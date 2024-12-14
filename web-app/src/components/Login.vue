@@ -10,7 +10,7 @@
       <button type="submit">Submit</button>
     </form>
     <div>
-      <h3>Submitted answer:</h3>
+      <h3>Submitted answerp:</h3>
       <p id="pAnswer">{{ inpValSubmitted }}</p>
     </div>
   </template>

@@ -5,12 +5,8 @@ import Navbar from '@/components/Navbar.vue';
 
 <template>
     <Navbar />
-    <div id="app">
+    <div>
       <form @submit.prevent="CustomerLogin">
-        <label>
-          Username
-          <input type="text" v-model="username" />
-        </label>
         <label>
           Email
           <input type="email" v-model="userEmail" />

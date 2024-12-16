@@ -2,7 +2,7 @@ const express = require("express");
 const {
     registerUser,
     loginUser,
-    currentUser
+    currentUser,
 } = require("../Controllers/userController");
 const validateToken = require("../Middleware/ValidateTokenHandler");
 

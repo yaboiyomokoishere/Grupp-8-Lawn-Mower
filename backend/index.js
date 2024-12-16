@@ -13,6 +13,7 @@ app.use(express.json());
 app.use("/api/user", require("./Routes/userRoutes"));
 app.use(errorHandler);
 
+ 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });

@@ -1,6 +1,5 @@
 <script setup>
 import Navbar from '@/components/Navbar.vue';
-
 import router from '@/router';
 import {reactive} from 'vue';
 import axios from 'axios';

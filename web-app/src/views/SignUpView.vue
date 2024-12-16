@@ -42,7 +42,7 @@ const handleSubmit = async () => {
   email: formData.userEmail,
   password: formData.password
   };
-  //console.log(newCustomer); // Shows the data fetched from the form
+  console.log(newCustomer); // Shows the data fetched from the form
   try {
     const response = await axios.post('http://localhost:3001/api/user/register', newCustomer);
     console.log(response.data); // Log the response data obtained from the backend
@@ -53,7 +53,6 @@ const handleSubmit = async () => {
     console.log('Error creating customer:', error);
     toast.error(error.message);
   }
-  
 }
 </script>
 

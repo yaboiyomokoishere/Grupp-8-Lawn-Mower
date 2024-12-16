@@ -42,18 +42,17 @@ const handleSubmit = async () => {
   email: formData.userEmail,
   password: formData.password
   };
-  //console.log(newCustomer); // Shows the data fetched from the form
+  console.log(newCustomer); // Shows the data fetched from the form
   try {
     const response = await axios.post('http://localhost:3001/api/user/register', newCustomer);
     console.log(response.data); // Log the response data obtained from the backend
     toast.success('Customer created successfully');
     
-    router.push('../login'); // Redirect to the login page after sucessful signup
+    //router.push('../login'); // Redirect to the login page after sucessful signup
   } catch (error) {
     console.log('Error creating customer:', error);
     toast.error(error.message);
   }
-  
 }
 </script>
 

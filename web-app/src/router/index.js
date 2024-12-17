@@ -13,8 +13,8 @@ const router = createRouter({
             component: HomeView
         },
         {
-            path: '/user/:id',
-            name: 'user-page',
+            path: '/CustomerView',
+            name: 'dashboard',
             component: CustomerView
         }, 
         {

@@ -5,7 +5,7 @@
         <h2>Sign up</h2>
         <label>
           First name
-          <input type="text" id="name" name="name" v-model="formData.firstName"  required />
+          <input type="text" id="name"  v-model="formData.firstName"  required />
         </label>
         <label>
           Email address
@@ -43,6 +43,7 @@ const handleSubmit = async () => {
   password: formData.password
   };
   console.log(newCustomer); // Shows the data fetched from the form
+  
   try {
     const response = await axios.post('http://localhost:3001/api/user/register', newCustomer);
     console.log(response.data); // Log the response data obtained from the backend

@@ -6,7 +6,7 @@ import axios from 'axios';
 import {useToast} from "vue-toastification";
 
 
-const credentials = reactive({
+const loginCredentials = reactive({
   userEmail: '',
   password: ''
 })
@@ -14,18 +14,19 @@ const credentials = reactive({
 const toast = useToast();
 
 const handleSubmit = async () => {
-  const newCustomer = {
-  email: credentials.userEmail,
-  password: credentials.password
+  const formCredentials = {
+  email: loginCredentials.userEmail,
+  password: loginCredentials.password
   };
+
   try {
-    const response = await axios.post('http://localhost:3001/api/user/login', newCustomer);
+    const response = await axios.post('http://localhost:3001/api/user/login', formCredentials,{
+      withCredentials: true
+    });
     console.log(response.data); // Log the response data obtained from the backend
     toast.success('Customer created successfully');
-    
-    // Save the 
 
-    //router.push('../login'); // Redirect to the login page after sucessful signup
+    router.push('../CustomerView'); // Redirect to user dashboard aka CustomerView.vue
   } catch (error) {
     console.log('Error creating customer:', error);
     toast.error(error.message);
@@ -37,14 +38,15 @@ const handleSubmit = async () => {
 <template>
     <Navbar />
     <div>
-      <form @submit.prevent="CustomerLogin">
+      <form @submit.prevent="handleSubmit">
+        <h2>Login</h2>
         <label>
           Email
-          <input type="email" id="userEmail" v-model="credentials.userEmail" />
+          <input type="email" id="userEmail" v-model="loginCredentials.userEmail" />
         </label>
         <label>
           Password
-          <input type="password" id="password" v-model="credentials.password" />
+          <input type="password" id="password" v-model="loginCredentials.password" />
         </label>
         <button type="submit">Login</button>
       </form>

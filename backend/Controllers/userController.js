@@ -26,9 +26,10 @@ const registerUser = asyncHandler(async (req,res) => {
         password: hashedPassword,
     });
 
-    console.log(`User created ${user}`);
+    //console.log(`User created ${user}`);
     if (user) {
-        res.status(201).json({_id: user.id, email: user.email });
+        //res.status(201).json({_id: user.id, email: user.email });
+        res.status(201).json({message: 'Registration successfull'});
     } else {
         res.status(400);
         throw new Error("User data is invalid");
@@ -54,9 +55,18 @@ const loginUser = asyncHandler(async (req, res) => {
                 id: user.id,
             },
         }, process.env. ACCESS_TOKEN_SECRET,
-        { expiresIn: "10m"}
-    );
-    res.status(200).json({accessToken});
+        //{     expiresIn: "10m" }
+        );
+        
+        res.cookie('jwt', accessToken, { 
+            domain: 'localhost',
+            path: '/',
+            maxAge: 24*60*60*1000 // Cookie expires in 24 hours
+        })
+
+        res.status(200).json({accessToken});
+        
+        // res.send({message: "Login successfull"});	
     }else {
         res.status(401);
         throw new Error("email or password invalid")
@@ -70,4 +80,16 @@ const currentUser = asyncHandler(async (req,res) => {
     res.json(req.user);
 });
 
-module.exports = {registerUser, loginUser, currentUser};
+
+const logoutUser = asyncHandler(async (req, res) => {
+    res.clearCookie("jwt", {
+        domain: 'localhost',
+        path: "/"});
+    res.end();
+
+    //res.status(200).json({message: "Logout successfull"});
+});
+
+
+
+module.exports = {registerUser, loginUser, currentUser, logoutUser};

@@ -61,6 +61,9 @@ const loginUser = asyncHandler(async (req, res) => {
         res.cookie('jwt', accessToken, { 
             domain: 'localhost',
             path: '/',
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
             maxAge: 24*60*60*1000 // Cookie expires in 24 hours
         })
 
@@ -82,12 +85,10 @@ const currentUser = asyncHandler(async (req,res) => {
 
 
 const logoutUser = asyncHandler(async (req, res) => {
-    res.clearCookie("jwt", {
-        domain: 'localhost',
-        path: "/"});
-    res.end();
-
-    //res.status(200).json({message: "Logout successfull"});
+    // Consle log the value of the cookie
+    
+    res.clearCookie('jwt');
+    res.status(200).json({message: "Logout successfull"});
 });
 
 

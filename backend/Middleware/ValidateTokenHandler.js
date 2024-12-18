@@ -1,6 +1,14 @@
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 
+/**
+ * @function validateToken
+ * @description validates a json web token
+ * @param {Object} req - express request object
+ * @param {Object} res - express response object
+ * @param {Function} next - express next middleware function
+ * @returns {void}
+ */
 const validateToken = asyncHandler(async(req, res, next) => {
     let token;
     let authHeader = req.headers.Authorization || req.headers.authorization;
@@ -14,6 +22,9 @@ const validateToken = asyncHandler(async(req, res, next) => {
             }
             req.user = decoded.user;
             next();
+        },
+        {
+            expiresIn: '10m'
         });
         if(!token){
             res.status(401);
@@ -21,4 +32,5 @@ const validateToken = asyncHandler(async(req, res, next) => {
         }
     }
 });
+
 module.exports = validateToken;

@@ -4,8 +4,8 @@
 
 
 <template>
-    <div>
-        <nav class="navbar">
+    <div class="navbar">
+        <nav >
             <div class="navbar-brand">
                 <RouterLink to="/" class="navbar-item">Home</RouterLink>
             </div>
@@ -17,7 +17,7 @@
   
   <style>
   .navbar {
-    background-color: #4705ee;
+    background-color: #010805;
     color: #0ce153;
     padding: 1em;
     text-align: left;
@@ -34,6 +34,6 @@
   }
   
   .navbar-item:hover {
-    color: #ccc;
+    color: #4705ee;
   }
   </style>

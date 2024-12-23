@@ -5,8 +5,5 @@ import Navbar from '@/components/Navbar.vue';
 
 <template>
     <Navbar />
-    <br />
-    <RouterLink to="/login">Login</RouterLink>
-    <br />
-    <RouterLink to="/signup">Sign Up</RouterLink>
+    <!-- Content for the Home page, such as information, or a landing page -->
 </template>

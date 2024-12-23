@@ -1,9 +1,26 @@
+<template>
+    <Navbar />
+    <div class="form-container">
+      <form @submit.prevent="handleSubmit">
+        <legend>Login</legend>
+        <label>Email</label>
+          <input type="email" id="userEmail" v-model="loginCredentials.userEmail" />
+        <label>Password</label>
+          <input type="password" id="password" v-model="loginCredentials.password" />
+        <button type="submit">Login</button>
+      </form>
+    </div>
+</template>
+
+
+
 <script setup>
 import Navbar from '@/components/Navbar.vue';
 import router from '@/router';
 import {reactive} from 'vue';
 import axios from 'axios';
 import {useToast} from "vue-toastification";
+import apiClient from '@/config/axios';
 
 
 const loginCredentials = reactive({
@@ -20,49 +37,44 @@ const handleSubmit = async () => {
   };
 
   try {
-    const response = await axios.post('http://localhost:3001/api/user/login', formCredentials,{
-      withCredentials: true
-    });
-    console.log(response.data); // Log the response data obtained from the backend
-    toast.success('Customer created successfully');
-
-    router.push('../CustomerView'); // Redirect to user dashboard aka CustomerView.vue
+    const response = await apiClient.post('/user/login', formCredentials,{
+    withCredentials: true});
+    //console.log(response); // Log the response data obtained from the backend, see fields in chrome dev tools
+    // Store the access token in the local storage
+    localStorage.setItem('accessToken', response.data.accessToken);
+    //toast.success('Customer logged in successfully');
+    router.push('/Dashboard'); // Redirect to user dashboard aka CustomerView.vue
   } catch (error) {
     console.log('Error creating customer:', error);
-    toast.error(error.message);
+    toast.error('Invalid email or password');
   }
 }
 </script>
 
 
-<template>
-    <Navbar />
-    <div>
-      <form @submit.prevent="handleSubmit">
-        <h2>Login</h2>
-        <label>
-          Email
-          <input type="email" id="userEmail" v-model="loginCredentials.userEmail" />
-        </label>
-        <label>
-          Password
-          <input type="password" id="password" v-model="loginCredentials.password" />
-        </label>
-        <button type="submit">Login</button>
-      </form>
-    </div>
-</template>
-
-
 <style scoped>
-button,
-input {
+
+button {
+  width: 100%;
+}
+button, input {
+  font-size: 1.2rem;
+  padding:10px;
   display: block;
   margin-bottom: 10px;
 }
 
-#alert {
-  color: red;
-  margin-bottom: 10px;
+button {
+  width: 100%;
+  margin-top: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
 }
 </style>

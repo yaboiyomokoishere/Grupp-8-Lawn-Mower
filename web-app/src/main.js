@@ -4,6 +4,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import Toast from "vue-toastification";
 import 'vue-toastification/dist/index.css';
+import './config/axios.js';
 
 
 const app = createApp(App); // Creates the app instance 

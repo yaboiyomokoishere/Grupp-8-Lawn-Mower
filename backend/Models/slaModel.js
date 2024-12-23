@@ -7,14 +7,44 @@ const slaSchema = mongoose.Schema({
     },
     status: {
         type: String,
-        required: [true, "Add user email address"],
-        unique: [true, "Email already taken"],
+        default: "Pending",
     },
-    password: {
+    Price: {       
+        type: String, 
+        default: "0",
+    },
+    Address: {
         type: String,
-        required: [true, "Add user password"],
+        required: [true, "Address mandatory"],
 
     },
+
+    Start_date: {
+        type: Date,
+        required: [true, "Start date required"],
+        default: Date.now,
+    },
+    
+    End_date: {
+        type: Date,
+        required: [true, "End date required"],
+        
+    },
+    cancellation_fee: {
+        type: String,
+        default: "400",
+    },
+    grass_height: {
+        type: String,
+        required: true,
+
+    },
+    working_area: {
+        type: String,
+        required: true,
+
+    },
+
 }, 
 {
     timestamps: true,

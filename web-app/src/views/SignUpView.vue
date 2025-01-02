@@ -8,13 +8,13 @@
         <div class="form-group">
           <label>First name</label>
           <input type="text" id="first_name" v-model="formData.firstName" />
-          <span v-if="v$.firstName.$error" class="error">First name is required.</span>
+          <span v-if="v$.firstName.$error" class="error">Only letters are allowed.</span>
         </div>
 
         <div class="form-group">
           <label>Last name</label>
           <input type="text" id="last_name" v-model="formData.lastName" />
-          <span v-if="v$.lastName.$error" class="error">Last name is required.</span>
+          <span v-if="v$.lastName.$error" class="error">Only letters are allowed.</span>
         </div>
       </div>
 
@@ -46,7 +46,7 @@
         <div class="form-group">
           <label>Postal code</label>
           <input type="text" id="postalCode" v-model="formData.postalCode" />
-          <span v-if="v$.postalCode.$error" class="error">Postal code is required.</span>
+          <span v-if="v$.postalCode.$error" class="error">Postal code must be 5 digits.</span>
         </div>
       </div>
 
@@ -84,7 +84,7 @@ import {reactive, computed} from 'vue';
 import axios from 'axios';
 import {useToast} from "vue-toastification";
 import { useVuelidate } from '@vuelidate/core'
-import { required, email, minLength, sameAs } from '@vuelidate/validators'
+import { required, email, minLength, sameAs, maxLength } from '@vuelidate/validators'
 
 
 const toast = useToast();
@@ -100,19 +100,22 @@ const formData = reactive({
   confirmPassword: ''
 })
 
+
+const alphaOnly = (value) => /^[a-zA-Z]+$/i.test(value); // Only letters 
+const alphaNum = value => /^[0-9]+$/.test(value) // Only numbers
+
 const rules = computed(() => ({ 
-  firstName: { required },
-  lastName: { required },
+  firstName: { required, alphaOnly },
+  lastName: { required, alphaOnly },
   userEmail: { required, email },
   address: { required },
-  phoneNumber: { required },
-  postalCode: { required },
+  phoneNumber: { required, alphaNum, minLength: minLength(10), maxLength: maxLength(10) },
+  postalCode: { required, alphaNum, minLength: minLength(5), maxLength: maxLength(5) },
   password: { required, minLength: minLength(8) },
   confirmPassword: { required, sameAsPassword: sameAs(formData.password) }  
 }))
 
 const v$ = useVuelidate(rules, formData);
-
 
 const handleSubmit = async () => {
   const result = await v$.value.$validate();
@@ -186,5 +189,4 @@ button {
 button:hover {
   background-color: #0056b3;
 }
-
 </style>

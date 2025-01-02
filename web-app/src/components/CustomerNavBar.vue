@@ -12,7 +12,7 @@ const logout = async () => {
     const response = await axios.post('http://localhost:3001/api/user/logout', {}, { withCredentials: true });
     localStorage.removeItem('accessToken');
     toast.success('Customer logged out successfully');
-    router.push('./login');
+    router.push('../login');
   } catch (error) {
     //console.log('Error creating customer:', error);
     toast.error(error.message);
@@ -22,61 +22,52 @@ const logout = async () => {
 
 
 <template>
-    <nav  class="navbar">
-        <div class="navbar-brand">
-            <RouterLink to="/" class="navbar-item">Home</RouterLink> <!-- Temporary for testing -->
-        </div>
+    <nav class="customer-navbar">
+        <RouterLink to="/" class="navbar-item">Home</RouterLink> <!-- Temporary for testing -->
+        <RouterLink to="/customer/profile" class="navbar-item">Profile</RouterLink>
+        <RouterLink to="/customer/contracts" class="navbar-item">Contracts</RouterLink>
+        <RouterLink to="/" class="navbar-item">TBD</RouterLink>
+        <RouterLink to="/" class="navbar-item">TBD</RouterLink>
         <button id= "logout" class="=navbar-item" @click="logout">Logout</button>
     </nav>
 </template>
   
 
-  
 <style scoped>
-.navbar {
-    width: 100%;
+/* Navigation bar styles */
+.customer-navbar {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
     padding: 5px;
     font-size: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    
 }
 
-.navbar-brand {
-    margin-right: auto; /* Pushes the Home button to the far left */
-}
-
-.navbar-links {
-    display: flex;
-    align-items: center;
-}
-
-.navbar a{
+/* Navigation link styles */
+.customer-navbar a{
     text-decoration: none;
     padding: 10px;
-    color: black;
-    
+    color: black;   
 }
 
-.navbar a:hover {
-    background-color: #f0f0f0; /* Optional hover effect */
-}
-
+/* Logout button styles */
 #logout {
-    margin-left: auto; /* Pushes the Logout button to the far right */
-    margin-right: 20px;
     text-decoration: none;
     font-size: 2rem;
     background-color: white;
     border: none;
-    padding: 10px;
+    padding: 5px;
     color: black; /* Adjust color as needed */
     cursor: pointer;
 }
 
-#logout:hover {
+
+/* Hover effect on navigation links and logout button */
+.customer-navbar a:hover, #logout:hover {
     background-color: #f0f0f0; /* Optional hover effect */
+    border: black;
 }
+
 </style>
 

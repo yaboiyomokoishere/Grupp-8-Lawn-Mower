@@ -26,28 +26,32 @@ const logout = async () => {
 
 
 <template>
-    <nav class="navbar">
+    <nav class="home-navbar">
         <div class="navbar-brand">
             <RouterLink to="/" class="navbar-item">Home</RouterLink>
         </div>
-        <div v-if="!loggedIn">
+
+        <div v-if="!loggedIn" class="navbar-links">
             <RouterLink to="/login" class="navbar-item">Login</RouterLink>
             <RouterLink to="/signup" class="navbar-item">Sign Up</RouterLink>
         </div>
-        <button v-else id="logout" class="navbar-item" @click="logout">Logout</button>
+        
+        <div v-else class="navbar-links">
+            <RouterLink to="/customer/dashboard" class="navbar-item">Profile</RouterLink>
+            <button  id="logout" class="navbar-item" @click="logout">Logout</button>
+        </div>
     </nav>
 </template>
   
 
   
 <style scoped>
-.navbar {
-    width: 100%;
-    padding: 5px;
-    font-size: 2rem;
+.home-navbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 5px;
+    font-size: 2rem;
 }
 
 .navbar-brand {
@@ -57,20 +61,20 @@ const logout = async () => {
 .navbar-links {
     display: flex;
     align-items: center;
-    gap: 20px; /* Adds space between the Login and Sign Up links */
+    justify-content: space-between;
 }
 
-.navbar a {
+.home-navbar a {
     text-decoration: none;
     padding: 10px;
     color: black; /* Adjust color as needed */
 }
 
-.navbar a:last-child {
+.home-navbar a:last-child {
     margin-right: 40px; /* Adds extra space for the last item */
 }
 
-.navbar a:hover {
+.home-navbar a:hover {
     background-color: #f0f0f0; /* Optional hover effect */
 }
 

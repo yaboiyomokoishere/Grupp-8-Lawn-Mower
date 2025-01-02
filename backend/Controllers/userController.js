@@ -6,15 +6,21 @@ const User = require("../Models/userModel");
 //@desc Register a user
 //@route POST /api/user/register
 //@access public
-const registerUser = asyncHandler(async (req,res) => {
+const registerCustomer = asyncHandler(async (req,res) => {
     
-    const { firstName, lastName, email, password, address, phone, postalCode } = req.body;
+    const { firstName, 
+            lastName, 
+            email, 
+            password, 
+            address, 
+            phone, 
+            postalCode,
+        } = req.body;
     //console.log(req.body)
 
     const userExists = await User.findOne({email});
     
     if(userExists) { 
-        
         res.status(400);
         throw new Error("Email already registered");
     }
@@ -28,13 +34,16 @@ const registerUser = asyncHandler(async (req,res) => {
             last_name: lastName,
             email: email,
             password: hashedPassword,
-            address: address,
-            phone_number: phone,
-            postal_code: postalCode,
-            role: "customer", // Assuming a default role
+            role: "customer",
+            customer_details: {
+                address,
+                postal_code: postalCode,
+                phone_number: phone
+            },
         });
         
-        console.log(user)
+        //console.log(user)
+
         if (user) {
             //res.status(201).json({_id: user.id, email: user.email });
             res.status(201).json({message: 'Registration successfull'});
@@ -44,23 +53,69 @@ const registerUser = asyncHandler(async (req,res) => {
         }
     }catch (error) {
         console.log(error);
+        res.status(400).json({message: 'Server error'});
     }
 });
+
+//@desc Register an admin
+//@route POST /api/user/registerAdmin
+//@access private
+const registerAdmin = asyncHandler(async (req,res) => {
+    const { firstName, 
+            lastName, 
+            email, 
+            password, 
+        } = req.body;
+    
+    const userExists = await User.findOne({email});
+    
+    if(userExists) { 
+        res.status(400);
+        throw new Error("Email already registered");
+    }
+
+    //hash password
+    const hashedPassword = await bcrypt.hash(password, 10); 
+    
+    try {
+        const user = await User.create({
+            first_name: firstName,
+            last_name: lastName,
+            email: email,
+            password: hashedPassword,
+            role: "admin",
+        });
+
+        if (user) {
+            res.status(201).json({message: 'Registration successfull'});
+        } else {
+            res.status(400);
+            throw new Error("User data is invalid");
+        }
+    }catch (error) {
+        console.log(error);
+        res.status(400).json({message: 'Server error'});
+    }
+});
+
 
 //@desc Login a user
 //@route POST /api/user/login
 //@access public
 const loginUser = asyncHandler(async (req, res) => {
-    const {email, password} = req.body;
+    const {email, password} = req.body
+
     // If either the email or password is missing return an error
     // MAY BE REMOVED WHEN VALIDATION ON THE FRON IT ADDED 
     if (!email || !password){
         res.status(400);
         throw new Error("All fields are mandatory!")
     }   
+    
+    //console.log(req.body)
 
     // Check if user exists in database
-    const user = await User.findOne({ email});
+    const user = await User.findOne({ email}).select('+password'); // +password to select the password
     
     if (user && (await bcrypt.compare(password, user.password))) { // If user exists and password is correct
         // Create access token containing username, email and id
@@ -69,14 +124,20 @@ const loginUser = asyncHandler(async (req, res) => {
                 username: user.username,
                 email: user.email,
                 id: user.id,
+                role: user.role
             },
-        }, process.env. ACCESS_TOKEN_SECRET,{ expiresIn: "10m"}); // Testing interceptors 30m
+        }, 
+        process.env. ACCESS_TOKEN_SECRET,
+        { expiresIn: "10m"}); // Testing interceptors 30m
 
         const refreshToken = jwt.sign({
             username: user.username,
             email: user.email,
             id: user.id,
-        }, process.env.REFRESH_TOKEN_SECRET, {expiresIn: "7d"});
+            role: user.role
+        }, 
+        process.env.REFRESH_TOKEN_SECRET, 
+        {expiresIn: "7d"});
         
         // Set the refresh token to a cookie
         res.cookie('jwt', refreshToken, { 
@@ -102,14 +163,6 @@ const logoutUser = asyncHandler(async (req, res) => {
     res.status(200).json({message: "Logout successfull"});
 });
 
-//@desc Current user info
-//@route GET /api/user/current
-//@access private
-const currentUser = asyncHandler(async (req,res) => {
-    // Returns the user object
-    res.json(req.user); // PROBABLY ONLY NEED ID
-});
-
 
 const refreshToken = asyncHandler(async (req, res) => {
     // Check if the cookie is present in the request
@@ -130,6 +183,7 @@ const refreshToken = asyncHandler(async (req, res) => {
                             username: decoded.username,
                             email: decoded.email,
                             id: decoded.id,    
+                            role: decoded.role
                         }
                     }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: "10m"});
 
@@ -142,4 +196,4 @@ const refreshToken = asyncHandler(async (req, res) => {
 })
 
 
-module.exports = {registerUser, loginUser, currentUser, logoutUser, refreshToken};
+module.exports = {registerCustomer, loginUser,  logoutUser, refreshToken, registerAdmin};

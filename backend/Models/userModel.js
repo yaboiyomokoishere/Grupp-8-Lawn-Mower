@@ -1,10 +1,40 @@
 const mongoose = require("mongoose");
 
+// Schema for customer details
+const customerDetailsSchema = mongoose.Schema({
+    address: {
+        type: String,
+        required: true
+    },
+    postal_code: {
+        type: Number,
+        required: true
+    },
+    phone_number: {
+        type: String,
+        required: true
+    }
+}, { _id: false }); // Prevent creation of a separate ID for the subschema
+
+// Subschema for technician-specific details
+const technicianDetailsSchema = mongoose.Schema({
+    jobs: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'sla',
+        default: null
+    }]
+}, { _id: false });
+
+// Subschema for admin-specific details
+const adminDetailsSchema = mongoose.Schema({
+    // TBD
+}, { _id: false });
+
+// Main User Schema
 const userSchema = mongoose.Schema({
     first_name: {
         type: String,
         required: [true, "Add a first name"],
-
     },
     last_name: {
         type: String,
@@ -14,39 +44,37 @@ const userSchema = mongoose.Schema({
         type: String,
         required: [true, "Add user email address"],
         unique: [true, "Email already taken"],
-
-    },
-    address: {
-        type: String,
-        required: [true, "Add user address"],
-
-    },
-    postal_code: {
-        type: Number,
-        required: [true, "Add user postal code"],
-    }, 
-    phone_number: {
-        type: Number,
-        required: [true, "Add user phone number"],
     },
     role: {
         type: String,
         required: [true, "Add user role"],
+        enum: ["customer", "technician", "admin"], // Restrict to specific roles
     },
     password: {
         type: String,
         required: [true, "Add user password"],
-        select: true
+        select: false
+    },
+    customer_details: {
+        type: customerDetailsSchema,
+        default: null // Only used for customers
+    },
+    technician_details: {
+        type: technicianDetailsSchema,
+        default: null // Only used for technicians
+    },
+    admin_details: {
+        type: adminDetailsSchema,
+        default: null // Only used for admins
     },
     contracts: [{
-        type: mongoose.Schema.Types.ObjectId, 
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'sla',
-        default: []
-    }], 
-},
-{
+        default: null
+    }]
+}, {
     timestamps: true,
-}
-);
+});
 
-module.exports = mongoose.model("User", userSchema );
+
+module.exports = mongoose.model("User", userSchema);

@@ -83,11 +83,11 @@ router.beforeEach((to, from, next) => {
                 const decodedToken = jwtDecode(token);
                 // Check token expiration if needed
                 if(to.meta.role === decodedToken.user.role) {
-                    //console.log("Access granted");
+                    console.log("Access granted");
                     next();
                 } else{
-                    //console.log("Access denied");
-                    next({ name: 'login' });
+                    console.log("Access denied");
+                    next({ name: 'home' });
                 }
             } catch (error) {
                 console.error('Token err:', error);

@@ -1,33 +1,65 @@
-* {
+*{
     margin: 0;
     padding: 0;
 
-  }
+}
 
-  body {
-    /*background-color: #d7ac54;*/
-  }
+body {
+  font-family: 'Roboto', sans-serif;
+}
 
 
-  /* Form styles */
-  .form-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* Full viewport height for vertical centering */
-  }
+/* Form styles */
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height for vertical centering */
+}
+
+form {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+legend {
+  text-align: center;
+  font-weight: bold;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.user-page-container{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: no-wrap;
+  width: 100%;
+
+
+}
+
+
+.customer-navbar{
+  display: flex;
+  flex-basis: 20%;
   
-  form {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
+}
 
-  legend {
-    text-align: center;
-    font-weight: bold;
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-  }
+.customer-content{
+  display: block;
+  flex-basis: 80%;
+}
+ .customer-content h1{
+  text-align: center;
+  font-weight: bold;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+ }
+
+
+
+  /* Make the customer navbar take only 20% 
+  width of the screen */

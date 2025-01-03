@@ -3,7 +3,10 @@ import HomeView from '@/views/HomeView.vue';
 import LoginView from '@/views/LoginView.vue';
 import SignUpView from '@/views/SignUpView.vue';
 import Dashboard from '@/views/CustomerViews/Dashboard.vue';
-import {useToast} from "vue-toastification";
+import CustomerProfile from '@/views/CustomerViews/CustomerProfile.vue';
+import CustomerContracts from '@/views/CustomerViews/CustomerContracts.vue';
+import { jwtDecode } from "jwt-decode";
+import AdminDashboard from '@/views/AdminViews/AdminDashboard.vue';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,7 +19,8 @@ const router = createRouter({
         {
             path: '/login',
             name: 'login',
-            component: LoginView
+            component: LoginView,
+            
         },
         {
             path: '/signup',
@@ -25,12 +29,34 @@ const router = createRouter({
         },
         // Customer Routes
         {
-            path: '/Dashboard',
-            name: 'dashboard',
+            path: '/customer/dashboard',
+            name: 'customer_dashboard',
             component: Dashboard,
             // Require authentication based on the meta property, see the beforeach guard below
-            meta: { requiresAuth: true } 
+            meta: { requiresAuth: true, role: 'customer' }
         }, 
+        {
+            path: '/customer/profile',
+            name: 'profile',
+            component: CustomerProfile,
+            // Require authentication based on the meta property, see the beforeach guard below
+            meta: { requiresAuth: true, role: 'customer' }
+        }, 
+        {
+            path: '/customer/contracts',
+            name: 'contracts',
+            component: CustomerContracts,
+            // Require authentication based on the meta property, see the beforeach guard below
+            meta: { requiresAuth: true, role: 'customer' },
+        }, 
+        // Admin routes
+        {
+            path: '/admin/dashboard',
+            name: 'admin_dashboard',
+            component: AdminDashboard,
+            // Require authentication based on the meta property, see the beforeach guard below
+            meta: { requiresAuth: true, role: 'admin' }
+        },
         {
             path: '/:catchAll(.*)', // Catch-all route for any unmatched routes
             name: 'not-found',
@@ -42,15 +68,34 @@ const router = createRouter({
 
 export const isAuthenticated = () => !!localStorage.getItem('accessToken');
 
-const toast = useToast();
+
 // Global navigation guard
 router.beforeEach((to, from, next) => {
     // Check if the route requires authentication
-    if (to.meta.requiresAuth && !isAuthenticated()) {
-        toast.error("You are not logged in. Please log in to access this page.");
-        next('/login'); // Redirect to login page
-    } else{
-        next()
+    if (to.meta.requiresAuth) {
+        const token = localStorage.getItem('accessToken');
+        if (!token) { // If the token is not present then the user is not authenticated
+            // Redirect to the login page
+            console.log('Redirecting to login');
+            next({ name: 'login' });
+        } else {
+            try {
+                const decodedToken = jwtDecode(token);
+                // Check token expiration if needed
+                if(to.meta.role === decodedToken.user.role) {
+                    //console.log("Access granted");
+                    next();
+                } else{
+                    //console.log("Access denied");
+                    next({ name: 'login' });
+                }
+            } catch (error) {
+                console.error('Token err:', error);
+                next({ name: 'login' });
+            }
+        }
+    } else {
+        next();
     }
 });
 

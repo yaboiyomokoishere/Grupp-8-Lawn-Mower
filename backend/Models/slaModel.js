@@ -9,26 +9,23 @@ const slaSchema = mongoose.Schema({
         type: String,
         default: "Pending",
     },
-    Price: {       
+    price: {       
         type: String, 
         default: "0",
     },
-    Address: {
+    address: {
         type: String,
         required: [true, "Address mandatory"],
 
     },
-
-    Start_date: {
+    start_date: {
         type: Date,
         required: [true, "Start date required"],
         default: Date.now,
     },
-    
-    End_date: {
+    end_date: {
         type: Date,
         required: [true, "End date required"],
-        
     },
     cancellation_fee: {
         type: String,
@@ -50,4 +47,28 @@ const slaSchema = mongoose.Schema({
     timestamps: true,
 });
 
+const slaLogSchema = mongoose.Schema({
+    sla_id: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'sla'
+    },
+    status: {
+        type: String,
+        default: "Pending",
+    },
+    action: {
+        type: String,
+        default: "Pending",
+    },
+    changed_by: {
+        type: String,
+        required: true
+    },
+    date: {
+        type: Date,
+        default: Date.now,
+    },
+});
+
 module.exports = mongoose.model("sla", slaSchema );
+module.exports = mongoose.model("sla_log", slaLogSchema );

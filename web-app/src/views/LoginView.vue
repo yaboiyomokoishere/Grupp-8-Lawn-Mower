@@ -18,9 +18,9 @@
 import Navbar from '@/components/Navbar.vue';
 import router from '@/router';
 import {reactive} from 'vue';
-import axios from 'axios';
 import {useToast} from "vue-toastification";
 import apiClient from '@/config/axios';
+import { jwtDecode } from "jwt-decode";
 
 
 const loginCredentials = reactive({
@@ -42,8 +42,23 @@ const handleSubmit = async () => {
     //console.log(response); // Log the response data obtained from the backend, see fields in chrome dev tools
     // Store the access token in the local storage
     localStorage.setItem('accessToken', response.data.accessToken);
+
     //toast.success('Customer logged in successfully');
-    router.push('/Dashboard'); // Redirect to user dashboard aka CustomerView.vue
+    
+    // Decode the access token to extract the user's role
+    const decodedToken = jwtDecode(response.data.accessToken);
+    const userRole = decodedToken.user.role;
+
+    // Redirect users based on their role
+    if (userRole === 'customer') {
+      //console.log("customer");
+      router.push({ name: 'customer_dashboard' });
+    } else if (userRole === 'admin') {
+      //console.log("admin");
+      router.push({ name: 'admin_dashboard' });
+    } else {
+      toast.error('invalid role');
+    }
   } catch (error) {
     console.log('Error creating customer:', error);
     toast.error('Invalid email or password');

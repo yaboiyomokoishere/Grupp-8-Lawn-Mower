@@ -26,7 +26,7 @@ const logout = async () => {
         <RouterLink to="/" class="navbar-item">Home</RouterLink> <!-- Temporary for testing -->
         <RouterLink to="/customer/profile" class="navbar-item">Profile</RouterLink>
         <RouterLink to="/customer/contracts" class="navbar-item">Contracts</RouterLink>
-        <RouterLink to="/" class="navbar-item">TBD</RouterLink>
+        <RouterLink to="/" class="navbar-item">Reports</RouterLink>
         <RouterLink to="/" class="navbar-item">TBD</RouterLink>
         <button id= "logout" class="=navbar-item" @click="logout">Logout</button>
     </nav>

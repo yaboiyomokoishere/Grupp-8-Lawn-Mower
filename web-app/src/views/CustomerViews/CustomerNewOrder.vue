@@ -94,7 +94,7 @@ const handleSubmit = async () => {
 
     try {
     // Create the SLA
-    //const response = await apiClient.post('/sla', newSla);
+    //const response = await apiClient.post('/createSla', newSla);
     //console.log(response.data);
     } catch (error) {
       console.error(error);

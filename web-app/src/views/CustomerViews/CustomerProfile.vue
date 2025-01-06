@@ -2,75 +2,76 @@
   <div class="user-page-container">
     <CustomerNavBar />
     <div class="customer-content">
-      <h1>Profile</h1>  <div class="form-container">
-      <form @submit.prevent="handleSubmit">
-        <div class="form-row">
-          <div class="form-group">
-            <label>First name</label>
-            <input type="text" id="first_name" v-model="formData.firstName" />
-            <span v-if="v$.firstName.$error" class="error">Only letters are allowed.</span>
+      <h1>Profile</h1>  
+      <div class="form-container">
+        <form @submit.prevent="handleSubmit">
+          <div class="form-row">
+            <div class="form-group">
+              <label>First name</label>
+              <input type="text" id="first_name" v-model="formData.firstName" />
+              <span v-if="v$.firstName.$error" class="error">Only letters are allowed.</span>
+            </div>
+
+            <div class="form-group">
+              <label>Last name</label>
+              <input type="text" id="last_name" v-model="formData.lastName" />
+              <span v-if="v$.lastName.$error" class="error">Only letters are allowed.</span>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label>Last name</label>
-            <input type="text" id="last_name" v-model="formData.lastName" />
-            <span v-if="v$.lastName.$error" class="error">Only letters are allowed.</span>
-          </div>
-        </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Email address</label>
+              <input type="email" id="userEmail" v-model="formData.userEmail" />
+              <span v-if="v$.userEmail.$error" class="error">
+                {{ v$.userEmail.$errors[0].$message }}
+              </span>
+            </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label>Email address</label>
-            <input type="email" id="userEmail" v-model="formData.userEmail" />
-            <span v-if="v$.userEmail.$error" class="error">
-              {{ v$.userEmail.$errors[0].$message }}
-            </span>
-          </div>
-
-          <div class="form-group">
-            <label>Address</label>
-            <input type="text" id="address" v-model="formData.address" />
-            <span v-if="v$.address.$error" class="error">Address is required.</span>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>Phone number</label>
-            <input type="tel" id="phone" v-model="formData.phoneNumber" />
-            <span v-if="v$.phoneNumber.$error" class="error">
-              Phone number must be 10 digits.
-            </span>
+            <div class="form-group">
+              <label>Address</label>
+              <input type="text" id="address" v-model="formData.address" />
+              <span v-if="v$.address.$error" class="error">Address is required.</span>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label>Postal code</label>
-            <input type="text" id="postalCode" v-model="formData.postalCode" />
-            <span v-if="v$.postalCode.$error" class="error">Postal code is required.</span>
-          </div>
-        </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Phone number</label>
+              <input type="tel" id="phone" v-model="formData.phoneNumber" />
+              <span v-if="v$.phoneNumber.$error" class="error">
+                Phone number must be 10 digits.
+              </span>
+            </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label>New Password</label>
-            <input type="password" id="password" v-model="formData.password" />
-            <span v-if="v$.password.$error" class="error">
-              {{ v$.password.$errors[0].$message }}
-            </span>
+            <div class="form-group">
+              <label>Postal code</label>
+              <input type="text" id="postalCode" v-model="formData.postalCode" />
+              <span v-if="v$.postalCode.$error" class="error">Postal code is required.</span>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label>Confirm Password</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              v-model="formData.confirmPassword"
-            />
-            <span v-if="v$.confirmPassword.$error" class="error">
-              Passwords must match.
-            </span>
+          <div class="form-row">
+            <div class="form-group">
+              <label>New Password</label>
+              <input type="password" id="password" v-model="formData.password" />
+              <span v-if="v$.password.$error" class="error">
+                {{ v$.password.$errors[0].$message }}
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label>Confirm Password</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                v-model="formData.confirmPassword"
+              />
+              <span v-if="v$.confirmPassword.$error" class="error">
+                Passwords must match.
+              </span>
+            </div>
           </div>
-        </div>
 
         <button type="submit">Sign up</button>
       </form>
@@ -86,8 +87,8 @@ import apiClient from '@/config/axios'; // Use your configured Axios instance
 import CustomerNavBar from '@/components/CustomerNavBar.vue';
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, minLength, sameAs, maxLength } from '@vuelidate/validators'
+
 // Reactive state variables
-const loading = ref(true); // Loading state
 const error = ref(null); // Error message
 
 // Form validation 
@@ -118,9 +119,7 @@ const fetchCustomerData = async () => {
   } catch (err) {
     error.value = 'Failed to fetch customer data. Please try again later.';
     console.error(err);
-  } finally {
-    loading.value = false; // Turn off loading state
-  }
+  } 
 };
 
 
@@ -175,7 +174,7 @@ const handleUpdate = async () => {
 
 // Fetch data when the component is mounted
 onMounted(() => {
-  fetchCustomerData();
+  //fetchCustomerData();
 });
 
 </script>

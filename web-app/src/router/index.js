@@ -7,6 +7,7 @@ import CustomerProfile from '@/views/CustomerViews/CustomerProfile.vue';
 import CustomerContracts from '@/views/CustomerViews/CustomerContracts.vue';
 import { jwtDecode } from "jwt-decode";
 import AdminDashboard from '@/views/AdminViews/AdminDashboard.vue';
+import CustomerNewOrder from '@/views/CustomerViews/CustomerNewOrder.vue';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,18 +38,24 @@ const router = createRouter({
         }, 
         {
             path: '/customer/profile',
-            name: 'profile',
+            name: 'customer_profile',
             component: CustomerProfile,
             // Require authentication based on the meta property, see the beforeach guard below
             meta: { requiresAuth: true, role: 'customer' }
         }, 
         {
             path: '/customer/contracts',
-            name: 'contracts',
+            name: 'customer_contracts',
             component: CustomerContracts,
             // Require authentication based on the meta property, see the beforeach guard below
             meta: { requiresAuth: true, role: 'customer' },
         }, 
+        {
+            path: '/customer/contracts/orderContract',
+            name: 'order_contract',
+            component: CustomerNewOrder,
+            meta: { requiresAuth: true, role: 'customer' },
+        },
         // Admin routes
         {
             path: '/admin/dashboard',
@@ -59,7 +66,7 @@ const router = createRouter({
         },
         {
             path: '/:catchAll(.*)', // Catch-all route for any unmatched routes
-            name: 'not-found',
+            name: 'not_found',
             component: HomeView
         }
     ]

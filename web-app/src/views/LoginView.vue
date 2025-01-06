@@ -57,11 +57,10 @@ const handleSubmit = async () => {
       //console.log("admin");
       router.push({ name: 'admin_dashboard' });
     } else {
-      toast.error('invalid role');
+      toast.error('Invalid email or password');
     }
   } catch (error) {
-    console.log('Error creating customer:', error);
-    toast.error('Invalid email or password');
+    console.log('Error logging in:', error);
   }
 }
 </script>

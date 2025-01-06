@@ -4,7 +4,9 @@
         <div class="customer-content">
             <h1>My Contracts</h1>
             <div class="utility-bar">
-                <button class="order-contract-button">Order Contract</button>
+                <RouterLink :to="{name: 'order_contract'}" >
+                    New Order
+                </RouterLink>
             </div>
             <table class="contracts-table">
                 <thead>
@@ -47,6 +49,7 @@
 import CustomerNavBar from '@/components/CustomerNavBar.vue';
 import { onMounted, ref } from 'vue';
 import apiClient from '@/config/axios';
+import { RouterLink } from 'vue-router';
 
 const customerContracts = ref([]);
 
@@ -74,7 +77,7 @@ onMounted(async () => {
 .contracts-table {
     width: 100%;
     margin-top: 20px;
-    border-collapse: collapse; /* Avoid/remove double border */
+    border-collapse: collapse; /* Avoid/prevent double border above each other */
 }
 
 .contracts-table th, .contracts-table td {
@@ -85,17 +88,15 @@ onMounted(async () => {
 .contracts-table th {
     border-bottom: 2px solid #ddd;
 }
-/* ADd border to table rows */
+
 .contracts-table td {
     border-bottom: 1px solid #ddd;
 }
 
-/* Remove border for buttons */
 .contracts-table td:last-child {
     border-bottom: none;
 }
 
-/* Spacing between rows */
 .contracts-table tbody tr {
     margin-bottom: 10px; 
 }
@@ -103,4 +104,22 @@ onMounted(async () => {
 .contracts-table tbody tr td {
     padding: 15px 10px; 
 }
+
+.utility-bar a, .view-contract-button {
+    background-color: #007bff;
+    color: white;
+    font-size: 1rem;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 2px solid #0056b3;
+}
+
+.utility-bar a {
+    margin-right: 60px;
+    text-decoration: none;
+}
+.utility-bar a:hover {
+    background-color: #0056b3;
+}
+
 </style>

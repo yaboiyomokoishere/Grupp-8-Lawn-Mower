@@ -12,7 +12,7 @@ const logout = async () => {
     const response = await axios.post('http://localhost:3001/api/user/logout', {}, { withCredentials: true });
     localStorage.removeItem('accessToken');
     toast.success('Customer logged out successfully');
-    router.push('../login');
+    router.push({name: 'login'});
   } catch (error) {
     //console.log('Error creating customer:', error);
     toast.error(error.message);
@@ -23,12 +23,11 @@ const logout = async () => {
 
 <template>
     <nav class="customer-navbar">
-        <RouterLink to="/" class="navbar-item">Home</RouterLink> <!-- Temporary for testing -->
-        <RouterLink to="/customer/profile" class="navbar-item">Profile</RouterLink>
-        <RouterLink to="/customer/contracts" class="navbar-item">Contracts</RouterLink>
-        <RouterLink to="/" class="navbar-item">Reports</RouterLink>
-        <RouterLink to="/" class="navbar-item">TBD</RouterLink>
-        <button id= "logout" class="=navbar-item" @click="logout">Logout</button>
+        <RouterLink :to="{name: 'home'}" class="navbar-item">Home</RouterLink> <!-- Temporary for testing -->
+        <RouterLink :to="{name: 'customer_profile'}" class="navbar-item">Profile</RouterLink>
+        <RouterLink :to="{name: 'customer_contracts'}" class="navbar-item">Contracts</RouterLink>
+        <RouterLink :to="{name: 'home'}" class="navbar-item">Reports</RouterLink>
+        <button id= "logout" class="navbar-item" @click="logout">Logout</button>
     </nav>
 </template>
   
@@ -45,28 +44,28 @@ const logout = async () => {
 }
 
 /* Navigation link styles */
-.customer-navbar a{
+.customer-navbar a, #logout {
     text-decoration: none;
     padding: 10px;
-    color: black;   
+    color: black; /* Adjust color as needed */
 }
 
 /* Logout button styles */
 #logout {
-    text-decoration: none;
     font-size: 2rem;
     background-color: white;
     border: none;
-    padding: 5px;
-    color: black; /* Adjust color as needed */
     cursor: pointer;
+    padding: 10px;
+    margin: 0;     
+    font-family: 'Roboto', sans-serif; 
+    display: flex;
+    width: auto; 
 }
 
 
-/* Hover effect on navigation links and logout button */
 .customer-navbar a:hover, #logout:hover {
-    background-color: #f0f0f0; /* Optional hover effect */
-    border: black;
+    background-color: #f0f0f0;
 }
 
 </style>

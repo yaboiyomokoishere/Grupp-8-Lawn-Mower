@@ -140,7 +140,7 @@ const handleSubmit = async () => {
       console.log(response.data); // Log the response data obtained from the backend
       toast.success('Customer created successfully');
       
-      router.push('../login'); // Redirect to the login page after sucessful signup
+      router.push({name: 'login'}); // Redirect to the login page after sucessful signup
     } catch (error) {
       console.log('Error creating customer:', error);
       toast.error(error.message);

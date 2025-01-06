@@ -57,6 +57,11 @@ const userSchema = mongoose.Schema({
     },
     customer_details: {
         type: customerDetailsSchema,
+        contracts: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'sla',
+            default: null
+        }],
         default: null // Only used for customers
     },
     technician_details: {
@@ -66,12 +71,7 @@ const userSchema = mongoose.Schema({
     admin_details: {
         type: adminDetailsSchema,
         default: null // Only used for admins
-    },
-    contracts: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'sla',
-        default: null
-    }]
+    }
 }, {
     timestamps: true,
 });

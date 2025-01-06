@@ -13,6 +13,11 @@ const slaSchema = mongoose.Schema({
         type: String, 
         default: "0",
     },
+    type: {
+        type: String,
+        required: [true, "Type mandatory"],
+        default: "Standard",
+    },
     address: {
         type: String,
         required: [true, "Address mandatory"],

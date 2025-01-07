@@ -4,8 +4,9 @@ const {
     logoutUser,
     refreshToken,
     registerCustomer,
-    registerAdmin
+    //registerAdmin
 } = require("../Controllers/userController");
+
 const {getCustomerInfo} = require("../Controllers/customerController");
 const validateToken = require("../Middleware/ValidateTokenHandler");
 
@@ -21,7 +22,7 @@ router.post('/refresh', refreshToken); // Refreshes access token with refresh to
 
 
 // Customer routes
-router.get('/getCustomer', validateToken, getCustomerInfo); 
+//router.get('/getCustomer', validateToken, getCustomerInfo); 
 
 
 // SLA Routes

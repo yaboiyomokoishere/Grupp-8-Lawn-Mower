@@ -26,17 +26,18 @@ const refreshAccessToken = async () => {
 // Request interceptor: Attach the access token to every request
 apiClient.interceptors.request.use(
   (config) => {
-    //console.log('Intercepted request!');
+   
     const token = localStorage.getItem('accessToken'); // Retrieve access token
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`; // Set the Authorization header
     }
+    console.log('Intercepted request!');
     //console.log("hello?")
     return config; //Push forward the request with the access token
   },
   (error) => {
     console.log(error);
-    return Promise.reject(error)  // Reject the request if there's an error
+    return Promise.reject(error)  // Reject request if there's an error
   }
 );
 

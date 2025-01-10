@@ -19,8 +19,8 @@ import Navbar from '@/components/Navbar.vue';
 import router from '@/router';
 import {reactive} from 'vue';
 import {useToast} from "vue-toastification";
-import apiClient from '@/config/axios';
 import { jwtDecode } from "jwt-decode";
+import axios from 'axios';
 
 
 const loginCredentials = reactive({
@@ -37,14 +37,17 @@ const handleSubmit = async () => {
   };
 
   try {
-    const response = await apiClient.post('/user/login', formCredentials,{
-    withCredentials: true});
-    //console.log(response); // Log the response data obtained from the backend, see fields in chrome dev tools
+    const response = await axios.post('http://localhost:3001/api/user/login', 
+                                      formCredentials,
+                                      {withCredentials: true}
+                                    );
+    console.log('Response data:', response); 
+    console.log('Successfully logged in!');
+
     // Store the access token in the local storage
     localStorage.setItem('accessToken', response.data.accessToken);
+    console.log('Access token stored in local storage.');
 
-    //toast.success('Customer logged in successfully');
-    
     // Decode the access token to extract the user's role
     const decodedToken = jwtDecode(response.data.accessToken);
     const userRole = decodedToken.user.role;

@@ -18,28 +18,23 @@
                         <th>Status</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>Standard</td>
-                        <td>Kungsgatan 1</td>
-                        <td>2022-01-01</td>
-                        <td>2022-12-31</td>
-                        <td>Pending</td>
+                <tbody v-if="hasContracts">
+                    <tr v-for="contract in customerContracts" :key="contract.id">
+                        <td>{{ contract.type }}</td>
+                        <td>{{ contract.address }}</td>
+                        <td>{{ contract.start_date }}</td>
+                        <td>{{ contract.end_date }}</td>
+                        <td>{{ contract.status }}</td>
                         <td>
-                            <button class="view-contract-button">View</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Standard</td>
-                        <td>Kungsgatan 1</td>
-                        <td>2022-01-01</td>
-                        <td>2022-12-31</td>
-                        <td>Pending</td>
-                        <td>
-                            <button class="view-contract-button">View</button>
+                            <RouterLink :to="{name: 'view_contract', params: {id: contract.id}}" class="view-contract-button">View</RouterLink>
                         </td>
                     </tr>
                 </tbody>
+                <tfoot v-else>
+                    <tr>
+                        <td colspan="5">No contracts available</td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>
@@ -51,15 +46,16 @@ import { onMounted, ref } from 'vue';
 import apiClient from '@/config/axios';
 import { RouterLink } from 'vue-router';
 
+const hasContracts = ref(false);
 const customerContracts = ref([]);
 
 onMounted(async () => {
-
     try {
-        //const response = await apiClient.get('/users/me', config); TO BE DEFINED
-        //console.log(response.data);
-
-        //customerContracts.value = response.data; // Contracts to display
+        const response = await apiClient.get('/user/getCustomerSlas'); 
+        console.log(response.data);
+        if(response.data.length > 0){
+            customerContracts.value = response.data;
+        } 
     } catch (error) {
         console.error(error);
     }

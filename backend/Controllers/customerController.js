@@ -16,10 +16,26 @@ const User = require("../Models/userModel");
 // });
 
 const getCustomerSlas = asyncHandler(async (req,res) => {
-    const user = await getUser(req,res);
+    const user = await getUser(req);
+    const contracts = user.customer_details.contracts;
+    const contractList = [];
+    if (contracts) {
+        for (const id of contracts) {
+            const contract = await User.findById(id).select("type address start_date end_date status");
+            contractList.push({
+                id: contract._id,
+                type: contract.type,
+                address: contract.address,
+                start_date: contract.start_date,
+                end_date: contract.end_date,
+                status: contract.status
+            });
+        }
+    } 
+    res.status(200).json(contractList);
 });
 
-const getUser = asyncHandler(async (req,res) => {
+const getUser = asyncHandler(async (req) => {
     const {id} = req.user;
     const user = await User.findById(id).select("-password"); 
     if(!user){
@@ -28,5 +44,4 @@ const getUser = asyncHandler(async (req,res) => {
     return user;
 })
 
-module.exports = {getCustomerSlas};
-
+module.exports = {getCustomerSlas, getUser};

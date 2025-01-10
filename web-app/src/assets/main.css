@@ -5,7 +5,7 @@
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 
@@ -13,8 +13,7 @@ body {
 .form-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  height:100%; /* Full viewport height for vertical centering */
+  padding: 2rem;
 }
 
 form {
@@ -23,6 +22,7 @@ form {
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  background-color: blue;
 }
 
 legend {
@@ -34,26 +34,20 @@ legend {
 
 .user-page-container{
   display: flex;
-  flex-direction: row;
-  flex-wrap: no-wrap;
-  width: 100%;
+  min-height: 100vh;
 
-}
-
-.customer-navbar{
-  display: flex;
-  /* Sets the initial main size of the flex item to 20% of the container */
-  flex-basis: 20%;
 }
 
 .customer-content{
-  display: block;
-  flex-basis: 80%;
-  padding-top: 2rem;
+  padding: 2rem;
+  flex-grow: 1;
+  min-height: 100vh;
+  margin-left: 200px;
+  background-color: rgb(242, 240, 255);
 }
  .customer-content h1{
   text-align: center;
   font-weight: bold;
   font-size: 2.5rem;
- 
+  margin-bottom: 2rem;
  }

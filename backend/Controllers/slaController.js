@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Sla = require("../Models/slaModel");
 const User = require("../Models/userModel");
-const customerController = require("customerController");
+const customerController = require("./customerController");
 
 //@desc Create sla
 //@route POST /api/sla/createSla

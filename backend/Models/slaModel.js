@@ -46,6 +46,18 @@ const slaSchema = mongoose.Schema({
         required: true,
 
     },
+    height_MoE:{        //Margin of Error
+        type: float,
+        default: 0.15, 
+    },
+    working_area_MoE:{
+        type: String,
+        required: true,
+    },
+    time_MoE:{
+        type: Number,
+        default: 1, 
+    }, 
 
 }, 
 {

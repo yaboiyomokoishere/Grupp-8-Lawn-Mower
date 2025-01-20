@@ -7,9 +7,9 @@ const customerController = require("./customerController");
 //@route POST /api/sla/createSla
 //@access private
 const createSla  = asyncHandler(async (req, res) => {
+    console.log(req.body)
     const { 
         Address, 
-        Start_date, 
         End_date,
         Grass_height,
         Working_area,
@@ -23,17 +23,18 @@ const createSla  = asyncHandler(async (req, res) => {
         res.status(400);
         throw new Error("Not a customer");
     }
-
+    
     try {
+        console.log(user);
         // create sla and insert the users id
         const sla = await Sla.create({
             customer_id: user._id, 
             address: Address, 
-            start_date: Start_date, 
             end_date: End_date, 
             grass_height: Grass_height,
             working_area: Working_area,
         });
+        console.log(sla);
         // if sla is created update the users array of contracts
         if(sla) {
             res.status(201).json({message: 'Sla created successfully'});

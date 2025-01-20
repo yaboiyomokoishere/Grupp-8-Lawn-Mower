@@ -36,12 +36,6 @@ const createSla  = asyncHandler(async (req, res) => {
         });
         // if sla is created update the users array of contracts
         if(sla) {
-            var Contracts = user.contracts;
-            Contracts.push(sla._id); 
-            //may have to fetch sla from db first
-            //const finishedSla = await Sla.findOne(sla.customer_id);
-            //Contracts.push(finishedSla._id);
-            await User.findOneAndUpdate({_id: user._id}, {contracts: Contracts});
             res.status(201).json({message: 'Sla created successfully'});
         } else {
             res.status(400);

@@ -57,11 +57,6 @@ const userSchema = mongoose.Schema({
     },
     customer_details: {
         type: customerDetailsSchema,
-        contracts: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'sla',
-            default: null
-        }],
         default: null // Only used for customers
     },
     technician_details: {

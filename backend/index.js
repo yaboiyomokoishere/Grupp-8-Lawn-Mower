@@ -20,6 +20,7 @@ app.use(cors({
 )); // Currently allowing all origins, to be changed later
 
 app.use("/api/user", require("./Routes/userRoutes"));
+app.use("/api/sla", require("./Routes/slaRoutes"));
 app.use(errorHandler);
 
  

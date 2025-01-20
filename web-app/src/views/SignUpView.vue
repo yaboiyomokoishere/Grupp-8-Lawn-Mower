@@ -1,6 +1,6 @@
 <template>
   <Navbar />
-  <div class="form-container">
+  <div class="login-signup-form-container">
     <form @submit.prevent="handleSubmit">
       <legend>Sign up</legend>
 
@@ -150,25 +150,25 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
-
-.form-container {
-  max-width: 600px;
-  margin: auto;
+form {
+  padding: 20px;
+  border-style: solid;
+  border-color: #CCCCCC;
+  border-width: 3px;
+  border-radius: 5px;
 }
 
 .form-row {
   display: flex;
-  justify-content: space-between;
-  gap: 20px;
+  gap: 20px; /* Space between form groups */
   margin-bottom: 20px;
 }
 
-.form-group {
-  flex: 1;
+input, label{
+  display: block;
 }
 
-input {
-  width: 100%;
+button, input {
   font-size: 1.2rem;
   padding: 10px;
   box-sizing: border-box;
@@ -176,17 +176,9 @@ input {
 
 button {
   width: 100%;
-  font-size: 1.2rem;
-  padding: 10px;
   margin-top: 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #0056b3;
+  border: solid;
+  border-radius: 5px;
+  border-color: #CCCCCC;
 }
 </style>

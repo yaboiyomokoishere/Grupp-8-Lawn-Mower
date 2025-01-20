@@ -96,55 +96,43 @@ const handleSubmit = async () => {
 
 <style scoped>
 .form-container {
-  max-width: 800px;
-  margin: 0 auto;
+  display: flex;
 }
 
 form {
-  width: 500px;
-  max-width: 100%;
-  margin: 0;
-  border: none;
-  background-color: aliceblue;
+  padding: 20px;
+  border-style: solid;
+  border-color: #CCCCCC;
+  border-width: 3px;
+  border-radius: 5px;
 }
 
 .form-row {
   display: flex;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  gap: 20px;
+  margin-bottom: 20px;
 }
 
 .form-group {
   flex: 1;
 }
 
-input, select, option {
-  width: 70%;
+input, label {
+  display: block;
+}
+
+button, input {
   font-size: 1.2rem;
   padding: 10px;
   box-sizing: border-box;
-  margin-bottom: 10px;
-  margin-top: 10px;
 }
-
-label {
-  font-size: large;
-}
-
 
 button {
-  width: 80%;
-  font-size: 1.2rem;
-  padding: 10px;
-  margin-top: 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
 
-button:hover {
-  background-color: #0056b3;
+  width: 100%;
+  margin: 10px auto;
+  border: solid;
+  border-radius: 5px;
+  border-color: #CCCCCC;
 }
 </style>

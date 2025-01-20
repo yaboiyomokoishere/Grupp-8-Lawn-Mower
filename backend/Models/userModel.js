@@ -4,15 +4,15 @@ const mongoose = require("mongoose");
 const customerDetailsSchema = mongoose.Schema({
     address: {
         type: String,
-        required: true
+        required: [true, "Address required"]
     },
     postal_code: {
         type: Number,
-        required: true
+        required: [true, "Postal code required"]
     },
     phone_number: {
-        type: String,
-        required: true
+        type: Number,
+        required: [true]
     }
 }, { _id: false }); // Prevent creation of a separate ID for the subschema
 

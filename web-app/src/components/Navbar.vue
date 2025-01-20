@@ -20,7 +20,7 @@
 import { isAuthenticated } from '@/router';
 import { ref } from 'vue';
 import Logout from '@/components/Logout.vue';
-// Needs to be a reactive variable in order to updated the buttons after logout
+// Needs to be a reactive variable in order to updated the buttons after logout.
 const loggedIn = ref(isAuthenticated()); 
 </script>
   
@@ -34,7 +34,7 @@ const loggedIn = ref(isAuthenticated());
 }
 
 .navbar-brand {
-    margin-right: auto; /* Pushes the Home button to the far left */
+    margin-right: auto; 
 }
 
 .navbar-links {
@@ -43,16 +43,9 @@ const loggedIn = ref(isAuthenticated());
 }
 
 .home-navbar a:last-child {
-    margin-right: 40px; /* Adds extra space for the last item */
+    margin-right: 30px; 
 }
-
 .home-navbar a {
-    text-decoration: none;
     padding: 10px;
-    color: black; /* Adjust color as needed */
-}
-
-.home-navbar a:hover {
-    background-color: #f0f0f0; 
 }
 </style>

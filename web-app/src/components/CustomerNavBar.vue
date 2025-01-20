@@ -14,11 +14,7 @@
   
 
 <script setup>
-import { isAuthenticated } from '@/router';
-import { ref } from 'vue';
 import Logout from '@/components/Logout.vue';
-// Needs to be a reactive variable in order to updated the buttons after logout
-const loggedIn = ref(isAuthenticated()); 
 </script>
 
 
@@ -44,20 +40,11 @@ const loggedIn = ref(isAuthenticated());
   display: flex;
   align-items: center;
   padding: 0.75rem 1.5rem;
-  color: #4b5563;
-  text-decoration: none;
 }
 
 .logout-button {
   padding: 1rem 1.5rem;
   border-top: 1px solid #e5e7eb;
 }
-
-.navbar-item:hover {
-  background-color: #f3f4f6;
-  color: #2563eb;
-}
-
-
 </style>
 

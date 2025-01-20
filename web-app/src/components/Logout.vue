@@ -24,22 +24,10 @@ const logout = async () => {
 <style>
 #logout {
     font-size: 2rem;
-    background-color: white;
     border: none;
-    cursor: pointer;
     padding: 10px;
     margin: 0;
     font-family: inherit;  
 }
 
- #logout {
-    text-decoration: none;
-    padding: 10px;
-    color: black; /* Adjust color as needed */
-}
-
-#logout:hover {
-  background-color: #f3f4f6;
-  color: #2563eb;
-}
 </style>

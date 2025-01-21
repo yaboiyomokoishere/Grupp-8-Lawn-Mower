@@ -1,19 +1,22 @@
 const mongoose = require("mongoose");
 
-const mowingRobotSchema = mongoose.Schema({
+// Scema for mowing robot
+const robotSchema = mongoose.Schema({
     status: {
         type: String,
-        default: "Pending",
-    },
-    last_maintenance_date: {
-        type: Date,
-        default: Date.now,
+        required: [true, "Status required"],
+        default: "Available" // Other options: "Not Available", "Under Maintenance" 
     },
     serial_number: {
         type: Number,
         required: [true, "Serial number required"],
         unique: [true, "Serial number already taken"]
+    },
+    last_maintenance_date: {
+        type: Date,
+        required: [true, "Last maintenance date required"],
+        default: Date.now,
     }
 });
 
-module.exports = mongoose.model("robot", mowingRobotSchema );
+module.exports = mongoose.model("robot", robotSchema );

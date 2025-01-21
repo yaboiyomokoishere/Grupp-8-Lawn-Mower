@@ -136,6 +136,7 @@ const loginUser = asyncHandler(async (req, res) => {
             id: user.id,
             role: user.role
         }, 
+        
         process.env.REFRESH_TOKEN_SECRET, 
         {expiresIn: "7d"});
         

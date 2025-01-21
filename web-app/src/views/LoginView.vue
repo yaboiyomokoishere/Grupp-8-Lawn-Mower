@@ -1,6 +1,6 @@
 <template>
     <Navbar />
-    <div class="form-container">
+    <div class="login-signup-form-container">
       <form @submit.prevent="handleSubmit">
         <legend>Login</legend>
         <label>Email</label>
@@ -13,14 +13,13 @@
 </template>
 
 
-
 <script setup>
 import Navbar from '@/components/Navbar.vue';
 import router from '@/router';
 import {reactive} from 'vue';
-import {useToast} from "vue-toastification";
-import apiClient from '@/config/axios';
 import { jwtDecode } from "jwt-decode";
+import axios from 'axios';
+import { useToast } from "vue-toastification";
 
 
 const loginCredentials = reactive({
@@ -32,20 +31,23 @@ const toast = useToast();
 
 const handleSubmit = async () => {
   const formCredentials = {
-  email: loginCredentials.userEmail,
-  password: loginCredentials.password
+    email: loginCredentials.userEmail,
+    password: loginCredentials.password
   };
 
   try {
-    const response = await apiClient.post('/user/login', formCredentials,{
-    withCredentials: true});
-    //console.log(response); // Log the response data obtained from the backend, see fields in chrome dev tools
-    // Store the access token in the local storage
-    localStorage.setItem('accessToken', response.data.accessToken);
+    const response = await axios.post('http://localhost:3001/api/user/login', 
+                                      formCredentials,
+                                      {withCredentials: true} // Ensures cookies are sent.
+                                    );
+    console.log('Response data:', response); 
+    console.log('Successfully logged in!');
 
-    //toast.success('Customer logged in successfully');
-    
-    // Decode the access token to extract the user's role
+    // Store the access token in the local storage.
+    localStorage.setItem('accessToken', response.data.accessToken);
+    console.log('Access token stored in local storage.');
+
+    // Decode the access token to extract the user's role.
     const decodedToken = jwtDecode(response.data.accessToken);
     const userRole = decodedToken.user.role;
 
@@ -67,10 +69,18 @@ const handleSubmit = async () => {
 
 
 <style scoped>
+form {
+  padding: 20px;
+  border-style: solid;
+  border-color: #CCCCCC;
+  border-width: 3px;
+  border-radius: 5px;
+}
 
 button {
   width: 100%;
 }
+
 button, input {
   font-size: 1.2rem;
   padding:10px;
@@ -81,14 +91,8 @@ button, input {
 button {
   width: 100%;
   margin-top: 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #0056b3;
+  border: solid;
+  border-radius: 5px;
+  border-color: #CCCCCC;
 }
 </style>

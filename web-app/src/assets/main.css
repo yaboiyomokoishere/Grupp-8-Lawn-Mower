@@ -5,24 +5,42 @@
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  background-color: #F5F5F5;
+  color: #333333;
+}
+
+/* Global anchor and buttons styles */
+a {
+  color: #333333;
+}
+
+.home-navbar a, .navbar-links a {
+  text-decoration: none;
+}
+
+.home-navbar a:hover, button:hover, 
+.navbar-links a:hover {
+  color: #2563eb;
+  text-decoration: underline;
+  text-decoration-color: #333333;
+}
+
+button {
+  cursor: pointer;
+  color: #333333;
+  background-color: #F5F5F5;
 }
 
 
 /* Form styles */
-.form-container {
+.login-signup-form-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height:100%; /* Full viewport height for vertical centering */
+  margin: 2rem;
 }
 
 form {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  margin: 0 auto; /* Center the form */
 }
 
 legend {
@@ -34,26 +52,21 @@ legend {
 
 .user-page-container{
   display: flex;
-  flex-direction: row;
-  flex-wrap: no-wrap;
-  width: 100%;
+  min-height: 100vh;
 
-}
-
-.customer-navbar{
-  display: flex;
-  /* Sets the initial main size of the flex item to 20% of the container */
-  flex-basis: 20%;
 }
 
 .customer-content{
-  display: block;
-  flex-basis: 80%;
-  padding-top: 2rem;
+  padding: 2rem;
+  flex-grow: 1;
+  min-height: 100vh;
+  margin-left: 200px;
+  
 }
  .customer-content h1{
   text-align: center;
   font-weight: bold;
   font-size: 2.5rem;
- 
+  margin-top: 2rem;
+  margin-bottom: 2rem;
  }

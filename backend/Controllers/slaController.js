@@ -8,11 +8,7 @@ const customerController = require("./customerController");
 //@access private
 const createSla  = asyncHandler(async (req, res) => {
     
-    // this check is redundant
-    if(!user){
-        res.status(400);
-        throw new Error("Not a customer");
-    }
+
     
     try {
         // create sla and insert the users id
@@ -38,10 +34,24 @@ const createSla  = asyncHandler(async (req, res) => {
 });
 
 //@desc Create sla
-//@route POST /api/sla/createSla
+//@route POST /api/sla/updateSla
 //@access private
 const updateSla  = asyncHandler(async (req, res) => {
-
+    
+    try {
+        const filter = { _id: req.body._id };
+        const update = { grass_height: req.body.grass_height,  
+            working_area: req.body.working_area, };
+        const result = await Sla.findOneAndUpdate(filter, update)
+        if(!result){
+            res.status(404).json({message: 'Sla no found'});
+        } else {
+            res.status(201).json({message: 'Sla updated successfully'});
+        }
+    } catch(error){
+        console.log(error);
+        res.status(400).json({message: 'Server error'});
+    }
 });
 
 module.exports = {createSla, updateSla};

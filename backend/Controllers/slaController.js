@@ -6,7 +6,11 @@ const customerController = require("./customerController");
 //@desc Create sla
 //@route POST /api/sla/createSla
 //@access private
+<<<<<<< HEAD
 const createSla  = asyncHandler(async (req, res) => {    
+=======
+const createSla  = asyncHandler(async (req, res) => {
+>>>>>>> b7a442cdc3fae410e70a4cd8aa2bbd5929057ecb
     try {
         // create sla and insert the users id
         const sla = await Sla.create({
@@ -17,7 +21,6 @@ const createSla  = asyncHandler(async (req, res) => {
             grass_height: req.body.grass_height,
             working_area: req.body.working_area,
         });
-        // if sla is created update the users array of contracts
         if(sla) {
             res.status(201).json({message: 'Sla created successfully'});
         } else {
@@ -33,12 +36,12 @@ const createSla  = asyncHandler(async (req, res) => {
 //@desc Create sla
 //@route POST /api/sla/updateSla
 //@access private
-const updateSla  = asyncHandler(async (req, res) => {
-    
+const updateSla  = asyncHandler(async (req, res) => { 
     try {
         const filter = { _id: req.body._id };
         const update = { grass_height: req.body.grass_height,  
-            working_area: req.body.working_area, };
+            working_area: req.body.working_area};
+
         const result = await Sla.findOneAndUpdate(filter, update)
         if(!result){
             res.status(404).json({message: 'Sla no found'});

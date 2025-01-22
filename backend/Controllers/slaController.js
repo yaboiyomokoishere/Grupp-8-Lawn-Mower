@@ -1,8 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Sla = require("../Models/slaModel");
-const User = require("../Models/userModel");
-const customerController = require("./customerController");
-const priceCalculator = require("../Middleware/priceCalculator");
+
 //@desc Create sla
 //@route POST /api/sla/createSla
 //@access private
@@ -75,3 +73,51 @@ const getPrice  = asyncHandler(async (req, res) => {
     }
 });
 module.exports = {createSla, updateSla, getPrice};
+
+
+const getHeightAndWorkingAreaAlternatives = asyncHandler(async (req, res) => {
+    try {
+        let id = '67914195fd30d6ec362d7f18'
+        const alternatives = await PriceList.findById(id);
+        //console.log(alternatives);
+        res.status(200).json(alternatives);
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({message: 'Could not fetch parameter alternatives'});
+    }
+});
+
+
+
+// One-time function used to fill the database
+// const fillPriceList =asyncHandler(async (req, res) => {
+//     try {
+//         const standardPrices = await PriceList.create({
+//             height_prices: [
+//                 { height: "1.5", price: 0 }, // kr/kvm
+//                 { height: "1", price: 0.01 },
+//                 { height: "0.5", price: 0.02 }
+//             ],
+//             area_prices: [
+//                 { area: "500", price: 0.7 },
+//                 { area: "1000", price: 0.6 },
+//                 { area: "2000", price: 0.5 }
+//             ],
+//             installation: 1500,
+//             robot_daily_rent: 20
+//         });
+//         if(standardPrices) {
+//             res.status(201).json({message: 'Price list created successfully'});
+//         } else {
+//             res.status(400);
+//             throw new Error("Price list data is invalid");
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         res.status(400).json({message: 'Server error'});
+//     }
+// });
+
+
+
+module.exports = {createSla, updateSla, getHeightAndWorkingAreaAlternatives }; 

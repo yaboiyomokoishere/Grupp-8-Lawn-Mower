@@ -20,7 +20,6 @@
                 </thead>
                 <tbody v-if="hasContracts">
                     <tr v-for="contract in customerContracts" :key="contract.id">
-                        <td>{{ contract.type }}</td>
                         <td>{{ contract.address }}</td>
                         <td>{{ contract.start_date }}</td>
                         <td>{{ contract.end_date }}</td>

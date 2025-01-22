@@ -8,9 +8,7 @@ const customerController = require("./customerController");
 //@access private
 const createSla  = asyncHandler(async (req, res) => {
     
-    // stolen from customerController 
-    const {id} = req.user;
-    const user = await User.findById(id).select("-password");
+    // this check is redundant
     if(!user){
         res.status(400);
         throw new Error("Not a customer");
@@ -19,7 +17,7 @@ const createSla  = asyncHandler(async (req, res) => {
     try {
         // create sla and insert the users id
         const sla = await Sla.create({
-            customer_id: user._id, 
+            customer_id: req.user._id, 
             address: req.body.address,
             start_date: req.body.start_date, 
             end_date: req.body.end_date, 
@@ -40,5 +38,11 @@ const createSla  = asyncHandler(async (req, res) => {
     }
 });
 
+//@desc Create sla
+//@route POST /api/sla/createSla
+//@access private
+const updateSla  = asyncHandler(async (req, res) => {
 
-module.exports = {createSla};
+});
+
+module.exports = {createSla, updateSla};

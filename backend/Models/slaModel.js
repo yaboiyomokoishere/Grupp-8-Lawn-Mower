@@ -20,7 +20,7 @@ const slaSchema = mongoose.Schema({
     },
     start_date: {
         type: Date,
-        default: Date.now,
+        required: [true, "Start date required"],
     },
     end_date: {
         type: Date,

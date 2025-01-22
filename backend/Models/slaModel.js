@@ -7,16 +7,11 @@ const slaSchema = mongoose.Schema({
     },
     status: {
         type: String,
-        default: "Pending",
+        default: "Pending", // Other options: "Completed", "Paid", "Active", "Archived", "Fault Check"
     },
     price: {       
-        type: String, 
+        type: Number, 
         default: "0",
-    },
-    type: {
-        type: String,
-        required: [true, "Type mandatory"],
-        default: "Standard",
     },
     address: {
         type: String,
@@ -28,20 +23,15 @@ const slaSchema = mongoose.Schema({
         default: Date.now,
     },
     end_date: {
-        type: String,
+        type: Date,
         required: [true, "End date required"],
     },
-    cancellation_fee: {
-        type: String,
-        default: "400",
-    },
     grass_height: {
-        type: String,
+        type: Number,
         required: true,
-
     },
     working_area: {
-        type: String,
+        type: Number,
         required: true,
     },
     height_MoE:{        //Margin of Error

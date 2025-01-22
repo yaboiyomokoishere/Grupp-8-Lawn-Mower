@@ -1,6 +1,5 @@
 const asyncHandler = require("express-async-handler");
 const Sla = require("../Models/slaModel");
-const PriceList = require("../Models/priceListModel");
 
 //@desc Create sla
 //@route POST /api/sla/createSla
@@ -48,6 +47,33 @@ const updateSla  = asyncHandler(async (req, res) => {
         res.status(400).json({message: 'Server error'});
     }
 });
+//@desc getPrice
+//@route GET /api/sla/getPrice
+//@access private
+const getPrice  = asyncHandler(async (req, res) => { 
+    try {
+        
+            let startDate = new Date(req.body.start_date);
+            let endDate = new Date(req.body.end_date);
+            let Difference_In_Time =
+            endDate.getTime() - startDate.getTime();
+            const duration = (Difference_In_Time)/(1000*60*60*24);      
+            //console.log();
+            var result = await priceCalculator.priceCalculator(req.body.grass_height, req.body.working_area, duration)
+
+        
+        if(!result){
+            res.status(404).json({message: 'result not found'});
+        } else {
+            res.status(200).json({result});
+        }
+    } catch(error){
+        console.log(error);
+        res.status(400).json({message: 'Server error'});
+    }
+});
+module.exports = {createSla, updateSla, getPrice};
+
 
 const getHeightAndWorkingAreaAlternatives = asyncHandler(async (req, res) => {
     try {

@@ -6,11 +6,7 @@ const customerController = require("./customerController");
 //@desc Create sla
 //@route POST /api/sla/createSla
 //@access private
-<<<<<<< HEAD
 const createSla  = asyncHandler(async (req, res) => {    
-=======
-const createSla  = asyncHandler(async (req, res) => {
->>>>>>> b7a442cdc3fae410e70a4cd8aa2bbd5929057ecb
     try {
         // create sla and insert the users id
         const sla = await Sla.create({

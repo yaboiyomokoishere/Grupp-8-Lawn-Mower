@@ -27,7 +27,6 @@ const createSla  = asyncHandler(async (req, res) => {
         // if sla is created update the users array of contracts
         if(sla) {
             res.status(201).json({message: 'Sla created successfully'});
-            // create("")
         } else {
             res.status(400);
             throw new Error("Sla data is invalid");

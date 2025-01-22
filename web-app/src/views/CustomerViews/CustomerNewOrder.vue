@@ -7,12 +7,6 @@
           <form @submit.prevent="handleSubmit" >
             <div class="form-row">
               <div class="form-group">
-                <label for="type">Type</label> <br>
-                <select name="type" id="type" v-model="formData.type" required>
-                  <option value="Standard">Standard</option>
-                </select>
-              </div>
-              <div class="form-group">
                 <label for="address">Address</label><br>
                 <input type="text" name="address" id="address" v-model="formData.address" required>
               </div>
@@ -50,9 +44,9 @@ import { reactive, computed} from 'vue';
 import apiClient from '@/config/axios'; 
 import { required, email, minLength, sameAs, maxLength } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
+import flatPickr from "vue-flatpickr-component";
 
 const formData = reactive({
-  type: '',
   address: '',
   start_date: '',
   end_date: '',
@@ -74,7 +68,6 @@ const handleSubmit = async () => {
     formData.working_area= parseInt(formData.working_area);
     formData.grass_height= parseInt(formData.grass_height);
     const newSla = {
-      type: formData.type,
       address: formData.address,
       start_date: formData.start_date,
       end_date: formData.end_date,

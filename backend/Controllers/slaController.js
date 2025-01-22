@@ -17,7 +17,6 @@ const createSla  = asyncHandler(async (req, res) => {
             grass_height: req.body.grass_height,
             working_area: req.body.working_area,
         });
-        // if sla is created update the users array of contracts
         if(sla) {
             res.status(201).json({message: 'Sla created successfully'});
         } else {
@@ -33,12 +32,12 @@ const createSla  = asyncHandler(async (req, res) => {
 //@desc Create sla
 //@route POST /api/sla/updateSla
 //@access private
-const updateSla  = asyncHandler(async (req, res) => {
-    
+const updateSla  = asyncHandler(async (req, res) => { 
     try {
         const filter = { _id: req.body._id };
         const update = { grass_height: req.body.grass_height,  
-            working_area: req.body.working_area, };
+            working_area: req.body.working_area};
+
         const result = await Sla.findOneAndUpdate(filter, update)
         if(!result){
             res.status(404).json({message: 'Sla no found'});

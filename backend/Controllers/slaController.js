@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Sla = require("../Models/slaModel");
 const User = require("../Models/userModel");
 const customerController = require("./customerController");
-const priceCalculator = require("../Middleware/priceCalculator")
+const priceCalculator = require("../Middleware/priceCalculator");
 //@desc Create sla
 //@route POST /api/sla/createSla
 //@access private
@@ -55,16 +55,19 @@ const updateSla  = asyncHandler(async (req, res) => {
 const getPrice  = asyncHandler(async (req, res) => { 
     try {
         
-            
-            const duration = (req.body.end_date - req.body.start_date)/(1000*60*60*24)            
-        
-            var result = priceCalculator(req.body.grass_height, req.body.working_area, duration)
+            let startDate = new Date(req.body.start_date);
+            let endDate = new Date(req.body.end_date);
+            let Difference_In_Time =
+            endDate.getTime() - startDate.getTime();
+            const duration = (Difference_In_Time)/(1000*60*60*24);      
+            //console.log();
+            var result = await priceCalculator.priceCalculator(req.body.grass_height, req.body.working_area, duration)
 
         
         if(!result){
-            res.status(404).json({message: 'Sla no found'});
+            res.status(404).json({message: 'result not found'});
         } else {
-            res.status(201).json({message: 'Sla updated successfully'});
+            res.status(200).json({result});
         }
     } catch(error){
         console.log(error);

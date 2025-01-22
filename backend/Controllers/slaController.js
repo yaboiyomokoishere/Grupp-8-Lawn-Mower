@@ -8,33 +8,24 @@ const customerController = require("./customerController");
 //@access private
 const createSla  = asyncHandler(async (req, res) => {
     
-    const { 
-        Address, 
-        End_date,
-        Grass_height,
-        Working_area,
-    } = req.body;
-    
     // stolen from customerController 
     const {id} = req.user;
     const user = await User.findById(id).select("-password");
-
     if(!user){
         res.status(400);
         throw new Error("Not a customer");
     }
     
     try {
-        console.log(user);
         // create sla and insert the users id
         const sla = await Sla.create({
             customer_id: user._id, 
-            address: Address, 
-            end_date: End_date, 
-            grass_height: Grass_height,
-            working_area: Working_area,
+            address: req.body.address,
+            start_date: req.body.start_date, 
+            end_date: req.body.end_date, 
+            grass_height: req.body.grass_height,
+            working_area: req.body.working_area,
         });
-        console.log(sla);
         // if sla is created update the users array of contracts
         if(sla) {
             res.status(201).json({message: 'Sla created successfully'});

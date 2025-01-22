@@ -7,7 +7,7 @@ const customerController = require("./customerController");
 //@route POST /api/sla/createSla
 //@access private
 const createSla  = asyncHandler(async (req, res) => {
-    console.log(req.body)
+    
     const { 
         Address, 
         End_date,

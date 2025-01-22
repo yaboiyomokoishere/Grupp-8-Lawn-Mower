@@ -110,10 +110,6 @@ const getPrice  = asyncHandler(async (req, res) => {
 });
 
 
-
-
-
-
 const getHeightAndWorkingAreaAlternatives = asyncHandler(async (req, res) => {
     try {
         let id = '67914195fd30d6ec362d7f18'

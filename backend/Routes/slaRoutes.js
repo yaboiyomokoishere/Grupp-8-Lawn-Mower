@@ -3,12 +3,9 @@ const {
     createSla,
     updateSla,
     getPrice,
-<<<<<<< HEAD
     getAllSla,
-    getSla
-=======
+    getSla,
     getHeightAndWorkingAreaAlternatives
->>>>>>> origin/main
 } = require("../Controllers/slaController");
 const validateToken = require("../Middleware/ValidateTokenHandler");
 

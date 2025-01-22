@@ -23,6 +23,7 @@ const technicianDetailsSchema = mongoose.Schema({
         ref: 'sla',
         default: null
     }]
+    // Calender
 }, { _id: false });
 
 // Subschema for admin-specific details

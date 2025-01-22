@@ -16,7 +16,21 @@ const robotSchema = mongoose.Schema({
         type: Date,
         required: [true, "Last maintenance date required"],
         default: Date.now,
-    }
+    },
+    booking_schedule:[{
+        sla_id: {
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'sla'
+        },
+        start_date: {
+            type: Date,
+            required: [true, "Start date required"],
+        },
+        end_date: {
+            type: Date,
+            required: [true, "End date required"],
+        }
+    }]
 });
 
 module.exports = mongoose.model("robot", robotSchema );

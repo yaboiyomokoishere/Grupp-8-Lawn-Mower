@@ -42,6 +42,9 @@ const getUser = asyncHandler(async (req) => {
         throw new Error("User not found");
     }
     return user;
+
+    // händelse:
+    // store i databas ("")
 })
 
 module.exports = {getCustomerSlas, getUser};

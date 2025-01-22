@@ -1,14 +1,10 @@
 const mongoose = require("mongoose");
 
 const reportSchema = mongoose.Schema({
-    sender: {
+    sender_id: {
         type: typeof mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: [true, "Sender required"]
-    },
-    sender_name: {
-        type: String,
-        required: [true, "Sender name required"],
     },
     sla_id: {
         type: typeof mongoose.Schema.Types.ObjectId,

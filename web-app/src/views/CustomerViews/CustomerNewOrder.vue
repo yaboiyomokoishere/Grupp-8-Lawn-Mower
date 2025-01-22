@@ -14,16 +14,26 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="start_date">Start Date</label><br>
-                <input type="date" name="start_date" id="start_date" v-model="formData.start_date" required>
+                <flatPickr
+                v-model="formData.start_date"
+                :config="startDateConfig"
+                id="start_date"
+                placeholder="Click to select a date"
+              />
               </div>
               <div class="form-group">
                 <label for="end_date">End Date</label><br>
-                <input type="date" name="end_date" id="end_date" v-model="formData.end_date" required>
+                <flatPickr
+                v-model="formData.end_date"
+                :config="endDateConfig"
+                id="end_date"
+                placeholder="Click to select a date"
+              />
               </div>
             </div>
             <div class="form-row">
               <div class="form-group">
-                <label for="working_area">Working Area (m^2)</label><br>
+                <label for="working_area">Working Area (kvm)</label><br>
                 <input type="text" name="working_area" id="working_area" v-model="formData.working_area" required>
               </div>
               <div class="form-group">
@@ -40,11 +50,12 @@
   
 <script setup>
 import CustomerNavBar from '@/components/CustomerNavBar.vue';
-import { reactive, computed} from 'vue';
+import { reactive, computed, watch} from 'vue';
 import apiClient from '@/config/axios'; 
-import { required, email, minLength, sameAs, maxLength } from '@vuelidate/validators'
+import { required, email, minLength, sameAs, maxLength, numeric } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 import flatPickr from "vue-flatpickr-component";
+import "flatpickr/dist/flatpickr.css";
 
 const formData = reactive({
   address: '',
@@ -56,10 +67,51 @@ const formData = reactive({
 
 const rules= computed(() => ({
   working_area: { minValue: minLength(1), maxValue: maxLength(5000) }, 
-  grass_height: { minValue: minLength(1), maxValue: maxLength(30) }
+  address: { required },
+  start_date: { required },
+  end_date: { required },
+  working_area: { required,  minValue: minLength(1), maxValue: maxLength(5000) },
+  grass_height: { required,  minValue: minLength(1), maxValue: maxLength(30) }
 }))
 
 const v$ = useVuelidate(rules, formData)
+
+
+const startDateConfig = {
+  dateFormat: "Y-m-d",
+  minDate: new Date() // Prevent past dates
+};
+
+const endDateConfig = computed(() => {
+  // The minimum date is atleast one day after the chosen start date
+  if (formData.start_date) {
+    const start = new Date(formData.start_date);
+    const minEndDate = new Date(start);
+    minEndDate.setDate(start.getDate() + 1);
+    return {
+      dateFormat: "Y-m-d",
+      minDate: minEndDate
+    };
+  } else {
+    return {
+      dateFormat: "Y-m-d",
+      minDate: new Date() 
+    };
+  }
+});
+
+// If the start date changes and the chosen end date becomes invalid
+watch(() => formData.start_date,
+  (newStartDate) => {
+    if (formData.end_date) { // If the end date is already chosen
+      const start = new Date(newStartDate);
+      const end = new Date(formData.end_date);
+      if (end <= start) {
+        formData.end_date = '';
+      }
+    }
+  }
+);
 
 const handleSubmit = async () => {
   const result = await v$.value.$validate();
@@ -74,7 +126,7 @@ const handleSubmit = async () => {
       working_area: formData.working_area,
       grass_height: formData.grass_height
     }
-
+    console.log(newSla);
     try {
     // Create the SLA
     //const response = await apiClient.post('/createSla', newSla);

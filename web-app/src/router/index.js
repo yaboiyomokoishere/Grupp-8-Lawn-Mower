@@ -8,7 +8,6 @@ import CustomerContracts from '@/views/CustomerViews/CustomerContracts.vue';
 import { jwtDecode } from "jwt-decode";
 import AdminDashboard from '@/views/AdminViews/AdminDashboard.vue';
 import CustomerNewOrder from '@/views/CustomerViews/CustomerNewOrder.vue';
-import Test from '@/views/Test.vue';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -64,11 +63,6 @@ const router = createRouter({
             component: AdminDashboard,
             // Require authentication based on the meta property, see the beforeach guard below
             meta: { requiresAuth: true, role: 'admin' }
-        },
-        { // används bara för att testa grejer
-            path: '/test',
-            name: 'test',
-            component: Test
         },
         {
             path: '/:catchAll(.*)', // Catch-all route for any unmatched routes

@@ -6,7 +6,7 @@ const priceCalculator = require("../Middleware/priceCalculator")
 //@desc Create sla
 //@route POST /api/sla/createSla
 //@access private
-const createSla  = asyncHandler(async (req, res) => {    
+const createSla  = asyncHandler(async (req, res) => {
     try {
         // create sla and insert the users id
         const sla = await Sla.create({

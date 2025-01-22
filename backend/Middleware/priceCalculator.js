@@ -1,4 +1,4 @@
-function PriceCalculator(grassHeight, WA, duration) {
+function priceCalculator(grassHeight, WA, duration) {
     const installation = 1500
     const dayPay = 200
     if (grassHeight = 1.0){
@@ -21,3 +21,4 @@ function PriceCalculator(grassHeight, WA, duration) {
     }
     return ((grassPay+WAPay)*WA)+installation+dayPay*duration;
   }
+  module.exports = {priceCalculator};

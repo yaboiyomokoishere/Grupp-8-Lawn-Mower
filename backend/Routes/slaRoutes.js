@@ -17,7 +17,7 @@ router.put('/updateSla', validateToken, updateSla);
 router.get('/getAllSla', validateToken, getAllSla);
 router.get('/getSla', validateToken, getSla);
 router.post('/getPrice', validateToken, getPrice);
-router.get('/getAlternatives', validateToken, getHeightAndWorkingAreaAlternatives); //need validateToken too
+router.get('/getAlternatives', validateToken, getHeightAndWorkingAreaAlternatives); 
 
 
 module.exports = router;

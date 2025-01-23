@@ -24,7 +24,7 @@
                          <td>{{ contract.end_date }}</td>
                         <td>{{ contract.status }}</td>
                         <td>
-                            <RouterLink :to="{name: 'view_contract', params: {id: contract.id}}" class="view-contract-button">View</RouterLink>
+                            <RouterLink :to="{name: 'customer_contract_view', params: {id: contract.id}}" class="view-contract-button">View</RouterLink>
                         </td> 
                         
                     </tr>

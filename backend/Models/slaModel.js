@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const slaSchema = mongoose.Schema({
     customer_id: {
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User'
+        ref: 'User',
+        required: true,
     },
     status: {
         type: String,

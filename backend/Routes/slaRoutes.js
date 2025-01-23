@@ -16,7 +16,7 @@ router.post('/createSla', validateToken, createSla);
 router.put('/updateSla', validateToken, updateSla);
 router.get('/getAllSla', validateToken, getAllSla);
 router.get('/getSla', validateToken, getSla);
-router.get('/getPrice', validateToken, getPrice);
+router.post('/getPrice', validateToken, getPrice);
 router.get('/getAlternatives', validateToken, getHeightAndWorkingAreaAlternatives); //need validateToken too
 
 

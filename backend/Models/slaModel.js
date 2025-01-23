@@ -16,7 +16,6 @@ const slaSchema = mongoose.Schema({
     address: {
         type: String,
         required: [true, "Address mandatory"],
-
     },
     // year month day
     start_date: {

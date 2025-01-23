@@ -11,7 +11,6 @@
             <table class="contracts-table">
                 <thead>
                     <tr>
-                        <th>Type</th>
                         <th>Address</th>
                         <th>Start Date</th>
                         <th>End Date</th>
@@ -22,11 +21,12 @@
                     <tr v-for="contract in customerContracts" :key="contract.id">
                         <td>{{ contract.address }}</td>
                         <td>{{ contract.start_date }}</td>
-                        <td>{{ contract.end_date }}</td>
+                         <td>{{ contract.end_date }}</td>
                         <td>{{ contract.status }}</td>
                         <td>
                             <RouterLink :to="{name: 'view_contract', params: {id: contract.id}}" class="view-contract-button">View</RouterLink>
-                        </td>
+                        </td> 
+                        
                     </tr>
                 </tbody>
                 <tfoot v-else>
@@ -50,11 +50,27 @@ const customerContracts = ref([]);
 
 onMounted(async () => {
     try {
-        const response = await apiClient.get('/user/getCustomerSlas'); 
-        console.log(response.data);
-        if(response.data.length > 0){
-            customerContracts.value = response.data;
-        } 
+        const response = await apiClient.get('/sla/getAllSla'); 
+        //console.log(response.data. result);
+        if (response.data.result.length > 0){
+            let tmp = []
+            hasContracts.value = true;
+            console.log("here")
+            for(let i = 0; i < response.data.result.length; i++){
+                let contract= {
+                    id: response.data.result[i]._id,
+                    address: response.data.result[i].address,
+                    start_date: response.data.result[i].start_date.split('T')[0],
+                    end_date: response.data.result[i].end_date.split('T')[0],
+                    status: response.data.result[i].status
+                }
+                customerContracts.value.push(contract);          
+            }
+            //console.log(tmp)  
+            console.log(customerContracts)
+        }
+          
+         
     } catch (error) {
         console.error(error);
     }

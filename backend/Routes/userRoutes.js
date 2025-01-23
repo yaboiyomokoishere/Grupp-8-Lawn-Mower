@@ -7,7 +7,7 @@ const {
     //registerAdmin
 } = require("../Controllers/userController");
 
-const {getCustomerSlas} = require("../Controllers/customerController");
+const { getCustomerInfo } = require("../Controllers/customerController");
 const validateToken = require("../Middleware/ValidateTokenHandler");
 
 
@@ -18,12 +18,12 @@ router.post('/register', registerCustomer);
 router.post('/login', loginUser);
 router.post('/logout', logoutUser);
 router.post('/refresh', refreshToken); // Refreshes access token with refresh token
-router.get('/getCustomerSlas', validateToken, getCustomerSlas); // Get customer SLAs
+
 //router.post('/admin/register', registerAdmin); // Use this only to create an admin
 
 
 // Customer routes
-//router.get('/getCustomer', validateToken, getCustomerInfo); 
+router.get('/getCustomer', validateToken, getCustomerInfo); 
 
 
 // SLA Routes

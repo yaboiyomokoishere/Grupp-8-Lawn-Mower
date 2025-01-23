@@ -10,7 +10,6 @@ const jwt = require("jsonwebtoken");
  * @returns {void}
  */
 const validateToken = asyncHandler(async(req, res, next) => {
-    
     let token;
     let authHeader =  req.headers.Authorization || req.headers.authorization;  
     if(authHeader && authHeader.startsWith("Bearer")) { // The Authorization header starts with "Bearer"

@@ -66,6 +66,7 @@ import { required, minLength, maxLength } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
+import router from '@/router';
 
 const formData = reactive({
   address: '',
@@ -84,14 +85,10 @@ const rules = computed(() => ({
   start_date: { required },
   end_date: { required },
   working_area: { 
-    required,  
-    minValue: minLength(1), 
-    maxValue: maxLength(5000) 
+    required  
   },
   grass_height: { 
-    required,  
-    minValue: minLength(1), 
-    maxValue: maxLength(30) 
+    required
   }
 }));
 
@@ -137,8 +134,9 @@ const handleSubmit = async () => {
   const result = await v$.value.$validate();
 
   if (result) {
+    //console.log(formData.grass_height)
     formData.working_area = parseInt(formData.working_area);
-    formData.grass_height = parseInt(formData.grass_height);
+    formData.grass_height = parseFloat(formData.grass_height);
     const newSla = {
       address: formData.address,
       start_date: formData.start_date,
@@ -146,11 +144,14 @@ const handleSubmit = async () => {
       working_area: formData.working_area,
       grass_height: formData.grass_height
     };
-    console.log(newSla);
+    //console.log(newSla);
     try {
-      // Create the SLA
-      // const response = await apiClient.post('/createSla', newSla);
-      // console.log(response.data);
+      // const slaStore = useSlaStore();
+      // slaStore.addSla(newSla);
+      localStorage.setItem('newOrder', JSON.stringify(newSla))
+      //console.log(localStorage.getItem('newOrder'))
+      // Forward the newSla object to the CustomerConfirmOrder page upon pressing the button
+      router.push({ name: 'confirm_order'});
     } catch (error) {
       console.error(error);
     }
@@ -160,7 +161,7 @@ const handleSubmit = async () => {
 onMounted(async () => {
   try{
     const alternatives = await apiClient.get('/sla/getAlternatives');
-    console.log(alternatives.data);
+    //console.log(alternatives.data);
     
     // Extract the height and area objects as arrays
     heightPrices.push(...alternatives.data.height_prices);

@@ -40,12 +40,12 @@ const handleSubmit = async () => {
                                       formCredentials,
                                       {withCredentials: true} // Ensures cookies are sent.
                                     );
-    console.log('Response data:', response); 
+    //console.log('Response data:', response); 
     console.log('Successfully logged in!');
 
     // Store the access token in the local storage.
     localStorage.setItem('accessToken', response.data.accessToken);
-    console.log('Access token stored in local storage.');
+    //console.log('Access token stored in local storage.');
 
     // Decode the access token to extract the user's role.
     const decodedToken = jwtDecode(response.data.accessToken);

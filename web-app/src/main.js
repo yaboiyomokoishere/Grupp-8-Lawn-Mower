@@ -8,8 +8,6 @@ import './config/axios.js';
 
 
 const app = createApp(App); // Creates the app instance 
-
-
 app.use(router); // Registers the router for the app
 app.use(Toast)
 

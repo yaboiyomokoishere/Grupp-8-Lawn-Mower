@@ -1,6 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const Sla = require("../Models/slaModel");
-const priceCalculator = require("../Middleware/priceCalculator")
+const User = require("../Models/userModel");
+const priceCalculator = require("../Middleware/priceCalculator");
+const Log = require("../Models/slaLogModel");
 
 //@desc Create sla
 //@route POST /api/sla/createSla
@@ -9,14 +11,24 @@ const createSla  = asyncHandler(async (req, res) => {
     try {
         // create sla and insert the users id
         const sla = await Sla.create({
-            customer_id: req.user._id, 
+            customer_id: req.user.id, 
             address: req.body.address,
             start_date: req.body.start_date, 
             end_date: req.body.end_date, 
             grass_height: req.body.grass_height,
             working_area: req.body.working_area,
+            price: req.body.total_price,
         });
+        console.log(sla)
         if(sla) {
+            // create the log for the sla
+            const date = new Date;
+            console.log(sla.customer_id)
+            const log = await Log.create({
+                        sla_id: sla._id,
+                        events: [
+                            {action: "Sla created", changed_by: sla.customer_id, date: date.now}]
+                    });
             res.status(201).json({message: 'Sla created successfully'});
         } else {
             res.status(400);
@@ -122,6 +134,15 @@ const getHeightAndWorkingAreaAlternatives = asyncHandler(async (req, res) => {
     }
 });
 
+const updateSlaLog = function(req) {
+    try {
+        const log = Log.findOne({sla_id: req.body._id});
+        const event = {action: "Sla updated", changed_by: req.customer_id, date: date.now};
+        Log.updateOne( {_id: log._id}, {$push : { events: event}})
+    } catch (error) {
+        
+    }
+}
 
 
 // One-time function used to fill the database

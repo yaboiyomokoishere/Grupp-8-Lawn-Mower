@@ -3,6 +3,7 @@ const Sla = require("../Models/slaModel");
 const User = require("../Models/userModel");
 const priceCalculator = require("../Middleware/priceCalculator");
 const Log = require("../Models/slaLogModel");
+const PriceList = require("../Models/priceListModel");
 
 //@desc Create sla
 //@route POST /api/sla/createSla
@@ -45,7 +46,8 @@ const createSla  = asyncHandler(async (req, res) => {
 //@access private
 const updateSla  = asyncHandler(async (req, res) => { 
     try {
-        const filter = { _id: req.body._id };
+        // maybe works
+        const filter = { _id: req.query.id };
         const update = { grass_height: req.body.grass_height,  
             working_area: req.body.working_area};
 
@@ -53,6 +55,7 @@ const updateSla  = asyncHandler(async (req, res) => {
         if(!result){
             res.status(404).json({message: 'Sla not found'});
         } else {
+            await updateSlaLog(req);
             res.status(201).json({message: 'Sla updated successfully'});
         }
     } catch(error){
@@ -134,13 +137,39 @@ const getHeightAndWorkingAreaAlternatives = asyncHandler(async (req, res) => {
     }
 });
 
-const updateSlaLog = function(req) {
+
+const updateSlaLog  = asyncHandler(async (req, res) => { 
     try {
         const log = Log.findOne({sla_id: req.body._id});
-        const event = {action: "Sla updated", changed_by: req.customer_id, date: date.now};
-        Log.updateOne( {_id: log._id}, {$push : { events: event}})
-    } catch (error) {
         
+        if(log){
+            //date = new Date;
+            var event = {action: 'Sla updated', changed_by: 'Me', date: '2000-10-10'};
+            console.log(event);
+
+            //db.Log.update({_id: log._id}, {$push : { events: event}});
+            //await Log.updateOne({_id: log._id}, {events: event});
+            //let event = 
+            await Log.findOneAndUpdate({_id: log._id}, {$push : { events: event}});
+            res.status(200).json({message: 'great'});
+        } else {
+            res.status(400).json({message: 'bad'});
+        }
+    } catch(error){
+        console.log(error);
+        res.status(400).json({message: 'Server error'});
+    }
+});
+
+const updateSlaLogOriginal = function(req) {
+    try {
+        date = new Date;
+        const log = Log.findOne({sla_id: req.body._id});
+        var event = {action: "Sla updated", changed_by: req.customer_id, date: date.now};
+        Log.update( {_id: log._id}, {$push : { events: event}}, done);
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({message: 'log server error'});
     }
 }
 
@@ -174,5 +203,5 @@ const updateSlaLog = function(req) {
 //     }
 // });
 
-module.exports = {createSla, updateSla, getPrice, getAllSla, getSla, getHeightAndWorkingAreaAlternatives};
+module.exports = {createSla, updateSla, getPrice, getAllSla, getSla, getHeightAndWorkingAreaAlternatives, updateSlaLog};
 

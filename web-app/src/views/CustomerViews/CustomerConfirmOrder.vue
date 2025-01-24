@@ -32,9 +32,10 @@
 import { reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import apiClient from '@/config/axios';
+import { useToast } from 'vue-toastification';
 
 const router = useRouter();
-
+const toast = useToast();
 
 const orderDetails = reactive({
 address: '',
@@ -59,6 +60,7 @@ const confirmOrder = async () => {
         const response = await apiClient.post('/sla/createSla', orderDetails);
         console.log('Order confirmed:', response.data);
         localStorage.removeItem('newOrder');
+        toast.success('Order confirmed successfully!');
         router.push({ name: 'customer_contracts' });
     } catch (error) {
         console.error('Error confirming order:', error);
@@ -112,7 +114,7 @@ try {
 </script>
   
 <style scoped>
-.confirmation-page {
+.sla-view {
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;

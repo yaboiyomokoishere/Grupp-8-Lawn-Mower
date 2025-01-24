@@ -60,7 +60,7 @@ const router = createRouter({
         },
         {
             path: '/customer/contracts/viewContract/:id',
-            name: 'view_contract',
+            name: 'customer_contract_view',
             component: CustomerContract,
             meta: { requiresAuth: true, role: 'customer' },
         },

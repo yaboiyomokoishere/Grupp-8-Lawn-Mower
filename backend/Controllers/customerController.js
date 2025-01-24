@@ -8,7 +8,7 @@ const getCustomerInfo = asyncHandler(async (req,res) => {
     const user = await User.findById(id).select("-password"); 
     
     if (user) {
-        console.log(user);
+        //console.log(user);
         res.status(200).json(user);
     } else {
         res.status(404);

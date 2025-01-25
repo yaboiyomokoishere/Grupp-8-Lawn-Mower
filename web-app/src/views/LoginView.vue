@@ -54,7 +54,7 @@ const handleSubmit = async () => {
     // Redirect users based on their role
     if (userRole === 'customer') {
       //console.log("customer");
-      router.push({ name: 'customer_dashboard' });
+      router.push({ name: 'customer_contracts' });
     } else if (userRole === 'admin') {
       //console.log("admin");
       router.push({ name: 'admin_dashboard' });

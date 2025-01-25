@@ -2,7 +2,6 @@ import {createRouter, createWebHistory} from 'vue-router';
 import HomeView from '@/views/HomeView.vue';
 import LoginView from '@/views/LoginView.vue';
 import SignUpView from '@/views/SignUpView.vue';
-import Dashboard from '@/views/CustomerViews/Dashboard.vue';
 import CustomerProfile from '@/views/CustomerViews/CustomerProfile.vue';
 import CustomerContracts from '@/views/CustomerViews/CustomerContracts.vue';
 import { jwtDecode } from "jwt-decode";
@@ -31,13 +30,6 @@ const router = createRouter({
             component: SignUpView
         },
         // Customer Routes
-        {
-            path: '/customer/dashboard',
-            name: 'customer_dashboard',
-            component: Dashboard,
-            // Require authentication based on the meta property, see the beforeach guard below
-            meta: { requiresAuth: true, role: 'customer' }
-        }, 
         {
             path: '/customer/profile',
             name: 'customer_profile',

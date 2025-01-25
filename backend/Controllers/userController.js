@@ -60,43 +60,43 @@ const registerCustomer = asyncHandler(async (req,res) => {
 //@desc Register an admin
 //@route POST /api/user/registerAdmin
 //@access private
-const registerAdmin = asyncHandler(async (req,res) => {
-    const { firstName, 
-            lastName, 
-            email, 
-            password, 
-        } = req.body;
+// const registerAdmin = asyncHandler(async (req,res) => {
+//     const { firstName, 
+//             lastName, 
+//             email, 
+//             password, 
+//         } = req.body;
     
-    const userExists = await User.findOne({email});
+//     const userExists = await User.findOne({email});
     
-    if(userExists) { 
-        res.status(400);
-        throw new Error("Email already registered");
-    }
+//     if(userExists) { 
+//         res.status(400);
+//         throw new Error("Email already registered");
+//     }
 
-    //hash password
-    const hashedPassword = await bcrypt.hash(password, 10); 
+//     //hash password
+//     const hashedPassword = await bcrypt.hash(password, 10); 
     
-    try {
-        const user = await User.create({
-            first_name: firstName,
-            last_name: lastName,
-            email: email,
-            password: hashedPassword,
-            role: "admin",
-        });
+//     try {
+//         const user = await User.create({
+//             first_name: firstName,
+//             last_name: lastName,
+//             email: email,
+//             password: hashedPassword,
+//             role: "admin",
+//         });
 
-        if (user) {
-            res.status(201).json({message: 'Registration successfull'});
-        } else {
-            res.status(400);
-            throw new Error("User data is invalid");
-        }
-    }catch (error) {
-        console.log(error);
-        res.status(400).json({message: 'Server error'});
-    }
-});
+//         if (user) {
+//             res.status(201).json({message: 'Registration successfull'});
+//         } else {
+//             res.status(400);
+//             throw new Error("User data is invalid");
+//         }
+//     }catch (error) {
+//         console.log(error);
+//         res.status(400).json({message: 'Server error'});
+//     }
+// });
 
 
 //@desc Login a user
@@ -197,4 +197,4 @@ const refreshToken = asyncHandler(async (req, res) => {
 })
 
 
-module.exports = {registerCustomer, loginUser,  logoutUser, refreshToken, registerAdmin};
+module.exports = {registerCustomer, loginUser,  logoutUser, refreshToken}; // registerAdmin

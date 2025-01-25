@@ -180,4 +180,3 @@ const updateSlaLog = function(req) {
 // });
 
 module.exports = {createSla, updateSla, getPrice, getAllSla, getSla, getHeightAndWorkingAreaAlternatives};
-

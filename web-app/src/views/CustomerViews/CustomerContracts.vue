@@ -5,7 +5,7 @@
             <h1>My Contracts</h1>
             <div class="utility-bar">
                 <RouterLink :to="{name: 'order_contract'}" >
-                    New Order
+                    Create Order
                 </RouterLink>
             </div>
             <table class="contracts-table">
@@ -24,7 +24,7 @@
                          <td>{{ contract.end_date }}</td>
                         <td>{{ contract.status }}</td>
                         <td>
-                            <RouterLink :to="{name: 'view_contract', params: {id: contract.id}}" class="view-contract-button">View</RouterLink>
+                            <RouterLink :to="{name: 'customer_contract_view', params: {id: contract.id}}" class="view-contract-button">View</RouterLink>
                         </td> 
                         
                     </tr>
@@ -67,7 +67,7 @@ onMounted(async () => {
                 customerContracts.value.push(contract);          
             }
             //console.log(tmp)  
-            console.log(customerContracts)
+            //console.log(customerContracts)
         }
           
          
@@ -117,20 +117,18 @@ onMounted(async () => {
 }
 
 .utility-bar a, .view-contract-button {
-    background-color: #007bff;
-    color: white;
     font-size: 1rem;
     padding: 10px 15px;
     border-radius: 5px;
-    border: 2px solid #0056b3;
+    border: 2px solid black;
+    text-decoration: none;
 }
 
 .utility-bar a {
     margin-right: 60px;
     text-decoration: none;
 }
-.utility-bar a:hover {
-    background-color: #0056b3;
+.utility-bar a:hover, .view-contract-button:hover {
+    background-color: #989d8f;
 }
-
 </style>

@@ -20,11 +20,11 @@ const createSla  = asyncHandler(async (req, res) => {
             working_area: req.body.working_area,
             price: req.body.total_price,
         });
-        console.log(sla)
+        //console.log(sla)
         if(sla) {
             // create the log for the sla
             const date = new Date;
-            console.log(sla.customer_id)
+            //console.log(sla.customer_id)
             const log = await Log.create({
                         sla_id: sla._id,
                         events: [
@@ -69,10 +69,13 @@ const updateSla  = asyncHandler(async (req, res) => {
 //@access private
 const getAllSla  = asyncHandler(async (req, res) => { 
     try {
-        const result = await Sla.find({customer_id: req.user._id});
+        const {id} = req.user;
+        const user = await User.findById(id).select("-password");
+        const result = await Sla.find({customer_id: user._id}); // req.user.id
         if(!result){
             res.status(404).json({message: 'Sla not found'});
         } else {
+            //console.log(result)
             res.status(200).json({result});
         }
     } catch(error){
@@ -85,8 +88,9 @@ const getAllSla  = asyncHandler(async (req, res) => {
 //@route POST /api/sla/getAllSla
 //@access private
 const getSla  = asyncHandler(async (req, res) => { 
+    // console.log(req.query.id)
     try {
-        const result = await Sla.findOne({_id: req.body._id});
+        const result = await Sla.findOne({_id: req.query.id});
         if(!result){
             res.status(404).json({message: 'Sla not found'});
         } else {
@@ -127,7 +131,7 @@ const getPrice  = asyncHandler(async (req, res) => {
 
 const getHeightAndWorkingAreaAlternatives = asyncHandler(async (req, res) => {
     try {
-        let id = '67914195fd30d6ec362d7f18'
+        const id = '67914195fd30d6ec362d7f18'
         const alternatives = await PriceList.findById(id);
         //console.log(alternatives);
         res.status(200).json(alternatives);
@@ -203,5 +207,5 @@ const updateSlaLogOriginal = function(req) {
 //     }
 // });
 
-module.exports = {createSla, updateSla, getPrice, getAllSla, getSla, getHeightAndWorkingAreaAlternatives, updateSlaLog};
 
+module.exports = {createSla, updateSla, getPrice, getAllSla, getSla, getHeightAndWorkingAreaAlternatives, updateSlaLog};

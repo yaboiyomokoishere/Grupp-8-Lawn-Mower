@@ -89,6 +89,9 @@ import apiClient from '@/config/axios'; // Use your configured Axios instance
 import CustomerNavBar from '@/components/CustomerNavBar.vue';
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, minLength, sameAs, maxLength } from '@vuelidate/validators'
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 // Reactive state variables
 const error = ref(null); // Error message
@@ -162,7 +165,8 @@ const handleSubmit = async () => {
       const response = await apiClient.put('http://localhost:3001/api/user/updateCustomer', newData);
       //console.log(response.data.message); 
       if (response.status === 200) {
-        location.reload(); // Refresh the page
+        fetchCustomerData();
+        toast.success('Your information has been updated successfully');
       } 
       
     } catch (err) {

@@ -47,8 +47,10 @@ const createSla  = asyncHandler(async (req, res) => {
 const updateSla  = asyncHandler(async (req, res) => { 
     try {
         const filter = { _id: req.body._id };
-        const update = { grass_height: req.body.grass_height,  
-            working_area: req.body.working_area};
+        const update = { 
+                grass_height: req.body.grass_height,  
+                working_area: req.body.working_area
+            };
 
         const result = await Sla.findOneAndUpdate(filter, update)
         if(!result){
@@ -139,15 +141,25 @@ const getHeightAndWorkingAreaAlternatives = asyncHandler(async (req, res) => {
     }
 });
 
-const updateSlaLog = function(req) {
+const updateSlaLog = asyncHandler(async (req, res) => { 
+    console.log(req.body.id);
     try {
-        const log = Log.findOne({sla_id: req.body._id});
-        const event = {action: "Sla updated", changed_by: req.customer_id, date: date.now};
-        Log.updateOne( {_id: log._id}, {$push : { events: event}})
+        const log = await Log.findOne({sla_id: req.body.id});
+        if(!log){
+            res.status(404).json({message: 'Sla log not found'});
+        } else {
+            res.status(200).json(log);
+        }    
+
+        const event = {action: "Sla updated", changed_by: req.user.id, date: new Date()};
+
+        log.events.push(event);
+        await log.save();
     } catch (error) {
-        
+        console.log(error);
+        res.status(400).json({message: 'Server error'});
     }
-}
+});
 
 
 // One-time function used to fill the database
@@ -179,4 +191,11 @@ const updateSlaLog = function(req) {
 //     }
 // });
 
-module.exports = {createSla, updateSla, getPrice, getAllSla, getSla, getHeightAndWorkingAreaAlternatives};
+module.exports = {createSla, 
+                updateSla, 
+                getPrice, 
+                getAllSla, 
+                getSla, 
+                getHeightAndWorkingAreaAlternatives,
+                updateSlaLog
+            };

@@ -5,7 +5,8 @@ const {
     getPrice,
     getAllSla,
     getSla,
-    getHeightAndWorkingAreaAlternatives
+    getHeightAndWorkingAreaAlternatives,
+    updateSlaLog
 } = require("../Controllers/slaController");
 const validateToken = require("../Middleware/ValidateTokenHandler");
 
@@ -18,6 +19,6 @@ router.get('/getAllSla', validateToken, getAllSla);
 router.get('/getSla', validateToken, getSla);
 router.post('/getPrice', validateToken, getPrice);
 router.get('/getAlternatives', validateToken, getHeightAndWorkingAreaAlternatives); 
-
+router.post('/updateSlaLog', validateToken, updateSlaLog);
 
 module.exports = router;

@@ -33,7 +33,7 @@
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label for="working_area">Working Area (kvm)</label><br>
+              <label for="working_area">Working Area (m²)</label><br>
               <select name="working_area" id="working_area" v-model="formData.working_area" required>
                 <option disabled value="">Select an area</option>
                 <option v-for="area in areaPrices"  :value="area.area">

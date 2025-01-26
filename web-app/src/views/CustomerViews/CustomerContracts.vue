@@ -67,7 +67,7 @@ onMounted(async () => {
                 customerContracts.value.push(contract);          
             }
             //console.log(tmp)  
-            console.log(customerContracts)
+            //console.log(customerContracts)
         }
           
          

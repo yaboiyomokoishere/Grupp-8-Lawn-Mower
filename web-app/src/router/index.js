@@ -9,6 +9,7 @@ import AdminDashboard from '@/views/AdminViews/AdminDashboard.vue';
 import CustomerNewOrder from '@/views/CustomerViews/CustomerNewOrder.vue';
 import CustomerContract from '@/views/CustomerViews/CustomerContract.vue';
 import CustomerConfirmOrder from '@/views/CustomerViews/CustomerConfirmOrder.vue';
+import CustomerUpdateContract from '@/views/CustomerViews/CustomerUpdateContract.vue';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -60,6 +61,12 @@ const router = createRouter({
             path: '/customer/contracts/confirmOrder/',
             name: 'confirm_order',
             component: CustomerConfirmOrder,
+            meta: { requiresAuth: true, role: 'customer' }
+        },
+        {
+            path: '/customer/contracts/updateContract/:id',
+            name: 'customer_update_contract',
+            component: CustomerUpdateContract,
             meta: { requiresAuth: true, role: 'customer' }
         },
         // Admin routes

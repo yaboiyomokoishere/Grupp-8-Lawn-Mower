@@ -7,14 +7,11 @@ const Log = require("../Models/slaLogModel");
 const createRobot  = asyncHandler(async (req, res) => { 
     try {
         const robot = await Robot.create({
-            
-            
             model: req.body.model,
             serial_number: req.body.serial_number,
             last_maintenance_date: req.body.last_maintenance_date
-        
         });
-      console.log(robot);
+        console.log(robot);
 
         if(!robot){
             res.status(400).json({message: 'robot failed'});
@@ -29,9 +26,7 @@ const createRobot  = asyncHandler(async (req, res) => {
 
 const start  = asyncHandler(async (req, res) => { 
     try {
-        
         const sla = await Sla.findById(req.body.sla_id);
-        
         if (sla) {
             sla.status = "Active";
             await sla.save();

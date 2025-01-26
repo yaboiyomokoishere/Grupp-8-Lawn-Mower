@@ -20,7 +20,6 @@ router.get('/getSla', validateToken, getSla);
 router.post('/getPrice', validateToken, getPrice);
 
 router.get('/getAlternatives', validateToken, getHeightAndWorkingAreaAlternatives); 
-
 router.post('/updateSlaLog', validateToken, updateSlaLog);
 
 module.exports = router;

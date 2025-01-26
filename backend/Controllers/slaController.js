@@ -159,17 +159,6 @@ const updateSlaLog = asyncHandler(async (req, res) => {
         console.log(error);
         res.status(400).json({message: 'Server error'});
     }
-    
-    
-    // try {
-    //     const log = Log.findOne({sla_id: req.body._id});
-    //     const event = {action: "Sla updated", changed_by: req.customer_id, date: date.now};
-    //     Log.updateOne( {_id: log._id}, {$push : { events: event}})
-    // } catch (error) {
-    //     console.log("error")
-    // }
-
-    //res.status(200).json({message: 'Good Job dudednesduasifhdsafiuhdas'});
 });
 
 

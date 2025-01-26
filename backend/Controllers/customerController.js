@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../Models/userModel");
+const bcrypt = require("bcrypt");
 
 
 
@@ -18,7 +19,7 @@ const getCustomerInfo = asyncHandler(async (req,res) => {
 
 const updateCustomerProfile = asyncHandler(async (req,res) => {
     const {id} = req.user;
-    const user = await User.findById(id).select("-password"); 
+    const user = await User.findById(id); 
     if(!user){
         return res.status(404).json("User not found");
     }
@@ -34,13 +35,15 @@ const updateCustomerProfile = asyncHandler(async (req,res) => {
     } 
     
     // Check whether each field is being updated
+    
     if (req.body.password) {
-        const hashedPassword = await bcrypt.hash(password, 10); 
+        const hashedPassword = await bcrypt.hash(req.body.password, 10); 
         if (hashedPassword !== user.password) { // pass is being changed
-            user.password = req.body.password;
+            user.password = hashedPassword;
             console.log("Password updated.");
         }
     }
+
     if (req.body.first_name && req.body.first_name !== user.first_name) {
         user.first_name = req.body.first_name;
         console.log("First name updated.");

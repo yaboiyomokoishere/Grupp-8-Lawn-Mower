@@ -160,11 +160,13 @@ const handleSubmit = async () => {
 
     try {
       const response = await apiClient.put('http://localhost:3001/api/user/updateCustomer', newData);
-      console.log(response.data.message); 
+      //console.log(response.data.message); 
       if (response.status === 200) {
         location.reload(); // Refresh the page
       } 
+      
     } catch (err) {
+      
       if (err.response && err.response.status === 400) {
         emailError.value = err.response.data.message; 
       } 

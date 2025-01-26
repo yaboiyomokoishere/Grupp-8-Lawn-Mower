@@ -21,6 +21,7 @@ app.use(cors({
 
 app.use("/api/user", require("./Routes/userRoutes"));
 app.use("/api/sla", require("./Routes/slaRoutes"));
+app.use("/api/robot", require("./Routes/robotRoutes"));
 app.use(errorHandler);
 
  

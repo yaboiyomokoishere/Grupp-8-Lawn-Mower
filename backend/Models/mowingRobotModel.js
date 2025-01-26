@@ -2,10 +2,18 @@ const mongoose = require("mongoose");
 
 // Scema for mowing robot
 const robotSchema = mongoose.Schema({
+    model: {
+        type: String,
+        required: [true, "Model required"],
+    },
     status: {
         type: String,
         required: [true, "Status required"],
         default: "Available" // Other options: "Not Available", "Under Maintenance" 
+    },
+    current_cut_area: {
+        type: Number,
+        default: 0
     },
     serial_number: {
         type: Number,

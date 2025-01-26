@@ -21,6 +21,6 @@ router.post('/getPrice', validateToken, getPrice);
 
 router.get('/getAlternatives', validateToken, getHeightAndWorkingAreaAlternatives); 
 
->>>>>>> d7dfc16bd459275afff8eec27e008f6813cc2f94
+router.post('/updateSlaLog', validateToken, updateSlaLog);
 
 module.exports = router;

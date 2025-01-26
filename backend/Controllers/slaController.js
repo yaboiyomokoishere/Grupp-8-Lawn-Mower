@@ -144,17 +144,23 @@ const getHeightAndWorkingAreaAlternatives = asyncHandler(async (req, res) => {
 
 const updateSlaLog  = asyncHandler(async (req, res) => { 
     try {
-        const log = Log.findOne({sla_id: req.body._id});
-        
+        const log = Log.findById(req.body.id);
+        //const log = Log.findOne({sla_id: req.body.id});
+        //console.log(log.events.toObject()[0]);
+        console.log(log.events);
         if(log){
             //date = new Date;
-            var event = {action: 'Sla updated', changed_by: 'Me', date: '2000-10-10'};
+            const event = {action: 'Sla updated', changed_by: 'Me', date: '2000-10-10'};
             console.log(event);
-
             //db.Log.update({_id: log._id}, {$push : { events: event}});
-            //await Log.updateOne({_id: log._id}, {events: event});
+            //await Log.updateOne({_id: log._id},{$push: {events: event}});
             //let event = 
-            await Log.findOneAndUpdate({_id: log._id}, {$push : { events: event}});
+            //var oldEvents = log.events;
+            await log.events.addToSet(event);
+            
+            //await log.events.$push(event);
+            await log.save();
+            //await Log.findOneAndUpdate({_id: log._id}, {events: event});
             res.status(200).json({message: 'great'});
         } else {
             res.status(400).json({message: 'bad'});

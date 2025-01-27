@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-// Scema for mowing robot
 const robotSchema = mongoose.Schema({
     model: {
         type: String,
@@ -9,7 +8,7 @@ const robotSchema = mongoose.Schema({
     status: {
         type: String,
         required: [true, "Status required"],
-        default: "Available" // Other options: "Not Available", "Under Maintenance" 
+        default: "Available" // Other options: "Under Maintenance", "Broken", "In service"
     },
     current_cut_area: {
         type: Number,

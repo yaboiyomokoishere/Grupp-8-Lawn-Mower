@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+
 const priceListSchema = mongoose.Schema({
     model: {
         type: String,

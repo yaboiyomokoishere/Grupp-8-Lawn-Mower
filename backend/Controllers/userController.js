@@ -128,7 +128,7 @@ const loginUser = asyncHandler(async (req, res) => {
             },
         }, 
         process.env. ACCESS_TOKEN_SECRET,
-        { expiresIn: "10m"}); // Testing interceptors 30m
+        { expiresIn: "60m"}); // Testing interceptors 30m
 
         const refreshToken = jwt.sign({
             username: user.username,

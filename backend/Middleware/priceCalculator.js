@@ -21,4 +21,6 @@ const priceCalculator = function(grassHeight, WA, duration) {
     }
     return (((grassPay+WAPay)*WA)+installation+dayPay*duration);
   };
+
+  
   module.exports = {priceCalculator};

@@ -28,8 +28,13 @@ const createSla  = asyncHandler(async (req, res) => {
             const log = await Log.create({
                         sla_id: sla._id,
                         events: [
-                            {action: "Sla created", changed_by: sla.customer_id, date: date.now}]
+                            {action: "Sla created", changed_by: sla.customer_id, date: date.now}
+                        ]
                     });
+            if(!log) {
+                res.status(400);
+                throw new Error("Sla log not created");
+            }
             res.status(201).json({message: 'Sla created successfully'});
         } else {
             res.status(400);
@@ -45,6 +50,7 @@ const createSla  = asyncHandler(async (req, res) => {
 //@route POST /api/sla/updateSla
 //@access private
 const updateSla  = asyncHandler(async (req, res) => { 
+    // 
     try {
         const filter = { _id: req.body._id };
         const update = { 
@@ -161,6 +167,21 @@ const updateSlaLog = asyncHandler(async (req, res) => {
     }
 });
 
+const getSlaLog = asyncHandler(async (req, res) => { 
+    try {
+        const id = req.query.id
+        const log = await Log.findOne({sla_id: id});
+        if(!log){
+            res.status(404).json({message: 'Sla log not found'});
+        } else {
+            res.status(200).json(log);
+        }    
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({message: 'Server error'});
+    }
+});
+
 
 // One-time function used to fill the database
 // const fillPriceList =asyncHandler(async (req, res) => {
@@ -197,5 +218,6 @@ module.exports = {createSla,
                 getAllSla, 
                 getSla, 
                 getHeightAndWorkingAreaAlternatives,
-                updateSlaLog
+                updateSlaLog,
+                getSlaLog
             };

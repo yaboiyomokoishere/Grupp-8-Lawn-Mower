@@ -149,13 +149,12 @@ const updateSlaLog = asyncHandler(async (req, res) => {
         if(!log){
             res.status(404).json({message: 'Sla log not found'});
         } else {
+            const event = {action: "Sla updated", changed_by: req.user.id, date: new Date()};
+            log.events.push(event);
+            await log.save();
             res.status(200).json(log);
-        }    
+        }   
 
-        const event = {action: "Sla updated", changed_by: req.user.id, date: new Date()};
-
-        log.events.push(event);
-        await log.save();
     } catch (error) {
         console.log(error);
         res.status(400).json({message: 'Server error'});

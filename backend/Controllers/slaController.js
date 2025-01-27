@@ -45,20 +45,62 @@ const createSla  = asyncHandler(async (req, res) => {
 //@route POST /api/sla/updateSla
 //@access private
 const updateSla  = asyncHandler(async (req, res) => { 
-    try {
-        const filter = { _id: req.body._id };
-        const update = { 
-                grass_height: req.body.grass_height,  
-                working_area: req.body.working_area
-            };
+    if(!req.body.grass_height && !req.body.working_area) {
+        res.status(403).json({message: "Atleast a field is required"})
+    } else{
+        try {
+            const sla = await Sla.findById(req.body.id);          
+            if(sla){
+                // check for what is changed
+                if(req.body.grass_height){
+                    sla.grass_height = req.body.grass_height;
+                }
+                if(req.body.working_area){
+                    sla.working_area = req.body.working_area;
+                }
 
-        const result = await Sla.findOneAndUpdate(filter, update)
-        if(!result){
-            res.status(404).json({message: 'Sla not found'});
-        } else {
-            res.status(201).json({message: 'Sla updated successfully'});
+                // Update log
+                const log = await Log.findOne({sla_id: req.body.id});
+                if(log){
+                    const event = {action: "Sla updated", changed_by: req.user.id, date: new Date()};
+                    log.events.push(event);
+                    // Update db
+                    await sla.save();
+                    await log.save();
+                    res.status(201).json({message: 'Sla updated successfully'});
+                } else {
+                    res.status(404).json({message: 'Log not found'});
+                }     
+            } else {
+                res.status(404).json({message: 'Sla not found'});
+            }
+            
+        } catch(error){
+            console.log(error);
+            res.status(400).json({message: 'Server error'});
         }
-    } catch(error){
+    }
+    
+});
+
+const cancelSla = asyncHandler (async (req, res) =>{
+    try{
+        const sla = await Sla.findOne({_id: req.body.id});
+        const log = await Log.findOne({sla_id: req.body.id });
+        //const robot 
+
+        if (!sla && !log){
+            res.status(404).json({message: 'Sla or log not found'});
+        }
+        else {
+            const event = {action: "Manual Cancellation", changed_by: req.user.id, date: new Date()};
+            log.events.push(event);
+            sla.status = "Archived";
+            await log.save();
+            await sla.save();
+            res.status(200).json({message: 'Cancellation successful'});
+        }
+    } catch (error){
         console.log(error);
         res.status(400).json({message: 'Server error'});
     }
@@ -148,12 +190,13 @@ const updateSlaLog = asyncHandler(async (req, res) => {
         if(!log){
             res.status(404).json({message: 'Sla log not found'});
         } else {
-            const event = {action: "Sla updated", changed_by: req.user.id, date: new Date()};
-            log.events.push(event);
-            await log.save();
             res.status(200).json(log);
-        }   
+        }    
 
+        const event = {action: "Sla updated", changed_by: req.user.id, date: new Date()};
+
+        log.events.push(event);
+        await log.save();
     } catch (error) {
         console.log(error);
         res.status(400).json({message: 'Server error'});
@@ -196,5 +239,6 @@ module.exports = {createSla,
                 getAllSla, 
                 getSla, 
                 getHeightAndWorkingAreaAlternatives,
-                updateSlaLog
+                updateSlaLog,
+                cancelSla
             };

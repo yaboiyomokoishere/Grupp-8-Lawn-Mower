@@ -1,18 +1,20 @@
 const express = require("express");
 const {
-    createRobot,
+    registerRobot,
+    startedCutting,
     currentCutArea,
     broken,
-    done,
-    start
+    doneCutting,
+    getRobot
 } = require("../Controllers/robotController");
 
 const router = express.Router();
 
-router.post('/createRobot', createRobot);
+router.post('/registerRobot', registerRobot);
+router.post('/startCutting', startedCutting);
 router.post('/currentCutArea', currentCutArea);
 router.post('/broken', broken);
-router.post('/done', done);
-router.post('/start', start);
+router.post('/doneCutting', doneCutting);
+router.get('/getRobot', getRobot);
 
 module.exports = router;

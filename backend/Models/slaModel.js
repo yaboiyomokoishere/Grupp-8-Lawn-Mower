@@ -31,9 +31,13 @@ const slaSchema = mongoose.Schema({
         type: Number,
         required: true,
     },
-    working_area: {
+    working_area: { // max working area
         type: Number,
         required: true,
+    },
+    current_cut_area: {
+        type: Number,
+        default: 0
     },
     height_MoE:{        //Margin of Error
         type: Number,

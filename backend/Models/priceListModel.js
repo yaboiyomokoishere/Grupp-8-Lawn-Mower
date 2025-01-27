@@ -5,7 +5,7 @@ const priceListSchema = mongoose.Schema({
         type: String,
         required: [true, "model required"],
     },
-    height_prices: [{// kr/kvm
+    height_prices: [{
         height:{
             type: String,
             required: [true, "Height required"],
@@ -15,7 +15,7 @@ const priceListSchema = mongoose.Schema({
             required: [true, "price required"],
         }    
     }],
-    area_prices: [{// kr/kvm
+    area_prices: [{
         area:{
             type: String,
             required: [true, "Height required"],

@@ -154,16 +154,14 @@ const getSla  = asyncHandler(async (req, res) => {
 //@access private
 const getPrice  = asyncHandler(async (req, res) => { 
     try {
+        // let robotModel = req.body.robot_model;
+        let robotModel = "Robot 1"; // Hardcoded for testing 
+        let startDate = new Date(req.body.start_date);
+        let endDate = new Date(req.body.end_date);
+        let Difference_In_Time = endDate.getTime() - startDate.getTime();
+        let duration = (Difference_In_Time)/(1000*60*60*24);      
         
-            let startDate = new Date(req.body.start_date);
-            let endDate = new Date(req.body.end_date);
-            let Difference_In_Time =
-            endDate.getTime() - startDate.getTime();
-            const duration = (Difference_In_Time)/(1000*60*60*24);      
-            //console.log();
-            var result = await priceCalculator.priceCalculator(req.body.grass_height, req.body.working_area, duration)
-
-        
+        var result = await priceCalculator(req.body.grass_height, req.body.working_area, duration, robotModel)
         if(!result){
             res.status(404).json({message: 'result not found'});
         } else {
@@ -178,8 +176,7 @@ const getPrice  = asyncHandler(async (req, res) => {
 
 const getHeightAndWorkingAreaAlternatives = asyncHandler(async (req, res) => {
     try {
-        const id = '67914195fd30d6ec362d7f18'
-        const alternatives = await PriceList.findById(id);
+        const alternatives = await PriceList.findOne({ model: "Robot 1" }); // Hardcoded for testing
         //console.log(alternatives);
         res.status(200).json(alternatives);
     } catch (error) {
@@ -224,35 +221,6 @@ const getSlaLog = asyncHandler(async (req, res) => {
 });
 
 
-// One-time function used to fill the database
-// const fillPriceList =asyncHandler(async (req, res) => {
-//     try {
-//         const standardPrices = await PriceList.create({
-//             height_prices: [
-//                 { height: "1.5", price: 0 }, // kr/kvm
-//                 { height: "1", price: 0.01 },
-//                 { height: "0.5", price: 0.02 }
-//             ],
-//             area_prices: [
-//                 { area: "500", price: 0.7 },
-//                 { area: "1000", price: 0.6 },
-//                 { area: "2000", price: 0.5 }
-//             ],
-//             installation: 1500,
-//             robot_daily_rent: 20
-//         });
-//         if(standardPrices) {
-//             res.status(201).json({message: 'Price list created successfully'});
-//         } else {
-//             res.status(400);
-//             throw new Error("Price list data is invalid");
-//         }
-//     } catch (error) {
-//         console.log(error);
-//         res.status(400).json({message: 'Server error'});
-//     }
-// });
-
 module.exports = {createSla, 
                 updateSla, 
                 getPrice, 
@@ -260,5 +228,6 @@ module.exports = {createSla,
                 getSla, 
                 getHeightAndWorkingAreaAlternatives,
                 updateSlaLog,
-                cancelSla
+                cancelSla, 
+                getSlaLog
             };

@@ -9,7 +9,7 @@ const priceListSchema = mongoose.Schema({
     },
     height_prices: [{
         height:{
-            type: String,
+            type: Number,
             required: [true, "Height required"],
         },
         price:{

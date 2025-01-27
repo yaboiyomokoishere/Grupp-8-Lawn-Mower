@@ -95,7 +95,7 @@ const cancelSla = asyncHandler (async (req, res) =>{
         else {
             const event = {action: "Manual Cancellation", changed_by: req.user.id, date: new Date()};
             log.events.push(event);
-            sla.status = "Archived";
+            sla.status = "Cancelled";
             await log.save();
             await sla.save();
             res.status(200).json({message: 'Cancellation successful'});

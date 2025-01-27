@@ -11,6 +11,8 @@ const registerRobot  = asyncHandler(async (req, res) => {
             serial_number: req.body.serial_number,
             last_maintenance_date: req.body.last_maintenance_date
         });
+      console.log(robot);
+
         if(!robot){
             res.status(400).json({message: 'robot failed'});
         } else {

@@ -56,7 +56,9 @@ const updateSla  = asyncHandler(async (req, res) => {
         try {
             const sla = await Sla.findById(req.body.id);
             const log = await Log.findOne({sla_id: req.body.id});
+            // if allowed to edit SLA
             if(sla.status == "Pending" || sla.status == "Paid" || sla.status == "Active") {
+                // if SLA and log found
                 if(sla && log){
                     // check for what is changed
                     if(req.body.grass_height){

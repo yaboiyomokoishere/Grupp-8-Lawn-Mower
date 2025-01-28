@@ -14,6 +14,8 @@ const {
     updateCustomerProfile 
 } = require("../Controllers/customerController");
 
+const { createPriceList } = require("../Controllers/adminController");
+
 
 const router = express.Router();
 
@@ -31,10 +33,7 @@ router.get('/getCustomer', validateToken, getCustomerInfo);
 router.put('/updateCustomer', validateToken, updateCustomerProfile);
 
 
-// SLA Routes
-
-
 // Admin routes
-
+router.post('/createPriceList', validateToken, createPriceList);
 
 module.exports = router;

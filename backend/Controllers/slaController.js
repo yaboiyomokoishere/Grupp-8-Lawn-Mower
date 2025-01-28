@@ -28,8 +28,13 @@ const createSla  = asyncHandler(async (req, res) => {
             const log = await Log.create({
                         sla_id: sla._id,
                         events: [
-                            {action: "Sla created", changed_by: sla.customer_id, date: date.now}]
+                            {action: "Sla created", changed_by: sla.customer_id, date: date.now}
+                        ]
                     });
+            if(!log) {
+                res.status(400);
+                throw new Error("Sla log not created");
+            }
             res.status(201).json({message: 'Sla created successfully'});
         } else {
             res.status(400);
@@ -67,6 +72,8 @@ const updateSla  = asyncHandler(async (req, res) => {
                     // Update db
                     await sla.save();
                     await log.save();
+
+
                     res.status(201).json({message: 'Sla updated successfully'});
                 } else {
                     res.status(404).json({message: 'Log not found'});
@@ -79,17 +86,16 @@ const updateSla  = asyncHandler(async (req, res) => {
             console.log(error);
             res.status(400).json({message: 'Server error'});
         }
-    }
-    
+    }  
 });
 
 const cancelSla = asyncHandler (async (req, res) =>{
+    
     try{
         const sla = await Sla.findOne({_id: req.body.id});
         const log = await Log.findOne({sla_id: req.body.id });
-        //const robot 
 
-        if (!sla && !log){
+        if (!sla || !log){
             res.status(404).json({message: 'Sla or log not found'});
         }
         else {
@@ -149,16 +155,14 @@ const getSla  = asyncHandler(async (req, res) => {
 //@access private
 const getPrice  = asyncHandler(async (req, res) => { 
     try {
+        // let robotModel = req.body.robot_model;
+        let robotModel = "Robot 1"; // Hardcoded for testing 
+        let startDate = new Date(req.body.start_date);
+        let endDate = new Date(req.body.end_date);
+        let Difference_In_Time = endDate.getTime() - startDate.getTime();
+        let duration = (Difference_In_Time)/(1000*60*60*24);      
         
-            let startDate = new Date(req.body.start_date);
-            let endDate = new Date(req.body.end_date);
-            let Difference_In_Time =
-            endDate.getTime() - startDate.getTime();
-            const duration = (Difference_In_Time)/(1000*60*60*24);      
-            //console.log();
-            var result = await priceCalculator.priceCalculator(req.body.grass_height, req.body.working_area, duration)
-
-        
+        var result = await priceCalculator(req.body.grass_height, req.body.working_area, duration, robotModel)
         if(!result){
             res.status(404).json({message: 'result not found'});
         } else {
@@ -173,8 +177,7 @@ const getPrice  = asyncHandler(async (req, res) => {
 
 const getHeightAndWorkingAreaAlternatives = asyncHandler(async (req, res) => {
     try {
-        const id = '67914195fd30d6ec362d7f18'
-        const alternatives = await PriceList.findById(id);
+        const alternatives = await PriceList.findOne({ model: "Robot 1" }); // Hardcoded for testing
         //console.log(alternatives);
         res.status(200).json(alternatives);
     } catch (error) {
@@ -203,35 +206,48 @@ const updateSlaLog = asyncHandler(async (req, res) => {
     }
 });
 
+const getSlaLog = asyncHandler(async (req, res) => { 
+    try {
+        const id = req.query.id
+        const log = await Log.findOne({sla_id: id});
+        if(!log){
+            res.status(404).json({message: 'Sla log not found'});
+        } else {
+            res.status(200).json(log);
+        }    
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({message: 'Server error'});
+    }
+});
 
-// One-time function used to fill the database
-// const fillPriceList =asyncHandler(async (req, res) => {
-//     try {
-//         const standardPrices = await PriceList.create({
-//             height_prices: [
-//                 { height: "1.5", price: 0 }, // kr/kvm
-//                 { height: "1", price: 0.01 },
-//                 { height: "0.5", price: 0.02 }
-//             ],
-//             area_prices: [
-//                 { area: "500", price: 0.7 },
-//                 { area: "1000", price: 0.6 },
-//                 { area: "2000", price: 0.5 }
-//             ],
-//             installation: 1500,
-//             robot_daily_rent: 20
-//         });
-//         if(standardPrices) {
-//             res.status(201).json({message: 'Price list created successfully'});
-//         } else {
-//             res.status(400);
-//             throw new Error("Price list data is invalid");
-//         }
-//     } catch (error) {
-//         console.log(error);
-//         res.status(400).json({message: 'Server error'});
-//     }
-// });
+const getSlaPriceList = asyncHandler(async (req, res) => { 
+    try {
+        const id = req.query.id
+        
+        const sla = await Sla.findById(id)
+        if(!sla){
+            res.status(404).json({message: 'Sla not found'});
+        }
+        //console.log(sla)
+        const robotModel = sla.assigned_robot_model
+        if (!robotModel) {
+            res.status(404).json({message: 'Robot model not found'});
+        }
+        //console.log(robotModel)
+        const prices = await PriceList.findOne({model: robotModel});
+        if(!prices){
+            res.status(404).json({message: 'Price list not found'});
+        } else {
+            //console.log(prices);
+            res.status(200).json(prices);
+        }    
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({message: 'Server error'});
+    }
+});
+
 
 module.exports = {createSla, 
                 updateSla, 
@@ -240,5 +256,7 @@ module.exports = {createSla,
                 getSla, 
                 getHeightAndWorkingAreaAlternatives,
                 updateSlaLog,
-                cancelSla
+                cancelSla, 
+                getSlaLog,
+                getSlaPriceList
             };

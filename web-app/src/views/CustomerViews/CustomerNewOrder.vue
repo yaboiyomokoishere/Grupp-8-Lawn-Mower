@@ -34,19 +34,17 @@
           <div class="form-row">
             <div class="form-group">
               <label for="working_area">Working Area (m²)</label><br>
-              <select name="working_area" id="working_area" v-model="formData.working_area" required>
-                <option disabled value="">Select an area</option>
-                <option v-for="area in areaPrices"  :value="area.area">
-                  {{ area.area }} kvm
-                </option>
-              </select>
+              <input type="number" name="working_area" id="working_area" v-model="formData.working_area" 
+                :max="maxArea"
+                required 
+              />
             </div>
             <div class="form-group">
               <label for="grass_height">Grass Height (cm)</label><br>
               <select name="grass_height" id="grass_height" v-model="formData.grass_height" required>
                 <option disabled value="">Select a height</option>
                 <option v-for="height in heightPrices"  :value="height.height">
-                  {{ height.height }} cm
+                  {{ height.height }}
                 </option>
               </select>
             </div>
@@ -60,7 +58,7 @@
 
 <script setup>
 import CustomerNavBar from '@/components/CustomerNavBar.vue';
-import { reactive, computed, watch, onMounted } from 'vue';
+import { reactive, computed, watch, onMounted, ref } from 'vue';
 import apiClient from '@/config/axios'; 
 import { required, minLength, maxLength } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
@@ -78,14 +76,15 @@ const formData = reactive({
 
 // Reactive variables to store height and area options
 const heightPrices = reactive([]);
-const areaPrices = reactive([]);
+const maxArea = ref();
 
 const rules = computed(() => ({
   address: { required },
   start_date: { required },
   end_date: { required },
   working_area: { 
-    required  
+    required,
+    maxLength: maxLength(maxArea)
   },
   grass_height: { 
     required
@@ -146,8 +145,6 @@ const handleSubmit = async () => {
     };
     //console.log(newSla);
     try {
-      // const slaStore = useSlaStore();
-      // slaStore.addSla(newSla);
       localStorage.setItem('newOrder', JSON.stringify(newSla))
       //console.log(localStorage.getItem('newOrder'))
       // Forward the newSla object to the CustomerConfirmOrder page upon pressing the button
@@ -165,7 +162,7 @@ onMounted(async () => {
     
     // Extract the height and area objects as arrays
     heightPrices.push(...alternatives.data.height_prices);
-    areaPrices.push(...alternatives.data.area_prices);
+    maxArea.value = alternatives.data.max_area;
     
   } catch (error) {
     console.log(error);
@@ -214,3 +211,4 @@ button {
   border-color: #CCCCCC;
 }
 </style>
+

@@ -32,8 +32,11 @@
                             />
                         </div>
                     </div>
+                    <p v-if="formData.price">Your new total price would be: {{ formData.price }} kr</p>
+
                     <div class="action-buttons">
-                        <button type="submit">Update</button>
+                        <button v-if="formData.price" type="submit">Confirm</button>
+                        <button v-else type="button"  @click = "calculateNewTotalPrice">Calculate</button>
                         <button type="button"  @click="goBack">Cancel</button>
                     </div>
                     
@@ -51,6 +54,7 @@ import apiClient from '@/config/axios';
 import CustomerNavBar from '@/components/CustomerNavBar.vue';
 import { ref } from 'vue';
 import { useToast } from 'vue-toastification';
+import router from '@/router';
 
 const route = useRoute();
 const toast = useToast();
@@ -58,7 +62,8 @@ const toast = useToast();
 const formData = reactive({
     grass_height: route.params.grass_height,
     working_area: route.params.working_area,
-    id: route.params.id
+    id: route.params.id,
+    price: ''
 });
 
 const currentCutArea = ref(0)
@@ -66,20 +71,62 @@ const maxArea = ref(0)
 const availableHeights = ref([])
 
 function goBack() {
-    window.history.back();
+    router.push({ name: 'customer_contract_view' });
 }
 
-async function handleSubmit() {
+async function calculateNewTotalPrice() {
     try {
-        const response = await apiClient.put('/sla/updateSla', formData);
-        if (response.status === 200) {
-            toast.success('Service updated successfully!');
+        const id = formData.id
+        const sla = await apiClient.get(`/sla/getSla?id=${id}`);
+
+        if (sla.status === 200) {
+            console.log('Sla data returned!');
         }
-        
+        //console.log(sla.data.result);
+        const slaData = {
+            id: id,
+            grass_height: formData.grass_height,
+            working_area: formData.working_area,
+            start_date: sla.data.result.start_date,
+            end_date: sla.data.result.end_date
+        }
+
+        const totalPrice = await apiClient.post('/sla/getPrice', slaData);
+        if (totalPrice.status === 200) {
+            console.log('Total price calculated!');
+        }
+
+        console.log(totalPrice.data.result);
+        formData.price = totalPrice.data.result;
+        //console.log(formData.total_price)
+
     } catch (error) {
         console.error('Error updating SLA:', error);
     }
 }
+
+async function handleSubmit() {
+    try {
+        const id = formData.id
+        const slaData = {
+            id: id,
+            grass_height: formData.grass_height,
+            working_area: formData.working_area,
+            start_date: route.params.start_date,
+            end_date: route.params.end_date,
+            price: formData.price
+        }
+        const response = await apiClient.put('/sla/updateSla', slaData);
+        if (response.status === 200) {
+            console.log('Sla updated!');
+        }
+        toast.success('Sla updated successfully!');
+        router.push({ name: 'customer_contract_view' });       
+    } catch (error) {
+        
+    }
+}
+
 
 onMounted(async () => {
     try {

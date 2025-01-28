@@ -54,34 +54,30 @@ const updateSla  = asyncHandler(async (req, res) => {
         res.status(403).json({message: "Atleast a field is required"})
     } else{
         try {
-            const sla = await Sla.findById(req.body.id);          
-            if(sla){
-                // check for what is changed
-                if(req.body.grass_height){
-                    sla.grass_height = req.body.grass_height;
-                }
-                if(req.body.working_area){
-                    sla.working_area = req.body.working_area;
-                }
-
-                // Update log
-                const log = await Log.findOne({sla_id: req.body.id});
-                if(log){
+            const sla = await Sla.findById(req.body.id);
+            const log = await Log.findOne({sla_id: req.body.id});
+            if(sla.status == "Pending" || sla.status == "Paid" || sla.status == "Active") {
+                if(sla && log){
+                    // check for what is changed
+                    if(req.body.grass_height){
+                        sla.grass_height = req.body.grass_height;
+                    }
+                    if(req.body.working_area){
+                        sla.working_area = req.body.working_area;
+                    }
+                    // Update log
                     const event = {action: "Sla updated", changed_by: req.user.id, date: new Date()};
                     log.events.push(event);
                     // Update db
                     await sla.save();
                     await log.save();
-
-
-                    res.status(201).json({message: 'Sla updated successfully'});
+                    res.status(201).json({message: 'Sla updated successfully'});               
                 } else {
-                    res.status(404).json({message: 'Log not found'});
-                }     
+                    res.status(404).json({message: 'Sla not found'});
+                }              
             } else {
-                res.status(404).json({message: 'Sla not found'});
-            }
-            
+                res.status(404).json({message: 'Wrong status, can not update sla'});
+            }    
         } catch(error){
             console.log(error);
             res.status(400).json({message: 'Server error'});

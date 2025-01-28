@@ -60,7 +60,7 @@
 import CustomerNavBar from '@/components/CustomerNavBar.vue';
 import { reactive, computed, watch, onMounted, ref } from 'vue';
 import apiClient from '@/config/axios'; 
-import { required, minLength, maxLength } from '@vuelidate/validators';
+import { required, maxLength } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";

@@ -52,17 +52,19 @@ const startedCutting  = asyncHandler(async (req, res) => {
 
 // Assume 
 const currentCutArea  = asyncHandler(async (req, res) => { 
-    // try {
-    //     if(!result){
-    //         res.status(404).json({message: 'currentCutArea not found'});
-    //     } else {
-    //         res.status(201).json({message: 'currentCutArea calculated successfully'});
-    //     }
-    // } catch(error){
-    //     console.log(error);
-    //     res.status(400).json({message: 'Server error'});
-    // }
-    console.log("hello");
+    try {
+        const sla = await Sla.findById(req.body.sla_id);
+        if(sla){
+            sla.currentCutArea = req.body.currentCutArea;
+            await sla.save();
+            res.status(200).json({message: "Updated succesfully"});
+        } else {
+            res.status(404).json({message: "Sla not found"});
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({message: 'Server error'});
+    }
 });
 
 const doneCutting  = asyncHandler(async (req, res) => { // Update SLA status to finished service

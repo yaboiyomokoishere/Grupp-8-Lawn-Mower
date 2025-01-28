@@ -4,8 +4,10 @@
             <RouterLink :to="{name: 'home'}" class="navbar-item">Home</RouterLink>
         </div>
         <div class="navbar-links">
-            <!-- <RouterLink  class="navbar-item">Pricing</RouterLink>
-            <RouterLink  class="navbar-item">About</RouterLink> -->
+            <!-- 
+            <RouterLink  class="navbar-item">Pricing</RouterLink>
+            <RouterLink  class="navbar-item">About</RouterLink> 
+            -->
             <div v-if="!loggedIn" >
                 <RouterLink :to="{name: 'login'}" class="navbar-item">Login</RouterLink>
                 <RouterLink :to="{name: 'signup'}" class="navbar-item">Sign Up</RouterLink>

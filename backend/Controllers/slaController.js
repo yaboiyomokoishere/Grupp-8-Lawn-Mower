@@ -72,6 +72,8 @@ const updateSla  = asyncHandler(async (req, res) => {
                     // Update db
                     await sla.save();
                     await log.save();
+
+
                     res.status(201).json({message: 'Sla updated successfully'});
                 } else {
                     res.status(404).json({message: 'Log not found'});
@@ -84,17 +86,16 @@ const updateSla  = asyncHandler(async (req, res) => {
             console.log(error);
             res.status(400).json({message: 'Server error'});
         }
-    }
-    
+    }  
 });
 
 const cancelSla = asyncHandler (async (req, res) =>{
+    
     try{
         const sla = await Sla.findOne({_id: req.body.id});
         const log = await Log.findOne({sla_id: req.body.id });
-        //const robot 
 
-        if (!sla && !log){
+        if (!sla || !log){
             res.status(404).json({message: 'Sla or log not found'});
         }
         else {
@@ -220,6 +221,33 @@ const getSlaLog = asyncHandler(async (req, res) => {
     }
 });
 
+const getSlaPriceList = asyncHandler(async (req, res) => { 
+    try {
+        const id = req.query.id
+        
+        const sla = await Sla.findById(id)
+        if(!sla){
+            res.status(404).json({message: 'Sla not found'});
+        }
+        //console.log(sla)
+        const robotModel = sla.assigned_robot_model
+        if (!robotModel) {
+            res.status(404).json({message: 'Robot model not found'});
+        }
+        //console.log(robotModel)
+        const prices = await PriceList.findOne({model: robotModel});
+        if(!prices){
+            res.status(404).json({message: 'Price list not found'});
+        } else {
+            //console.log(prices);
+            res.status(200).json(prices);
+        }    
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({message: 'Server error'});
+    }
+});
+
 
 module.exports = {createSla, 
                 updateSla, 
@@ -229,5 +257,6 @@ module.exports = {createSla,
                 getHeightAndWorkingAreaAlternatives,
                 updateSlaLog,
                 cancelSla, 
-                getSlaLog
+                getSlaLog,
+                getSlaPriceList
             };

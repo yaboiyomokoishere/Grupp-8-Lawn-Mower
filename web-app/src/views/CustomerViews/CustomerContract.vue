@@ -9,7 +9,8 @@
                     <RouterLink :to="{name: 'customer_update_contract',  params: {id: slaDetails.id} }">
                             <button class="sla-button">Update</button>
                     </RouterLink>
-                    <button class="sla-button" >Cancel</button>
+    
+                    <button class="sla-button" @click = "cancelOrder" >Cancel</button>
                     <button class="sla-button">View Log</button>
                     <button class="sla-button">Report</button>
                 </div>
@@ -48,8 +49,10 @@ import { onMounted, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import  apiClient from '@/config/axios';
 import CustomerNavBar from '@/components/CustomerNavBar.vue';
+import { useToast } from 'vue-toastification';
 
 const $route = useRoute();
+const toast = useToast();
 
 const slaDetails = reactive({
     address: '',
@@ -70,6 +73,23 @@ const customerInfo= reactive({
     phone_number: '',
     address: ''
 });
+
+
+const cancelOrder = async () => {
+    try {
+        const id = {id: $route.params.id}
+    
+        const response = await apiClient.post('/sla/cancelSla', id);
+        if(response.status == 200){
+            console.log(response.data.message);
+            toast.success("Cancelled order successfully!");
+        }
+        
+    } catch (error) {
+        console.error('Error cancelling order:', error);
+    }
+};
+
 
 onMounted(async () => {
     try {

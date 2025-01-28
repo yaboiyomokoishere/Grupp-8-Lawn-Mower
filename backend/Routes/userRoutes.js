@@ -33,9 +33,6 @@ router.get('/getCustomer', validateToken, getCustomerInfo);
 router.put('/updateCustomer', validateToken, updateCustomerProfile);
 
 
-// SLA Routes
-
-
 // Admin routes
 router.post('/createPriceList', validateToken, createPriceList);
 

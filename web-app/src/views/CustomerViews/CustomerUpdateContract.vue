@@ -13,12 +13,12 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="grassHeight">Grass Height (cm):</label>
-                            <input 
-                                id="grassHeight"
-                                type="number"
-                                v-model="formData.grass_height"
-                                required
-                            />
+                            <select name="grass_height" id="grass_height" v-model="formData.grass_height" required>
+                                <option :value="formData.grass_height">{{ formData.grass_height }}</option>
+                                <option v-for="heightObj in availableHeights.filter((h) => h.height != formData.grass_height)">
+                                {{ heightObj.height }}
+                                </option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="workingArea">Working Area (m²):</label>
@@ -27,6 +27,8 @@
                                 type="number"
                                 v-model="formData.working_area"
                                 required
+                                :min="currentCutArea"
+                                :max="maxArea"
                             />
                         </div>
                     </div>
@@ -42,20 +44,26 @@
 
 </template>
   
-  <script setup>
+<script setup>
 import { reactive, onMounted} from 'vue'
 import { useRoute } from 'vue-router';
 import apiClient from '@/config/axios';
 import CustomerNavBar from '@/components/CustomerNavBar.vue';
+import { ref } from 'vue';
+import { useToast } from 'vue-toastification';
 
 const route = useRoute();
+const toast = useToast();
+
 const formData = reactive({
     grass_height: route.params.grass_height,
-    working_area: route.params.working_area
+    working_area: route.params.working_area,
+    id: route.params.id
 });
 
-const currentCutArea = '??'
-const maxArea = '6000'
+const currentCutArea = ref(0)
+const maxArea = ref(0)
+const availableHeights = ref([])
 
 function goBack() {
     window.history.back();
@@ -63,8 +71,11 @@ function goBack() {
 
 async function handleSubmit() {
     try {
-        console.log(route.params.id)
-        //const response = await apiClient.put(`/sla/updateSla/id=${route.params.id}`, formData);
+        const response = await apiClient.put('/sla/updateSla', formData);
+        if (response.status === 200) {
+            toast.success('Service updated successfully!');
+        }
+        
     } catch (error) {
         console.error('Error updating SLA:', error);
     }
@@ -73,10 +84,18 @@ async function handleSubmit() {
 onMounted(async () => {
     try {
         const id = route.params.id
-        console.log(id);
+        //console.log(id);
         const response = await apiClient.get(`/sla/getSla?id=${id}`); 
         formData.grass_height = response.data.result.grass_height;
         formData.working_area = response.data.result.working_area;
+        currentCutArea.value = response.data.result.current_cut_area;
+
+        const slaPriceList = await apiClient.get(`/sla/getSlaPriceList?id=${id}`);
+        maxArea.value = slaPriceList.data.max_area
+        //console.log(slaPriceList.data);
+
+        // Extract the height-price objects as arrays
+        availableHeights.value.push(...slaPriceList.data.height_prices);
     } catch (error) {
         console.log(error);
     }
@@ -112,21 +131,20 @@ form {
     align-items: center;
     gap: 1rem;
 }
-input {
-    margin-bottom: 1rem;
-}
+
 label {
     font-weight: bold;
 }
 
-input, select {
-  font-size: 1.2rem;
-  padding: 10px;
-  box-sizing: border-box;
+input, option, select {
+    margin: 30px;
+    font-size: 1.2rem;
+    padding: 10px;
+    box-sizing: border-box;
+    width: 100px
 }
 
-
-input, label, select {
+input, label, option, select {
   display: block;
 }
 
@@ -135,6 +153,7 @@ input, label, select {
     justify-content: flex-end;
     gap: 15px;
 }
+
 button {
     font-size: 1rem;
     text-decoration: none;

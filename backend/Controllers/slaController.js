@@ -67,6 +67,7 @@ const updateSla  = asyncHandler(async (req, res) => {
                     if(req.body.working_area){
                         sla.working_area = req.body.working_area;
                     }
+                    sla.price = req.body.price;
                     // Update log
                     const event = {action: "Sla updated", changed_by: req.user.id, date: new Date()};
                     log.events.push(event);

@@ -106,7 +106,7 @@ const cancelSla = asyncHandler (async (req, res) =>{
     try{
         const sla = await Sla.findOne({_id: req.body.id});
         const log = await Log.findOne({sla_id: req.body.id });
-        const robot = await Robot.findOne({'booking_schedule.sla_id': 'req.body.id'});
+        const robot = await Robot.findOne({'booking_schedule.sla_id': req.body.id});
         console.log(robot);
         robot.status = "Available";
         // Works as long as only one booking at a time

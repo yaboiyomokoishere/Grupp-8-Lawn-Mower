@@ -1,7 +1,7 @@
 const PriceList = require("../Models/priceListModel");
 
 const priceCalculator = async function(grassHeight, workingArea, duration, robotModel) {
-    if (!grassHeight || !workingArea || !robotModel) {
+    if (!grassHeight || !workingArea || !robotModel || !duration) {
         throw new Error("Data is missing");
     }
 
@@ -11,8 +11,10 @@ const priceCalculator = async function(grassHeight, workingArea, duration, robot
             throw new Error("Price list not found");
         }
         //console.log("priceList", priceList);
+        //console.log(grassHeight)
         
-        const heightPrice = priceList.height_prices.find(hp => hp.height === grassHeight);
+        const heightPrice = priceList.height_prices.find(hp => hp.height == grassHeight);
+
         if (!heightPrice) {
             throw new Error("Height not found in price list");
         }

@@ -62,6 +62,7 @@ const createSla  = asyncHandler(async (req, res) => {
 //@route POST /api/sla/updateSla
 //@access private
 const updateSla  = asyncHandler(async (req, res) => { 
+    console.log(req.body)
     if(!req.body.grass_height && !req.body.working_area) {
         res.status(403).json({message: "Atleast a field is required"})
     } else{

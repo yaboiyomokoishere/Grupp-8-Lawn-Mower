@@ -4,42 +4,54 @@ const User = require("../Models/userModel");
 const priceCalculator = require("../Middleware/priceCalculator");
 const Log = require("../Models/slaLogModel");
 const PriceList = require("../Models/priceListModel");
+const Robot = require("../Models/robotModel");
 
 //@desc Create sla
 //@route POST /api/sla/createSla
 //@access private
 const createSla  = asyncHandler(async (req, res) => {
     try {
-        // create sla and insert the users id
-        const sla = await Sla.create({
-            customer_id: req.user.id, 
-            address: req.body.address,
-            start_date: req.body.start_date, 
-            end_date: req.body.end_date, 
-            grass_height: req.body.grass_height,
-            working_area: req.body.working_area,
-            price: req.body.total_price,
-        });
-        //console.log(sla)
-        if(sla) {
-            // create the log for the sla
-            const date = new Date;
-            //console.log(sla.customer_id)
-            const log = await Log.create({
-                        sla_id: sla._id,
-                        events: [
-                            {action: "Sla created", changed_by: sla.customer_id, date: date.now}
-                        ]
-                    });
-            if(!log) {
+
+        const robot = await Robot.findOne({status: "Available"});
+        if(robot){
+            // create sla and insert the users id
+            const sla = await Sla.create({
+                customer_id: req.user.id, 
+                address: req.body.address,
+                start_date: req.body.start_date, 
+                end_date: req.body.end_date, 
+                grass_height: req.body.grass_height,
+                working_area: req.body.working_area,
+                price: req.body.total_price,
+            });
+            //console.log(sla)
+            if(sla) {
+                // scuffed booking of a robot
+                robot.status = "Unavailable";
+                const booking = {sla_id: sla._id, start_date: sla.start_date, end_date: sla.end_date};
+                robot.booking_schedule.push(booking);
+                await robot.save();
+                // create the log for the sla
+                const date = new Date;
+                //console.log(sla.customer_id)
+                const log = await Log.create({
+                            sla_id: sla._id,
+                            events: [
+                                {action: "Sla created", changed_by: sla.customer_id, date: date.now}
+                            ]
+                        });
+                if(!log) {
+                    res.status(400);
+                    throw new Error("Sla log not created");
+                }
+                res.status(201).json({message: 'Sla created successfully'});
+            } else {
                 res.status(400);
-                throw new Error("Sla log not created");
+                throw new Error("Sla data is invalid");
             }
-            res.status(201).json({message: 'Sla created successfully'});
         } else {
-            res.status(400);
-            throw new Error("Sla data is invalid");
-        }
+            res.status(400).json({message: 'No available robot'});
+        }       
     } catch (error) {
         console.log(error);
         res.status(400).json({message: 'Server error'});
@@ -93,7 +105,13 @@ const cancelSla = asyncHandler (async (req, res) =>{
     try{
         const sla = await Sla.findOne({_id: req.body.id});
         const log = await Log.findOne({sla_id: req.body.id });
-
+        const robot = await Robot.findOne({'booking_schedule.sla_id': 'req.body.id'});
+        console.log(robot);
+        robot.status = "Available";
+        // Works as long as only one booking at a time
+        robot.booking_schedule.pop();
+        console.log(robot);
+        await robot.save();
         if (!sla || !log){
             res.status(404).json({message: 'Sla or log not found'});
         }

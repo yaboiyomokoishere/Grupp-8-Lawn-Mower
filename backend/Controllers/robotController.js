@@ -2,6 +2,8 @@ const asyncHandler = require("express-async-handler");
 const Robot = require("../Models/robotModel");
 const Sla = require("../Models/slaModel");
 const Log = require("../Models/slaLogModel");
+const logSlaEvent = require("../Middleware/logSlaEvent");
+
 
 
 const registerRobot  = asyncHandler(async (req, res) => { 
@@ -30,14 +32,9 @@ const startedCutting  = asyncHandler(async (req, res) => {
         if (sla) {
             sla.status = "Active";
             await sla.save();
-            const log = await Log.findOne({sla_id: req.body.sla_id});
-            if(!log){
-                res.status(404).json({message: 'Sla log not found'});
-            } else {
-                const event = {action: "Sla status changed to active", changed_by: "System", date: new Date()};
-                log.events.push(event);
-                await log.save();
-            }
+            await log.save();
+            logSlaEvent(sla.id, "Sla status changed to active", "System", "Error while logging status change to active");
+            
             //console.log(result);
             res.status(201).json({message: 'Sla status updated successfully'});
         }
@@ -73,6 +70,7 @@ const doneCutting  = asyncHandler(async (req, res) => { // Update SLA status to 
         if (sla) {
             sla.status = "Completed";
             await sla.save();
+            logSlaEvent(sla.id, "Sla status changed to completed", "System", "Error while logging sla status change to");
             const log = await Log.findOne({sla_id: req.body.sla_id});
             if(!log){
                 res.status(404).json({message: 'Sla log not found'});
@@ -163,5 +161,6 @@ const getBooking = asyncHandler(async (req, res) => {
         res.status(400).json({message: 'Server error'});
     }
 });
+
 
 module.exports = {registerRobot, doneCutting, startedCutting, broken, currentCutArea, getRobot, maintenance, getBooking};

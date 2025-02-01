@@ -10,6 +10,7 @@ import AdminDashboard from '@/views/AdminViews/AdminDashboard.vue';
 import CustomerNewOrder from '@/views/CustomerViews/CustomerNewOrder.vue';
 import CustomerContract from '@/views/CustomerViews/CustomerContract.vue';
 import CustomerConfirmOrder from '@/views/CustomerViews/CustomerConfirmOrder.vue';
+import CustomerLog from '@/views/CustomerViews/CustomerLog.vue';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -69,6 +70,12 @@ const router = createRouter({
             name: 'confirm_order',
             component: CustomerConfirmOrder,
             meta: { requiresAuth: true, role: 'customer' }
+        },
+        {
+            path: '/customer/Log/viewLog/679362218d2782827ddf1392',
+            name: 'customer_Log_view',
+            component: CustomerLog,
+            meta: { requiresAuth: true, role: 'customer' },
         },
         // Admin routes
         {

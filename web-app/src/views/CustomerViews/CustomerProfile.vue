@@ -72,7 +72,9 @@
               </span>
             </div>
           </div>
-
+          <span v-if="emailError" class="error" >
+                {{ emailError }}
+          </span>
         <button type="submit">Update</button>
       </form>
     </div>
@@ -87,9 +89,13 @@ import apiClient from '@/config/axios'; // Use your configured Axios instance
 import CustomerNavBar from '@/components/CustomerNavBar.vue';
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, minLength, sameAs, maxLength } from '@vuelidate/validators'
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 // Reactive state variables
 const error = ref(null); // Error message
+const emailError = ref(null);
 
 // Form validation 
 const formData = reactive({
@@ -106,23 +112,20 @@ const formData = reactive({
 // Fetch data on component mount
 const fetchCustomerData = async () => {
   try {
-    // FETCHING DATA NOT DONE YET
     const response = await apiClient.get('/user/getCustomer');
-    console.log(response.data);
+    //console.log(response.data);
     //customerData.value = response.data; // Assign the API response to `customerData`
     formData.firstName = response.data.first_name;
     formData.lastName = response.data.last_name;
     formData.userEmail = response.data.email;
-    formData.address = response.data.address;
-    formData.phoneNumber = response.data.phone_number;
-    formData.postalCode = response.data.postal_code;
+    formData.address = response.data.customer_details.address;
+    formData.phoneNumber = response.data.customer_details.phone_number;
+    formData.postalCode = response.data.customer_details.postal_code;
   } catch (err) {
-    error.value = 'Failed to fetch customer data. Please try again later.';
+    error.value = 'Failed to fetch customer data.';
     console.error(err);
   } 
 };
-
-
 
 const alphaOnly = (value) => /^[a-zA-Z]+$/i.test(value); // Only letters 
 const alphaNum = value => /^[0-9]+$/.test(value) // Only numbers
@@ -134,39 +137,43 @@ const rules = computed(() => ({
   address: { required },
   phoneNumber: { required, alphaNum, minLength: minLength(10), maxLength: maxLength(10) },
   postalCode: { required, alphaNum, minLength: minLength(5), maxLength: maxLength(5) },
-  password: { required, minLength: minLength(8) },
-  confirmPassword: { required, sameAsPassword: sameAs(formData.password) }  
+  password: { required: computed(() => !!formData.confirmPassword), minLength: minLength(8) },
+  confirmPassword: { required: computed(() => !!formData.password), sameAsPassword: sameAs(formData.password) }  
 }))
 
 const v$ = useVuelidate(rules, formData);
 
 // Update customer data
-const handleUpdate = async () => {
+const handleSubmit = async () => {
   const result = await v$.value.$validate();
   
   //console.log(result);
   if (result) {
     formData.phoneNumber = parseInt(formData.phoneNumber);
     formData.postalCode = parseInt(formData.postalCode);
-    const newCustomer = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
+    const newData = {
+      first_name: formData.firstName,
+      last_name: formData.lastName,
       email: formData.userEmail,
       address: formData.address,
-      phone: formData.phoneNumber,
-      postalCode: formData.postalCode,
+      phone_number: formData.phoneNumber,
+      postal_code: formData.postalCode,
       password: formData.password
     };
 
     try {
-      // API endpoint not implemented yet
-      //const response = await axios.post('http://localhost:3001/api/user/updateCustomer', newCustomer);
-      console.log(response.data); // Log the response data obtained from the backend
-      toast.success('Data updated successfully');
-      location.reload(); // Refresh the page
-    } catch (error) {
-      console.log('Error while updating customer:', error);
-      toast.error(error.message);
+      const response = await apiClient.put('http://localhost:3001/api/user/updateCustomer', newData);
+      //console.log(response.data.message); 
+      if (response.status === 200) {
+        fetchCustomerData();
+        toast.success('Your information has been updated successfully');
+      } 
+      
+    } catch (err) {
+      
+      if (err.response && err.response.status === 400) {
+        emailError.value = err.response.data.message; 
+      } 
     }
   }
 }
@@ -174,7 +181,7 @@ const handleUpdate = async () => {
 
 // Fetch data when the component is mounted
 onMounted(() => {
-  //fetchCustomerData();
+  fetchCustomerData();
 });
 
 </script>
@@ -211,6 +218,7 @@ button, input {
 }
 
 button {
+
   width: 100%;
   margin: 10px auto;
   border: solid;

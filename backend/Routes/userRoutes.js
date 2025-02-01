@@ -1,14 +1,20 @@
 const express = require("express");
+const validateToken = require("../Middleware/ValidateTokenHandler");
+
 const {
     loginUser,
     logoutUser,
     refreshToken,
-    registerCustomer,
+    registerCustomer
     //registerAdmin
 } = require("../Controllers/userController");
 
-const { getCustomerInfo } = require("../Controllers/customerController");
-const validateToken = require("../Middleware/ValidateTokenHandler");
+const { 
+    getCustomerInfo, 
+    updateCustomerProfile 
+} = require("../Controllers/customerController");
+
+const { createPriceList } = require("../Controllers/adminController");
 
 
 const router = express.Router();
@@ -24,12 +30,10 @@ router.post('/refresh', refreshToken); // Refreshes access token with refresh to
 
 // Customer routes
 router.get('/getCustomer', validateToken, getCustomerInfo); 
-
-
-// SLA Routes
+router.put('/updateCustomer', validateToken, updateCustomerProfile);
 
 
 // Admin routes
-
+router.post('/createPriceList', validateToken, createPriceList);
 
 module.exports = router;

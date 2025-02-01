@@ -3,15 +3,19 @@
         <div class="navbar-brand">
             <RouterLink :to="{name: 'home'}" class="navbar-item">Home</RouterLink>
         </div>
-
-        <div v-if="!loggedIn" class="navbar-links">
-            <RouterLink :to="{name: 'login'}" class="navbar-item">Login</RouterLink>
-            <RouterLink :to="{name: 'signup'}" class="navbar-item">Sign Up</RouterLink>
-        </div>
-        
-        <div v-else class="navbar-links">
-            <RouterLink :to="{name: 'customer_dashboard'}" class="navbar-item">Profile</RouterLink>
-            <Logout />
+        <div class="navbar-links">
+            <!-- 
+            <RouterLink  class="navbar-item">Pricing</RouterLink>
+            <RouterLink  class="navbar-item">About</RouterLink> 
+            -->
+            <div v-if="!loggedIn" >
+                <RouterLink :to="{name: 'login'}" class="navbar-item">Login</RouterLink>
+                <RouterLink :to="{name: 'signup'}" class="navbar-item">Sign Up</RouterLink>
+            </div>
+            <div v-else >
+                <RouterLink :to="{name: 'customer_contracts'}" class="navbar-item">My Profile</RouterLink>
+                <Logout />
+            </div>
         </div>
     </nav>
 </template>

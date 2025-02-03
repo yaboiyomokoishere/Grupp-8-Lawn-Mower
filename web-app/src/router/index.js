@@ -11,6 +11,7 @@ import CustomerContract from '@/views/CustomerViews/CustomerContract.vue';
 import CustomerConfirmOrder from '@/views/CustomerViews/CustomerConfirmOrder.vue';
 import CustomerUpdateContract from '@/views/CustomerViews/CustomerUpdateContract.vue';
 import UserManagement from '@/views/AdminViews/UserManagement.vue';
+import EditUser from '@/views/AdminViews/EditUser.vue';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -82,6 +83,12 @@ const router = createRouter({
             path: '/admin/users',
             name: 'admin_users',
             component: UserManagement,
+            meta: { requiresAuth: true, role: 'admin' }
+        },
+        {
+            path: '/admin/users/:id',
+            name: 'admin_user_edit',
+            component: EditUser,
             meta: { requiresAuth: true, role: 'admin' }
         },
         {

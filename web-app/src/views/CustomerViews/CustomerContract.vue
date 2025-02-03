@@ -12,7 +12,7 @@
     
                     <button class="sla-button" @click = "cancelOrder" >Cancel</button>
                     <button class="sla-button">View Log</button>
-                    <button class="sla-button">Report</button>
+                    <button class="sla-button">Report Error</button>
                 </div>
                 
                 <div class="status">

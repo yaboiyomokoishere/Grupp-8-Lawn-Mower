@@ -13,7 +13,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="grassHeight">Grass Height (cm):</label>
-                            <select name="grass_height" id="grass_height" v-model="formData.grass_height" required>
+                            <select name="grass_height" id="grass_height" required>
                                 <option :value="formData.grass_height">{{ formData.grass_height }}</option>
                                 <option v-for="heightObj in availableHeights.filter((h) => h.height != formData.grass_height)">
                                 {{ heightObj.height }}

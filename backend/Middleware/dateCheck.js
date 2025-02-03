@@ -4,8 +4,10 @@ const dateCheck = async function() {
     const date =  Date.now();
     //const day = date.getTime();
     try {
-        const result = await Sla.find();
+        // should return all SLA that is not archived or cancelled
+        const result = await Sla.find({status: { $ne: "Fault"}});
         console.log(result);
+        console.log("--------");
         while(result != "") {
             const sla = result.pop();
             const comp = dateComparison(date, sla.end_date);
@@ -17,10 +19,11 @@ const dateCheck = async function() {
                 await sla.save();  
             }
             else if(comp < 0 && sla.status == "Completed"){
-                sla.status = "Fault";
+                sla.status = "Archived";
                 await sla.save();
             }
         } 
+        console.log("done");
     }catch (error) {
         console.log(error);
     }

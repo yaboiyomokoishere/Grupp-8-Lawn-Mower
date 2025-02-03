@@ -4,6 +4,8 @@ const errorHandler = require("./Middleware/errorHandler");
 const dotenv = require("dotenv").config();
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const schedule = require('node-schedule');
+const dateCheck = require('./Middleware/dateCheck');
 
 connectDb();
 const app = express();
@@ -24,7 +26,12 @@ app.use("/api/sla", require("./Routes/slaRoutes"));
 app.use("/api/robot", require("./Routes/robotRoutes"));
 app.use(errorHandler);
 
- 
+
+const job = schedule.scheduleJob(' 08 * * * *', async() => {
+    await dateCheck();
+})
+
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });

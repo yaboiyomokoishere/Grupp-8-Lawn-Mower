@@ -38,12 +38,12 @@ const router = useRouter();
 const toast = useToast();
 
 const orderDetails = reactive({
-address: '',
-start_date: '',
-end_date: '',
-grass_height: 0,
-working_area: 0,
-total_price: 0
+    address: '',
+    start_date: '',
+    end_date: '',
+    grass_height: 0,
+    working_area: 0,
+    total_price: 0
 });
 
 const customerInfo= reactive({
@@ -93,7 +93,7 @@ orderDetails.working_area = newOrderData.working_area;
 try {
     const response = await apiClient.post('/sla/getPrice', newOrderData);
     console.log("Total price:", response.data.result);
-    orderDetails.total_price = response.data.result;
+    orderDetails.total_price = Math.ceil(response.data.result);
     console.log(orderDetails)
 } catch (error) {
     console.error('Error fetching total price:', error);
@@ -114,59 +114,84 @@ try {
 </script>
   
 <style scoped>
-.sla-view {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
+.confirmation-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column; /* Display items in a column format instead of row format */
+    align-items: center; /* Center items horizontally */
+    padding: 1rem;
+    background-color: #f5f5f5;
 }
 
-.customer-info, .sla-info, .price-info {
-    margin-bottom: 20px;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.customer-info, .sla-info {
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 3px 3px rgba(128, 128, 128, 0.485);
+}
+
+.price-info {
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 1rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 3px 3px rgba(128, 128, 128, 0.485);
 }
 
 h2 {
-    margin-bottom: 10px;    
+    font-size: 1.5rem;
+    color: #2d3748;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 0.5rem;
 }
 
 h3 {
-    color: #333;
+    font-size: 1.25rem;
+    color: #2d3748;
+    margin: 0;
 }
 
 p {
-    margin: 5px 0;
+    margin: 0.75rem 0;
+    color: #4a5568;
+}
+
+strong {
+    color: #2d3748;
+    min-width: 120px;
+    display: inline-block;
 }
 
 .action-buttons {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
+    width: 100%;
+    max-width: 800px;
+    gap: 15px;
 }
 
-.confirm-button, .cancel-button {
-    padding: 10px 20px;
-    border: none;
+button {
+    font-size: 1rem;
+    text-decoration: none;
+    padding: 10px 15px;
     border-radius: 5px;
-    cursor: pointer;
+    border: 2px solid black;
 }
 
-.confirm-button {
-    background-color: #28a745;
-    color: #fff;
+.cancel-button:hover{
+    background-color: white;
+    color:red;
 }
-
-.cancel-button {
-    background-color: #dc3545;
-    color: #fff;
-}
-
-.confirm-button:hover {
-    background-color: #218838;
-}
-
-.cancel-button:hover {
-    background-color: #c82333;
+.confirm-button:hover{
+    background-color: white;
+    color:green;
 }
 </style>
   

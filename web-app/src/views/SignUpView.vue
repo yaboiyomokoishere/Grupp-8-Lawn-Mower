@@ -115,6 +115,10 @@ const rules = computed(() => ({
   confirmPassword: { required, sameAsPassword: sameAs(formData.password) }  
 }))
 
+function capitalizeFirstLetter(val) {
+    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+}
+
 const v$ = useVuelidate(rules, formData);
 
 const handleSubmit = async () => {
@@ -125,10 +129,10 @@ const handleSubmit = async () => {
     formData.phoneNumber = parseInt(formData.phoneNumber);
     formData.postalCode = parseInt(formData.postalCode);
     const newCustomer = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
+      firstName: capitalizeFirstLetter(formData.firstName),
+      lastName: capitalizeFirstLetter(formData.lastName),
       email: formData.userEmail,
-      address: formData.address,
+      address: capitalizeFirstLetter(formData.address),
       phone: formData.phoneNumber,
       postalCode: formData.postalCode,
       password: formData.password

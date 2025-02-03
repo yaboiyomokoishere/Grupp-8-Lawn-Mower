@@ -1,4 +1,6 @@
 const Sla = require("../Models/slaModel");
+const logSlaEvent = require("./logSlaEvent");
+const Robot = require("../Models/robotModel");
 
 const dateCheck = async function() {
     const date =  Date.now();
@@ -6,21 +8,36 @@ const dateCheck = async function() {
     try {
         // should return all SLA that is not archived or cancelled
         const result = await Sla.find({status: { $ne: "Archived"}});
-        for(let i = 0; i< result.length; i++) {
+        
+        while(result.length > 0){
             const sla = result.pop();
             const comp = dateComparison(date, sla.end_date);
             console.log(sla);
             console.log(comp);
             
-            if(comp < 0 && sla.status != "Completed"){
-                sla.status = "Fault";
-                await sla.save();  
-            }
-            else if(comp < 0 && sla.status == "Completed"){
-                sla.status = "Archived";
-                await sla.save();
+            // if end date has passed
+            if(comp < 0){
+                if(sla.status != "Completed") {
+                    sla.status = "Fault";
+                    await sla.save();
+                    await logSlaEvent(sla.id, "Sla Fault", "System", "Logging error while auto end sla"); 
+                }
+                else{
+                    sla.status = "Archived";
+                    await sla.save();
+                    await logSlaEvent(sla.id, "Sla Archived", "System", "Logging error while auto end sla"); 
+                }
+                robot = await Robot.findOne({sla_id: sla._id});
+                if(robot){
+                    robot.status = "Available";
+                    robot.booking_schedule.pop();
+                    await robot.save();
+                }
+                
+                
             }
         }
+        
         console.log("done");
     }catch (error) {
         console.log(error);

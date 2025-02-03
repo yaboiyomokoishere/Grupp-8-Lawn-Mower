@@ -198,25 +198,6 @@ const getHeightAndWorkingAreaAlternatives = asyncHandler(async (req, res) => {
     }
 });
 
-// const updateSlaLog = asyncHandler(async (req, res) => { 
-//     console.log(req.body.id);
-//     try {
-//         const log = await Log.findOne({sla_id: req.body.id});
-//         if(!log){
-//             res.status(404).json({message: 'Sla log not found'});
-//         } else {
-//             res.status(200).json(log);
-//         }    
-
-//         const event = {action: "Sla updated", changed_by: req.user.id, date: new Date()};
-
-//         log.events.push(event);
-//         await log.save();
-//     } catch (error) {
-//         console.log(error);
-//         res.status(400).json({message: 'Server error'});
-//     }
-// });
 
 const getSlaLog = asyncHandler(async (req, res) => { 
     try {
@@ -260,7 +241,6 @@ const getSlaPriceList = asyncHandler(async (req, res) => {
     }
 });
 
-// action: "Sla created", changed_by: sla.customer_id, date: date.now
 
 
 
@@ -270,7 +250,6 @@ module.exports = {createSla,
                 getAllSla, 
                 getSla, 
                 getHeightAndWorkingAreaAlternatives,
-                //updateSlaLog,
                 cancelSla, 
                 getSlaLog,
                 getSlaPriceList, 

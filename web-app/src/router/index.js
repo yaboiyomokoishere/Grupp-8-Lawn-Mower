@@ -5,11 +5,12 @@ import SignUpView from '@/views/SignUpView.vue';
 import CustomerProfile from '@/views/CustomerViews/CustomerProfile.vue';
 import CustomerContracts from '@/views/CustomerViews/CustomerContracts.vue';
 import { jwtDecode } from "jwt-decode";
-import AdminDashboard from '@/views/AdminViews/AdminDashboard.vue';
+import Dashboard from '@/views/AdminViews/Dashboard.vue';
 import CustomerNewOrder from '@/views/CustomerViews/CustomerNewOrder.vue';
 import CustomerContract from '@/views/CustomerViews/CustomerContract.vue';
 import CustomerConfirmOrder from '@/views/CustomerViews/CustomerConfirmOrder.vue';
 import CustomerUpdateContract from '@/views/CustomerViews/CustomerUpdateContract.vue';
+import UserManagement from '@/views/AdminViews/UserManagement.vue';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -73,8 +74,14 @@ const router = createRouter({
         {
             path: '/admin/dashboard',
             name: 'admin_dashboard',
-            component: AdminDashboard,
+            component: Dashboard,
             // Require authentication based on the meta property, see the beforeach guard below
+            meta: { requiresAuth: true, role: 'admin' }
+        },
+        {
+            path: '/admin/users',
+            name: 'admin_users',
+            component: UserManagement,
             meta: { requiresAuth: true, role: 'admin' }
         },
         {

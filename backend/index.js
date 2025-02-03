@@ -5,7 +5,7 @@ const dotenv = require("dotenv").config();
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const schedule = require('node-schedule');
-const Sla = require("./Models/slaModel");
+const dateCheck = require('./Middleware/dateCheck');
 
 connectDb();
 const app = express();
@@ -26,19 +26,9 @@ app.use("/api/sla", require("./Routes/slaRoutes"));
 app.use("/api/robot", require("./Routes/robotRoutes"));
 app.use(errorHandler);
 
-//setInterval(()=> {
-  //  console.log("test");
-//}, 1000);
 
-async function test(data) {
-    const result = await Sla.findOne({_id: '6792527c187052508165cba8'});
-    console.log(result);
-    return result
-}
-
-const job = schedule.scheduleJob(' 55 * * * *', async() => {
-    const result = await test();
-    console.log(result);
+const job = schedule.scheduleJob(' 02 * * * *', async() => {
+    await dateCheck();
 })
 
 

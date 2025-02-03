@@ -25,7 +25,7 @@
                         <td>{{ user.email }}</td>
                         <td>{{ user.status }}</td>
                         <td>
-                            <RouterLink :to="{name: 'admin_user_edit', params: {id: user._id}}">Edit</RouterLink>
+                            <RouterLink :to="{name: 'admin_user_edit', params: {id: user._id}}" class="edit-user-button">Edit</RouterLink>
                         </td>                        
                     </tr>
                     
@@ -45,7 +45,7 @@ const users = ref([]);
 const userRole = ref('customer');
 
 const fetchUsers = async () => {
-    const response = await apiClient.get(`/user/fetchUsers?role=${userRole.value}`);
+    const response = await apiClient.get(`/user/getUsers?role=${userRole.value}`);
     users.value = response.data;
     console.log(users.value);
 }
@@ -82,7 +82,7 @@ onMounted(async () => {
 }
 
 .admin-content th, .admin-content td {
-    padding: 0.75rem;
+    padding: 1rem;
     text-align: left;
     border-bottom: 1px solid #e2e8f0;
 }
@@ -101,6 +101,19 @@ onMounted(async () => {
     color: #718096;
     margin-top: 1rem;
     font-style: italic;
+}
+
+
+.edit-user-button {
+    font-size: 1rem;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 2px solid black;
+    text-decoration: none;
+}
+
+.edit-user-button:hover {
+    background-color: #989d8f;
 }
 </style>
 

@@ -15,7 +15,8 @@ const {
 } = require("../Controllers/customerController");
 
 const { createPriceList,
-        fetchUsers
+        getUsers,
+        getUser,
  } = require("../Controllers/adminController");
 
 
@@ -37,6 +38,7 @@ router.put('/updateCustomer', validateToken, updateCustomerProfile);
 
 // Admin routes
 router.post('/createPriceList', validateToken, createPriceList);
-router.get('/fetchUsers', validateToken, fetchUsers);
+router.get('/getUsers', validateToken, getUsers);
+router.get('/getUser', validateToken, getUser);
 
 module.exports = router;

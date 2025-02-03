@@ -3,12 +3,22 @@ const PriceList = require("../Models/priceListModel");
 const User = require("../Models/userModel");
 
 
-const fetchUsers = asyncHandler(async (req, res) => {
+const getUsers = asyncHandler(async (req, res) => {
     const users = await User.find({role: req.query.role});
     if(!users) {
         res.status(404).json({message: 'error while fetching list of type ' + req.body.role});
     }
     res.status(200).json(users);
+});
+
+const getUser = asyncHandler(async (req, res) => {
+    const id = req.query.id;
+    const user = await User.findById(id); 
+    if(!user){
+        res.status(404).json({message: 'User not found'});
+        throw new Error("User not found");
+    }
+    res.status(200).json(user);
 });
 
 
@@ -35,4 +45,4 @@ const createPriceList = asyncHandler(async (req, res) => {
     }
 });
 
-module.exports = {createPriceList, fetchUsers};
+module.exports = {createPriceList, getUsers, getUser};

@@ -12,11 +12,13 @@ const dateCheck = async function() {
         while(result.length > 0){
             const sla = result.pop();
             const comp = dateComparison(date, sla.end_date);
-            console.log(sla);
-            console.log(comp);
+           
+            
             
             // if end date has passed
-            if(comp < 0){
+            if(comp < 0  && sla.status != "Fault"){//
+                console.log(sla);
+                console.log(comp);
                 if(sla.status != "Completed") {
                     sla.status = "Fault";
                     await sla.save();

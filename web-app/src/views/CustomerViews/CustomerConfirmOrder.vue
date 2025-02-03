@@ -58,12 +58,14 @@ const customerInfo= reactive({
 const confirmOrder = async () => {
     try {
         const response = await apiClient.post('/sla/createSla', orderDetails);
-        console.log('Order confirmed:', response.data);
+        
+        console.log(response.data.message);
+
         localStorage.removeItem('newOrder');
         toast.success('Order confirmed successfully!');
         router.push({ name: 'customer_contracts' });
     } catch (error) {
-        console.error('Error confirming order:', error);
+        console.error('Error confirming order:', error.response.data.message);
     }
 };
 

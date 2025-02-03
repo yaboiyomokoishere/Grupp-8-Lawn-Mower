@@ -206,7 +206,6 @@ form {
   margin-bottom: 20px;
 }
 
-
 input, label {
   display: block;
 }
@@ -218,7 +217,6 @@ button, input {
 }
 
 button {
-
   width: 100%;
   margin: 10px auto;
   border: solid;

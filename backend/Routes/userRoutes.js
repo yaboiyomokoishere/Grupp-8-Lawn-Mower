@@ -14,7 +14,10 @@ const {
     updateCustomerProfile 
 } = require("../Controllers/customerController");
 
-const { createPriceList } = require("../Controllers/adminController");
+const { createPriceList,
+        getUsers,
+        getUser,
+ } = require("../Controllers/adminController");
 
 
 const router = express.Router();
@@ -35,5 +38,7 @@ router.put('/updateCustomer', validateToken, updateCustomerProfile);
 
 // Admin routes
 router.post('/createPriceList', validateToken, createPriceList);
+router.get('/getUsers', validateToken, getUsers);
+router.get('/getUser', validateToken, getUser);
 
 module.exports = router;

@@ -6,7 +6,6 @@ const {
     getAllSla,
     getSla,
     getHeightAndWorkingAreaAlternatives,
-    updateSlaLog,
     cancelSla,
     getSlaLog,
     getSlaPriceList
@@ -23,7 +22,6 @@ router.get('/getSla', validateToken, getSla);
 router.post('/getPrice', validateToken, getPrice);
 router.post('/cancelSla', validateToken, cancelSla);
 
-//router.post('/updateSlaLog', validateToken, updateSlaLog);
 router.get('/getSlaLog', validateToken, getSlaLog);
 
 

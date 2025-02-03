@@ -51,6 +51,12 @@ const userSchema = mongoose.Schema({
         required: [true, "Add user role"],
         enum: ["customer", "technician", "admin"], // Restrict to specific roles
     },
+    status: {
+        type: String,
+        required: [true, "Add user status"],
+        enum: ["active", "inactive"],  
+        default: "active" 
+    },
     password: {
         type: String,
         required: [true, "Add user password"],

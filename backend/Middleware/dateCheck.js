@@ -34,13 +34,10 @@ const dateCheck = async function() {
                     robot.status = "Available";
                     robot.booking_schedule.pop();
                     await robot.save();
-                }
-                
-                
+                }      
             }
         }
-        
-        console.log("done");
+        console.log("Termination check done");
     }catch (error) {
         console.log(error);
     }

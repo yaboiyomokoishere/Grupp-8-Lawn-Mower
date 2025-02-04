@@ -16,19 +16,19 @@
 import apiClient from '@/config/axios';
 import { reactive, onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-
+import { useRoute } from 'vue-router';
 
 //const logData = reactive ([{
   //  action: '',
   //  changed_by: '',
   //  date: ''
 //}]);
-
+const $route = useRoute();
 const customerLogs = ref([]);
 
 onMounted(async () => {
     try {
-        const id = '679362218d2782827ddf1392';
+        const id = $route.params.id;
         console.log(id);
         const response = await apiClient.get(`/sla/getSlaLog?id=${id}`); 
         console.log(response.data);

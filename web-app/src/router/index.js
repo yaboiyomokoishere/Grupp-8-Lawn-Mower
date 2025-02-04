@@ -9,6 +9,7 @@ import Dashboard from '@/views/AdminViews/Dashboard.vue';
 import CustomerNewOrder from '@/views/CustomerViews/CustomerNewOrder.vue';
 import CustomerContract from '@/views/CustomerViews/CustomerContract.vue';
 import CustomerConfirmOrder from '@/views/CustomerViews/CustomerConfirmOrder.vue';
+import CustomerLog from '@/views/CustomerViews/CustomerLog.vue';
 import CustomerUpdateContract from '@/views/CustomerViews/CustomerUpdateContract.vue';
 import UserManagement from '@/views/AdminViews/UserManagement.vue';
 import EditUser from '@/views/AdminViews/EditUser.vue';
@@ -65,6 +66,13 @@ const router = createRouter({
             component: CustomerConfirmOrder,
             meta: { requiresAuth: true, role: 'customer' }
         },
+        {
+            path: '/customer/contracts/viewContract/:id',
+            name: 'customer_Log_view',
+            component: CustomerLog,
+            meta: { requiresAuth: true, role: 'customer' },
+        },
+        
         {
             path: '/customer/contracts/updateContract/:id',
             name: 'customer_update_contract',

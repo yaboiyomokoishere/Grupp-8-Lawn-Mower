@@ -11,7 +11,11 @@
                     </RouterLink>
     
                     <button class="sla-button" @click = "cancelOrder" >Cancel</button>
+
+                    <RouterLink :to="{name: 'customer_Log_view',  params: {id: slaDetails.id} }">
                     <button class="sla-button">View Log</button>
+                    </RouterLink>
+
                     <button class="sla-button">Report Error</button>
                 </div>
                 

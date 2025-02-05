@@ -1,5 +1,6 @@
 const express = require("express");
 const validateToken = require("../Middleware/ValidateTokenHandler");
+const validateActiveUser = require("../Middleware/ValidUser");
 
 const {
     loginUser,
@@ -33,8 +34,8 @@ router.post('/refresh', refreshToken); // Refreshes access token with refresh to
 
 
 // Customer routes
-router.get('/getCustomer', validateToken, getCustomerInfo); 
-router.put('/updateCustomer', validateToken, updateCustomerProfile);
+router.get('/getCustomer', validateToken, validateActiveUser, getCustomerInfo); 
+router.put('/updateCustomer', validateToken, validateActiveUser, updateCustomerProfile);
 
 
 // Admin routes

@@ -2,7 +2,8 @@ const asyncHandler = require("express-async-handler");
 const User = require("../Models/userModel");
 
 const validateActiveUser = asyncHandler(async (req, res, next) => {
-    const userId = req.body.user.id;
+    
+    const userId = req.user.id;
 
     const user = await User.findById(userId);
     if (!user) {
@@ -14,6 +15,8 @@ const validateActiveUser = asyncHandler(async (req, res, next) => {
         res.status(403);
         throw new Error("Access denied: User is not active");
     } else {
+        //console.log("User is active");
+        req.user = user;
         next();
     }  
 });

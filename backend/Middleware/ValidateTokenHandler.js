@@ -10,6 +10,7 @@ const jwt = require("jsonwebtoken");
  * @returns {void}
  */
 const validateToken = asyncHandler(async(req, res, next) => {
+   
     let token;
     let authHeader =  req.headers.Authorization || req.headers.authorization;  
     if(authHeader && authHeader.startsWith("Bearer")) { // The Authorization header starts with "Bearer"
@@ -19,7 +20,7 @@ const validateToken = asyncHandler(async(req, res, next) => {
                 res.status(401);
                 throw new Error("User not Authorized!")
             }
-            req.user = decoded.user;         
+            req.user = decoded.user;       
             next();
         }); 
     } else{ // If there is no token

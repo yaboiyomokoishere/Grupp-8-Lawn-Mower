@@ -4,6 +4,7 @@ const robotSchema = mongoose.Schema({
     model: {
         type: String,
         required: [true, "Model required"],
+        default: "Robot 1"
     },
     status: {
         type: String,
@@ -21,8 +22,6 @@ const robotSchema = mongoose.Schema({
     },
     last_maintenance_date: {
         type: Date,
-        required: [true, "Last maintenance date required"],
-        default: Date.now,
     },
     booking_schedule:[{
         sla_id: {

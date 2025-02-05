@@ -1,7 +1,6 @@
 const Log = require('../Models/slaLogModel');
 
 const logSlaEvent = async function (sla_id, action, user_id, err_message) {
-    console.log('hej')
     const log = await Log.findOne({sla_id: sla_id});
     if(!log) {
         res.status(400);

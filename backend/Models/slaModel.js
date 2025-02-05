@@ -43,19 +43,7 @@ const slaSchema = mongoose.Schema({
         type: String,
         required: [true, "Robot model required"],
         default: "Robot 1"
-    },
-    height_MoE:{        //Margin of Error
-        type: Number,
-        default: 0.15, 
-    },
-    working_area_MoE:{
-        type: Number,
-        default: 0.9,
-    },
-    time_MoE:{
-        type: Number,
-        default: 1, 
-    }, 
+    }
 }, 
 {
     timestamps: true,

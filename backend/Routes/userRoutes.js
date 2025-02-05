@@ -1,5 +1,6 @@
 const express = require("express");
 const validateToken = require("../Middleware/ValidateTokenHandler");
+const validateActiveUser = require("../Middleware/ValidUser");
 
 const {
     loginUser,
@@ -17,8 +18,9 @@ const {
 const { createPriceList,
         getUsers,
         getUser,
+        toggleUserStatus,
+        updateUser
  } = require("../Controllers/adminController");
-
 
 const router = express.Router();
 
@@ -32,13 +34,14 @@ router.post('/refresh', refreshToken); // Refreshes access token with refresh to
 
 
 // Customer routes
-router.get('/getCustomer', validateToken, getCustomerInfo); 
-router.put('/updateCustomer', validateToken, updateCustomerProfile);
+router.get('/getCustomer', validateToken, validateActiveUser, getCustomerInfo); 
+router.put('/updateCustomer', validateToken, validateActiveUser, updateCustomerProfile);
 
 
 // Admin routes
 router.post('/createPriceList', validateToken, createPriceList);
 router.get('/getUsers', validateToken, getUsers);
 router.get('/getUser', validateToken, getUser);
-
+router.put('/toggleUserStatus', validateToken, toggleUserStatus);
+router.put('/updateUser', validateToken, updateUser);
 module.exports = router;

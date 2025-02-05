@@ -11,18 +11,19 @@ const {
     getSlaPriceList
 } = require("../Controllers/slaController");
 const validateToken = require("../Middleware/ValidateTokenHandler");
+const validateActiveUser = require("../Middleware/ValidUser");
 
 
 const router = express.Router();
 
-router.post('/createSla', validateToken, createSla);
-router.put('/updateSla', validateToken, updateSla);
-router.get('/getAllSla', validateToken, getAllSla);
-router.get('/getSla', validateToken, getSla);
-router.post('/getPrice', validateToken, getPrice);
-router.post('/cancelSla', validateToken, cancelSla);
+router.post('/createSla', validateToken, validateActiveUser, createSla);
+router.put('/updateSla', validateToken, validateActiveUser, updateSla);
+router.get('/getAllSla', validateToken, validateActiveUser, getAllSla);
+router.get('/getSla', validateToken, validateActiveUser,  getSla);
+router.post('/getPrice', validateToken, validateActiveUser, getPrice);
+router.post('/cancelSla', validateToken, validateActiveUser, cancelSla);
 
-router.get('/getSlaLog', validateToken, getSlaLog);
+router.get('/getSlaLog', validateToken, validateActiveUser, getSlaLog);
 
 
 router.get('/getAlternatives', validateToken, getHeightAndWorkingAreaAlternatives); 

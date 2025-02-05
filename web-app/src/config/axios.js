@@ -1,5 +1,8 @@
 import axios from 'axios';
 import router from '@/router';
+import { useToast } from 'vue-toastification';
+
+const toast = useToast();
 
 // Base API call for private pages, i.e., use the apiClient instance for 
 // private routes, i.e., customer and admin/other pages.
@@ -48,7 +51,11 @@ apiClient.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-
+    if(error.status === 403 && !originalRequest._retry){
+      toast.error('You are not authorized to access this page.');
+      localStorage.removeItem('accessToken');
+      router.push('/login');
+    }
     // Check if the error is due to an expired access token and not a retry
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true; // Prevent infinite retry loops

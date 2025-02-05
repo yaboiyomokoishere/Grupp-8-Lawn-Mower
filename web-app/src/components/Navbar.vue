@@ -12,8 +12,13 @@
                 <RouterLink :to="{name: 'login'}" class="navbar-item">Login</RouterLink>
                 <RouterLink :to="{name: 'signup'}" class="navbar-item">Sign Up</RouterLink>
             </div>
-            <div v-else >
-                <RouterLink :to="{name: 'customer_contracts'}" class="navbar-item">My Profile</RouterLink>
+            <div v-else class="navbar-links">
+                <div v-if="userRole === 'customer'">
+                    <RouterLink :to="{name: 'customer_contracts'}" class="navbar-item">My Profile</RouterLink>
+                </div>
+                <div v-else-if="userRole === 'admin'">
+                    <RouterLink :to="{name: 'admin_dashboard'}" class="navbar-item">Dashboard</RouterLink>
+                </div>
                 <Logout />
             </div>
         </div>
@@ -24,8 +29,17 @@
 import { isAuthenticated } from '@/router';
 import { ref } from 'vue';
 import Logout from '@/components/Logout.vue';
-// Needs to be a reactive variable in order to updated the buttons after logout.
+import { jwtDecode } from 'jwt-decode';
+
+// Needs to be a reactive variable in order to update the buttons after logout.
 const loggedIn = ref(isAuthenticated()); 
+const token = localStorage.getItem('accessToken');
+const userRole = ref('');
+if(token){
+    const decodedToken = jwtDecode(token);
+    userRole.value = decodedToken.user.role;
+}
+
 </script>
   
 <style scoped>

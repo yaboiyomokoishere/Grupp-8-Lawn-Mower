@@ -1,28 +1,44 @@
 <template>
-    <div class="Log-Page">
-        <h2>Customer Log</h2>
-        <div class="log-info">
-            <tr v-for=" log in customerLogs">
-                <p><strong>action:</strong> {{ log.action }}</p>
-                <p><strong>changed by:</strong> {{ log.changed_by }}</p>
-                <p class="date"><strong>date:</strong> {{ log.date }}</p>
-            </tr>
+    <div class="user-page-container">
+        <CustomerNavBar />
+        <div class="customer-content">
+            <h1>SLA - ID: {{ $route.params.id }}</h1>
+            <div class="back-button-container">
+                <RouterLink :to="{name: 'customer_contract_view', paramas: {id: $route.params.id}}" class="back-button">
+                    <button>Go back</button>
+                </RouterLink>
+            </div>
+            <table v-if= "customerLogs.length" >
+                <thead>
+                    <tr>
+                        <th>Action</th>
+                        <th>Changed by</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for=" log in customerLogs" :key="log.id">
+                        <td><p>{{ log.action }}</p></td>
+                        <td><p>{{ log.changed_by }}</p></td>
+                        <td><p class="date"> {{ log.date }}</p></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div v-else>
+                <p>Error while fetching the logs</p>
+            </div>            
         </div>
     </div>
-
 </template>
+
 
 <script setup>
 import apiClient from '@/config/axios';
-import { reactive, onMounted, ref } from 'vue';
+import CustomerNavBar from '@/components/CustomerNavBar.vue';
+import { onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useRoute } from 'vue-router';
 
-//const logData = reactive ([{
-  //  action: '',
-  //  changed_by: '',
-  //  date: ''
-//}]);
 const $route = useRoute();
 const customerLogs = ref([]);
 
@@ -56,17 +72,48 @@ onMounted(async () => {
 
 <style>
 
-.log-info {
-    margin-bottom: 20px;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-.date {
-    margin-bottom: 20px;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.customer-content table {
+    width: 75%;
+    max-width: 75%;
+    margin: 0 auto;
+    border-collapse: collapse; 
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+.customer-content th, .customer-content td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.customer-content th {
+    background-color: #f7fafc;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.customer-content tr:hover {
+    background-color: #f8fafc;
+}
+
+.customer-content p {
+    color: #718096;
+    margin-top: 1rem;
+    font-style: italic;
+}
+
+button {
+    font-size: 1rem;
+    float:right;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 2px solid black;
+}
+
+button:hover{
+    background-color: #989d8f;
+    color:black;
+}
 </style>

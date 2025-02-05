@@ -22,7 +22,7 @@
                         </div>
                         <div class="form-group">
                             <label for="status">Status:</label>
-                            <input type="text" id="status" v-model="user.status" :readonly="!isEditing" />
+                            <input type="text" id="status" v-model="user.status" readonly />
                         </div>
 
                     </div>
@@ -33,7 +33,7 @@
                     <div class="form-actions">
                         <button type="button" @click="editUser">{{ isEditing ? 'Save' : 'Edit' }}</button>
                         <button type="button" @click="changeStatus">
-                            {{ user.status === 'active' ? 'Deactivate' : 'Activate' }}
+                            {{ user.status === 'active' ? 'Deactivate' : 'Activate' }} User
                         </button>
                     </div>
                 </form>
@@ -60,20 +60,36 @@ const user = reactive({
     email:''
 });
 
-const editUser = () => {
-    // if (isEditing.value) {
-    //     const userId = $route.params.id;
-    //     const response = apiClient.post(`user/editUser?id=${userId}`, user.value);
-    //     isEditing.value = false;
 
-    // }
-    isEditing.value = true;
+const editUser = () => {
+    if (isEditing.value) {
+        const updatedUser = {
+            id: $route.params.id,
+            first_name: user.firstName,
+            last_name: user.lastName,
+            email: user.email,
+            role: user.role,
+            email: user.email
+        }
+        const response = apiClient.put('user/updateUser', updatedUser);
+        console.log(response);
+        isEditing.value = false;
+    } else {
+        isEditing.value = true;
+    }
 };
 
 const changeStatus = async () => {
     const userId = $route.params.id;
-    const response = await apiClient.post(`user/toggleStatus?id=${userId}`);
-    user.value.status = response.data.status;
+    try {
+        const response = await apiClient.put('user/toggleUserStatus', { id: userId });
+        //console.log(response.data);
+        user.status = response.data.status;    
+        console.log("Status updated successfully to " + user.status);
+    } catch(error) {
+        console.error(error);
+    }
+    
 };
 
 onMounted(async () => {

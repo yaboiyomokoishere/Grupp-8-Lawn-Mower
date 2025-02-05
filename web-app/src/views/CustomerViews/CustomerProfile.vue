@@ -113,7 +113,7 @@ const formData = reactive({
 const fetchCustomerData = async () => {
   try {
     const response = await apiClient.get('/user/getCustomer');
-    //console.log(response.data);
+    console.log(response.data);
     //customerData.value = response.data; // Assign the API response to `customerData`
     formData.firstName = response.data.first_name;
     formData.lastName = response.data.last_name;

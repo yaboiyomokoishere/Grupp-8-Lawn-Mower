@@ -86,9 +86,9 @@ const cancelOrder = async () => {
         const response = await apiClient.post('/sla/cancelSla', id);
         if(response.status == 200){
             console.log(response.data.message);
-            toast.success("Cancelled order successfully!");
+            //toast.success("Cancelled order successfully!");
+            window.location.reload();
         }
-        
     } catch (error) {
         console.error('Error cancelling order:', error);
     }

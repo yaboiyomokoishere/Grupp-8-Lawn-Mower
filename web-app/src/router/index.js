@@ -67,12 +67,11 @@ const router = createRouter({
             meta: { requiresAuth: true, role: 'customer' }
         },
         {
-            path: '/customer/contracts/viewContract/:id',
+            path: '/customer/contracts/viewContract/viewLog/:id',
             name: 'customer_Log_view',
             component: CustomerLog,
             meta: { requiresAuth: true, role: 'customer' },
         },
-        
         {
             path: '/customer/contracts/updateContract/:id',
             name: 'customer_update_contract',

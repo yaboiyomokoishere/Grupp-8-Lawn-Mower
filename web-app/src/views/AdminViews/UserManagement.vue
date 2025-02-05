@@ -20,7 +20,6 @@
                 </thead>
                 <tbody>
                     <tr v-for="user in users" :key="user.id">
-
                         <td>{{ user.first_name }} {{ user.last_name }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.status }}</td>
@@ -60,9 +59,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.user-page-container {
-    min-height: 100vh;
-}
 
 .admin-content select {
     padding: 1rem;

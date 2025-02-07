@@ -12,20 +12,22 @@ const dateCheck = async function() {
         while(result.length > 0){
             const sla = result.pop();
             const comp = dateComparison(date, sla.end_date);
-            
+            let description = "";
             // if end date has passed
             if(comp < 0  && sla.status != "Fault"){//
-                console.log(sla);
-                console.log(comp);
+                // console.log(sla);
+                // console.log(comp);
                 if(sla.status != "Completed") {
                     sla.status = "Fault";
                     await sla.save();
+                    description = "The end date has passed without the service being completed. Status updated to Fault.";
                     await logSlaEvent(sla.id, "Sla Fault", "System", "Logging error while auto end sla"); 
                 }
                 else{
                     sla.status = "Archived";
                     await sla.save();
-                    await logSlaEvent(sla.id, "Sla Archived", "System", "Logging error while auto end sla"); 
+                    description = "The contract is over and the service has been completed. Status updated to Archived.";
+                    await logSlaEvent(sla.id, "Sla Archived", "System", description, "Logging error while auto end sla"); 
                 }
                 robot = await Robot.findOne({sla_id: sla._id});
                 if(robot){

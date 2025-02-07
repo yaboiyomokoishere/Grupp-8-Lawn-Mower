@@ -125,9 +125,9 @@ try {
     background-color: #f5f5f5;
 }
 
-.customer-info, .sla-info {
+.customer-info, .sla-info, .price-info {
     width: 100%;
-    max-width: 800px;
+    max-width: 400px;
     margin-bottom: 1rem;
     padding: 1rem;
     background: white;
@@ -135,15 +135,10 @@ try {
     box-shadow: 3px 3px rgba(128, 128, 128, 0.485);
 }
 
+
+
 .price-info {
-    max-width: 800px;
-    width: 100%;
     text-align: center;
-    margin-bottom: 1rem;
-    padding: 1.5rem;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 3px 3px rgba(128, 128, 128, 0.485);
 }
 
 h2 {
@@ -175,7 +170,7 @@ strong {
     display: flex;
     justify-content: flex-end;
     width: 100%;
-    max-width: 800px;
+    max-width: 440px;
     gap: 15px;
 }
 

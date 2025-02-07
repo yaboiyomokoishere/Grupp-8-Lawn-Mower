@@ -5,13 +5,15 @@
         </div>
         <div class="navbar-links">
             <!-- 
-            <RouterLink  class="navbar-item">Pricing</RouterLink>
             <RouterLink  class="navbar-item">About</RouterLink> 
             -->
+            <RouterLink :to="{name: 'pricing'}"  class="navbar-item">Pricing</RouterLink>
+
             <div v-if="!loggedIn" >
                 <RouterLink :to="{name: 'login'}" class="navbar-item">Login</RouterLink>
                 <RouterLink :to="{name: 'signup'}" class="navbar-item">Sign Up</RouterLink>
             </div>
+
             <div v-else class="navbar-links">
                 <RouterLink :to="{name: 'customer_contracts'}"  v-if="userRole === 'customer'" class="navbar-item">
                     My Profile
@@ -19,7 +21,6 @@
                 <RouterLink :to="{name: 'admin_dashboard'}" v-else-if="userRole === 'admin'" class="navbar-item">
                     Dashboard
                 </RouterLink>
-                
                 <Logout />
             </div>
         </div>

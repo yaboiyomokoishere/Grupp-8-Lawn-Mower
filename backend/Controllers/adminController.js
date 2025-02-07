@@ -61,7 +61,6 @@ const updateUser = asyncHandler(async (req, res) => {
 
 
 
-
 const createPriceList = asyncHandler(async (req, res) => {
     // Created a price list for testing. Most values are defaults in the model and the
     // height prices are hardcoded. The actual implementation should receive all values  
@@ -77,11 +76,12 @@ const createPriceList = asyncHandler(async (req, res) => {
         await PriceList.create({ 
             height_prices: heightPrices
         });
-        res.status(200).json({message: 'Price list created successfully'});
+        res.status(200).json({message: 'Price list created successfully.'});
     } catch (error) {
         console.log(error);
-        res.status(400).json({message: 'Error while creating price list'});
+        res.status(400).json({message: 'Error while creating price list.'});
     }
 });
+
 
 module.exports = {createPriceList, getUsers, getUser, toggleUserStatus, updateUser};

@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Robot = require("../Models/robotModel");
 const Sla = require("../Models/slaModel");
+const PriceList = require("../Models/priceListModel");
 const logSlaEvent = require("../Middleware/logSlaEvent");
 
 
@@ -181,5 +182,17 @@ const getBooking = asyncHandler(async (req, res) => {
     }
 });
 
+const getAllPriceLists = asyncHandler(async (req, res) => {
+    const priceLists = await PriceList.find();
+    // console.log(priceLists)
+    if(priceLists.length > 0) {
+        // console.log("At least one price list found")
+        return res.status(200).json(priceLists);
+    } else {
+        return res.status(404).json({message: 'Error while fetching price lists.'});
+    }   
+});
 
-module.exports = {registerRobot, doneCutting, startedCutting, broken, currentCutArea, getRobot, maintenance, getBooking};
+
+
+module.exports = {registerRobot, doneCutting, startedCutting, broken, currentCutArea, getRobot, maintenance, getBooking, getAllPriceLists};

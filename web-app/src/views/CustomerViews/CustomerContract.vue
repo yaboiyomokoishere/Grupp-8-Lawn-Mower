@@ -6,14 +6,18 @@
 
             <div class="sla-view">
                 <div class="action-buttons">
-                    <RouterLink :to="{name: 'customer_update_contract',  params: {id: slaDetails.id} }">
+                    <RouterLink :to="{name: 'customer_update_contract',  params: {id: slaDetails.id} }" 
+                    v-if="validStatuses.includes(slaDetails.status)">
                             <button class="sla-button">Update</button>
                     </RouterLink>
     
-                    <button class="sla-button" @click = "cancelOrder" >Cancel</button>
+                    <button class="sla-button" @click = "cancelOrder" 
+                    v-if="validStatuses.includes(slaDetails.status)">
+                        Cancel
+                    </button>
 
                     <RouterLink :to="{name: 'customer_Log_view',  params: {id: slaDetails.id} }">
-                    <button class="sla-button">View Log</button>
+                        <button class="sla-button">View Log</button>
                     </RouterLink>
 
                     <button class="sla-button">Report Error</button>
@@ -76,6 +80,8 @@ const customerInfo= reactive({
     address: ''
 });
 
+const validStatuses = ['Active', 'Paid', 'Pending', 'Completed'];
+
 
 const cancelOrder = async () => {
     try {
@@ -107,7 +113,7 @@ onMounted(async () => {
         slaDetails.grass_height = response.data.result.grass_height;
         slaDetails.working_area = response.data.result.working_area;
         slaDetails.status = response.data.result.status;
-        slaDetails.price = response.data.result.price;
+        slaDetails.price = Math.round(response.data.result.price);
 
     } catch (error) {
         console.log(error);

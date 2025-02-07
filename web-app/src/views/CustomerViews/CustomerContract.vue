@@ -53,10 +53,8 @@ import { onMounted, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import  apiClient from '@/config/axios';
 import CustomerNavBar from '@/components/CustomerNavBar.vue';
-import { useToast } from 'vue-toastification';
 
 const $route = useRoute();
-const toast = useToast();
 
 const slaDetails = reactive({
     address: '',

@@ -13,12 +13,13 @@
                 <RouterLink :to="{name: 'signup'}" class="navbar-item">Sign Up</RouterLink>
             </div>
             <div v-else class="navbar-links">
-                <div v-if="userRole === 'customer'">
-                    <RouterLink :to="{name: 'customer_contracts'}" class="navbar-item">My Profile</RouterLink>
-                </div>
-                <div v-else-if="userRole === 'admin'">
-                    <RouterLink :to="{name: 'admin_dashboard'}" class="navbar-item">Dashboard</RouterLink>
-                </div>
+                <RouterLink :to="{name: 'customer_contracts'}"  v-if="userRole === 'customer'" class="navbar-item">
+                    My Profile
+                </RouterLink>
+                <RouterLink :to="{name: 'admin_dashboard'}" v-else-if="userRole === 'admin'" class="navbar-item">
+                    Dashboard
+                </RouterLink>
+                
                 <Logout />
             </div>
         </div>

@@ -75,19 +75,16 @@ const updateSla  = asyncHandler(async (req, res) => {
                 if(sla){
                     // check for what is changed
                     if(req.body.grass_height){
-                        description = "Grass height changed to " + req.body.grass_height + "from " + sla.grass_height;
+                        description = "The grass height changed to " + req.body.grass_height + " kr from " + sla.grass_height + " kr. ";
                         sla.grass_height = req.body.grass_height;
                     }
-                    if(req.body.working_area){
-                        if (description != "") {
-                            description = description + " and working area changed to " + req.body.working_area + 
-                                            " from " + sla.working_area;
-                        } else{
-                            description = "Working area changed to " + req.body.working_area + " from " + sla.working_area;
-                        }
-                        sla.working_area = req.body.working_area;
+                    if(req.body.working_area){                      
+                        description = "The working area changed to " + req.body.working_area + " kr  from " + sla.working_area + " kr.";
                     }
+                        sla.working_area = req.body.working_area;
+                    
                     sla.price = req.body.price;
+                    description = description + " The cost for the changes was  " + req.body.update_cost + " kr.";
                     // Update db
                     logSlaEvent(sla.id, "Sla updated", req.user.id, description, "Logging error while updating sla");
                     await sla.save();

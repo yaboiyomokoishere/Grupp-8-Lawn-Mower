@@ -68,22 +68,30 @@ const updateSla  = asyncHandler(async (req, res) => {
     } else{
         try {
             const sla = await Sla.findById(req.body.id);
+            let description = "";
             // if allowed to edit SLA
             if(sla.status == "Pending" || sla.status == "Paid" || sla.status == "Active") {
                 // if SLA and log found
                 if(sla){
                     // check for what is changed
                     if(req.body.grass_height){
+                        description = "Grass height changed to " + req.body.grass_height + "from " + sla.grass_height;
                         sla.grass_height = req.body.grass_height;
                     }
                     if(req.body.working_area){
+                        if (description != "") {
+                            description = description + " and working area changed to " + req.body.working_area + 
+                                            " from " + sla.working_area;
+                        } else{
+                            description = "Working area changed to " + req.body.working_area + " from " + sla.working_area;
+                        }
                         sla.working_area = req.body.working_area;
                     }
                     sla.price = req.body.price;
-                    // // Update db
-                    logSlaEvent(sla.id, "Sla updated", req.user.id, "Logging error while updating sla");
+                    // Update db
+                    logSlaEvent(sla.id, "Sla updated", req.user.id, description, "Logging error while updating sla");
                     await sla.save();
-                    console.log(sla);
+                    //console.log(sla);
                     res.status(201).json({message: 'Sla updated successfully'});               
                 } else {
                     res.status(404).json({message: 'Sla not found'});
@@ -99,22 +107,24 @@ const updateSla  = asyncHandler(async (req, res) => {
 });
 
 const cancelSla = asyncHandler (async (req, res) =>{
-    
     try{
         const sla = await Sla.findOne({_id: req.body.id});
         const robot = await Robot.findOne({'booking_schedule.sla_id': req.body.id});
-        console.log(robot);
+        //console.log(robot);
         robot.status = "Available";
         // Works as long as only one booking at a time
         robot.booking_schedule.pop();
-        console.log(robot);
+        //console.log(robot);
         await robot.save();
         if (!sla){
             res.status(404).json({message: 'Sla or log not found'});
         }
         else {
             sla.status = "Cancelled";
-            logSlaEvent(sla.id, "Manual Cancellation", req.user.id, "Logging error while cancelling sla");
+            sla.endDate = Date.now();
+            let description = "End date updated to " + sla.endDate + " from " + sla.end_date + 
+                               " and status changed to " + sla.status + " from " + sla.status + ".";
+            logSlaEvent(sla.id, "Manual Cancellation", req.user.id, description, "Logging error while cancelling sla");
             await sla.save();
             res.status(200).json({message: 'Cancellation successful'});
         }

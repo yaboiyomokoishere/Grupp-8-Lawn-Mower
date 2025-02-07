@@ -74,7 +74,8 @@ const userSchema = mongoose.Schema({
         type: adminDetailsSchema,
         default: null // Only used for admins
     }
-}, {
+}, 
+{
     timestamps: true,
 });
 

@@ -5,7 +5,6 @@
             <h1>Users Management</h1>
             <select v-model="userRole">
                 <option value="customer">Customers</option>
-                <option value="admin">Admins</option>
                 <option value="technician">Technicians</option>
                 <option value="organization">Organizations</option>
             </select>

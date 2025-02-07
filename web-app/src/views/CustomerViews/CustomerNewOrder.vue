@@ -67,11 +67,11 @@ import "flatpickr/dist/flatpickr.css";
 import router from '@/router';
 
 const formData = reactive({
-  address: '',
-  start_date: '',
-  end_date: '',
-  working_area: '',
-  grass_height: ''
+    address: '',
+    start_date: '',
+    end_date: '',
+    working_area: '',
+    grass_height: ''
 });
 
 // Reactive variables to store height and area options
@@ -163,7 +163,7 @@ onMounted(async () => {
     // Extract the height and area objects as arrays
     heightPrices.push(...alternatives.data.height_prices);
     maxArea.value = alternatives.data.max_area;
-    
+
   } catch (error) {
     console.log(error);
   }

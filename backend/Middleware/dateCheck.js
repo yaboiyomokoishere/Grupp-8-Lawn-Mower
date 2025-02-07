@@ -8,7 +8,7 @@ const dateCheck = async function() {
     try {
         // should return all SLA that is not archived or cancelled
         const result = await Sla.find({status: { $nin: ["Archived", "Cancelled", "Fault"]}});
-        console.log(result);
+        //console.log(result);
         while(result.length > 0){
             const sla = result.pop();
             const comp = dateComparison(date, sla.end_date);

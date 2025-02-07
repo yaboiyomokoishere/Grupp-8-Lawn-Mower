@@ -53,9 +53,7 @@ onMounted(async () => {
         const response = await apiClient.get('/sla/getAllSla'); 
         //console.log(response.data. result);
         if (response.data.result.length > 0){
-            let tmp = []
             hasContracts.value = true;
-            console.log("here")
             for(let i = 0; i < response.data.result.length; i++){
                 let contract= {
                     id: response.data.result[i]._id,
@@ -66,11 +64,8 @@ onMounted(async () => {
                 }
                 customerContracts.value.push(contract);          
             }
-            //console.log(tmp)  
             //console.log(customerContracts)
         }
-          
-         
     } catch (error) {
         console.error(error);
     }

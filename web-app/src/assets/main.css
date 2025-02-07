@@ -19,8 +19,7 @@ a {
   text-decoration: none;
 }
 
-.home-navbar a:hover, button:hover, 
-.navbar-links a:hover {
+.home-navbar a:hover, button:hover, .navbar-links a:hover {
   color: #2563eb;
   text-decoration: underline;
   text-decoration-color: #333333;
@@ -67,6 +66,5 @@ legend {
   text-align: center;
   font-weight: bold;
   font-size: 2.5rem;
-  margin-top: 2rem;
   margin-bottom: 2rem;
 }

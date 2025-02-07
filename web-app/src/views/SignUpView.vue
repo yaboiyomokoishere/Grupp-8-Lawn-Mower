@@ -142,7 +142,7 @@ const handleSubmit = async () => {
       //console.log(newCustomer);
       const response = await axios.post('http://localhost:3001/api/user/register', newCustomer);
       console.log(response.data); // Log the response data obtained from the backend
-      toast.success('Customer created successfully');
+      toast.success('Account created successfully');
       
       router.push({name: 'login'}); // Redirect to the login page after sucessful signup
     } catch (error) {

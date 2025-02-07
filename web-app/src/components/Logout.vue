@@ -20,13 +20,19 @@ const logout = async () => {
 }
 </script>
 
-<style>
+<style scoped>
 #logout {
     font-size: 2rem;
     border: none;
     padding: 10px;
     margin: 0;
     font-family: inherit;  
+}
+
+#logout:hover {
+    cursor: pointer;
+    background-color: inherit; 
+    color: #2563eb;
 }
 
 </style>

@@ -37,14 +37,14 @@ import Logout from '@/components/Logout.vue';
 }
 
 .navbar-item {
-  display: flex;
-  align-items: center;
-  padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
 }
 
 .logout-button {
-  padding: 1rem 1.5rem;
-  border-top: 1px solid #e5e7eb;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e5e7eb;
 }
 </style>
 

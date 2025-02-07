@@ -32,7 +32,7 @@
                             />
                         </div>
                     </div>
-                    <p v-if="formData.price">Your new total price would be: {{ formData.price }} kr</p>
+                    <p v-if="formData.price">Your changes will cost {{ updateExpenses }} kr. </p>
 
                     <div class="action-buttons">
                         <button v-if="formData.price" type="submit">Confirm</button>
@@ -69,6 +69,7 @@ const formData = reactive({
 const currentCutArea = ref(0)
 const maxArea = ref(0)
 const availableHeights = ref([])
+const updateExpenses = ref(0)
 
 function goBack() {
     router.push({ name: 'customer_contract_view' });
@@ -98,6 +99,8 @@ async function calculateNewTotalPrice() {
 
         console.log(totalPrice.data.result);
         formData.price = totalPrice.data.result;
+        updateExpenses.value = Math.round(totalPrice.data.result - sla.data.result.price);
+        console.log(updateExpenses.value)
         //console.log(formData.total_price)
 
     } catch (error) {
@@ -114,7 +117,8 @@ async function handleSubmit() {
             working_area: formData.working_area,
             start_date: route.params.start_date,
             end_date: route.params.end_date,
-            price: formData.price
+            price: formData.price,
+            update_cost: updateExpenses.value
         }
         const response = await apiClient.put('/sla/updateSla', slaData);
         if (response.status === 200) {
@@ -123,7 +127,7 @@ async function handleSubmit() {
         toast.success('Sla updated successfully!');
         router.push({ name: 'customer_contract_view' });       
     } catch (error) {
-        
+        console.error('Error updating SLA:', error);
     }
 }
 

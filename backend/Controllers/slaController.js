@@ -121,7 +121,10 @@ const cancelSla = asyncHandler (async (req, res) =>{
         }
         else {
             sla.status = "Cancelled";
-            logSlaEvent(sla.id, "Manual Cancellation", req.user.id, "Logging error while cancelling sla");
+            sla.endDate = Date.now();
+            let description = "End date updated to " + sla.endDate + " from " + sla.end_date + 
+                               " and status changed to " + sla.status + " from " + sla.status + ".";
+            logSlaEvent(sla.id, "Manual Cancellation", req.user.id, description, "Logging error while cancelling sla");
             await sla.save();
             res.status(200).json({message: 'Cancellation successful'});
         }

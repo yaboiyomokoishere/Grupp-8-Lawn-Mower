@@ -16,11 +16,18 @@
                         <th>Date</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr v-for=" log in customerLogs" :key="log.id">
+                <tbody v-for=" log in customerLogs" :key="log.id">
+                    <tr >
                         <td><p>{{ log.action }}</p></td>
                         <td><p>{{ log.changed_by }}</p></td>
                         <td><p class="date"> {{ log.date }}</p></td>
+                        <td v-if = 'log.description !== ""'> 
+                            <button @click="showDescription(log.id)">Description</button>
+                        </td>
+                    </tr>
+                    <tr v-if = 'log.description !== "" ' :class="{hideDescription: !isActive.get(log.id)}">
+                        <td>Description: </td>
+                        <td>{{ log.description }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -41,29 +48,43 @@ import { useRoute } from 'vue-router';
 
 const $route = useRoute();
 const customerLogs = ref([]);
+const isActive = ref(new Map());
+
+const showDescription = function(logId){
+    //console.log(logId);
+    if (isActive.value.get(logId)) {
+        isActive.value.set(logId, false);
+    } else {
+        isActive.value.set(logId, true);
+    }
+}
 
 onMounted(async () => {
     try {
         const id = $route.params.id;
         console.log(id);
         const response = await apiClient.get(`/sla/getSlaLog?id=${id}`); 
-        console.log(response.data);
+        //console.log(response.data);
         console.log(response.data.events[0]);
         for(let i = 0; i < response.data.events.length; i++) {
             //logData.action = response.data.events[i].action;
             //logData.changed_by = response.data.events[i].changed_by; 
             //logData.date = response.data.events[i].date.split('T')[0];
             let log = {
+                id: i,
                 action: response.data.events[i].action,
                 changed_by: response.data.events[i].changed_by,
-                date: response.data.events[i].date.split('T')[0]
+                date: response.data.events[i].date.split('T')[0],
+                description: response.data.events[i].description
             }
-                //logData.action = response.data.events[i].action;
-                //logData.changed_by = response.data.events[i].changed_by; 
-                //logData.date = response.data.events[i].date.split('T')[0];
-              customerLogs.value.push(log);
+            isActive.value.set(i, false);
+            //logData.action = response.data.events[i].action;
+            //logData.changed_by = response.data.events[i].changed_by; 
+            //logData.date = response.data.events[i].date.split('T')[0];
+            customerLogs.value.push(log);
         }
-        
+        //console.log(customerLogs.value);
+
     } catch (error) {
         console.log(error);
     }
@@ -116,4 +137,8 @@ button:hover{
     background-color: #989d8f;
     color:black;
 }
+
+.hideDescription{
+    display:none;
+} 
 </style>

@@ -62,10 +62,11 @@ legend {
   margin-left: 200px;
   
 }
- .customer-content h1, .admin-content h1{
+
+.customer-content h1, .admin-content h1{
   text-align: center;
   font-weight: bold;
   font-size: 2.5rem;
   margin-top: 2rem;
   margin-bottom: 2rem;
- }
+}

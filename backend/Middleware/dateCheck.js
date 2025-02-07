@@ -12,8 +12,6 @@ const dateCheck = async function() {
         while(result.length > 0){
             const sla = result.pop();
             const comp = dateComparison(date, sla.end_date);
-           
-            
             
             // if end date has passed
             if(comp < 0  && sla.status != "Fault"){//

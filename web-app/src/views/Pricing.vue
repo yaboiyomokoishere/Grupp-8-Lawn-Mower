@@ -1,9 +1,8 @@
 <template>
     <Navbar />
-
-    <div class="pricing-table">
+    <div class="pricing-tables">
         <!-- Loop through the models and display them -->
-        <ModelPricing v-for="model in modelsPrices" :key="model._id" :model="model" />
+        <ModelPricing v-for="model in modelsPrices" :key="model._id" :model="model"  />
     </div>
 </template>
 
@@ -17,7 +16,7 @@ const modelsPrices = ref([]);
 
 onMounted(async () => {
     // Fetch all model prices.
-    const response = await apiClient.get('/robot/getAllModelPrices');
+    const response = await apiClient.get('/robot/getAllPriceLists');
     modelsPrices.value = response.data;
     //console.log(modelsPrices.value);
 })
@@ -25,9 +24,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.pricing-table{
-    border: 1px solid black;
-    border-radius: 10px;
+.pricing-tables{
     width: 75%;
     margin: 0 auto;
     padding: 20px;

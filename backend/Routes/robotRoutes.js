@@ -7,7 +7,8 @@ const {
     doneCutting,
     getRobot,
     maintenance,
-    getBooking
+    getAllPriceLists
+    //getBooking
 } = require("../Controllers/robotController");
 
 const router = express.Router();
@@ -19,5 +20,6 @@ router.post('/broken', broken);
 router.post('/maintenance', maintenance);
 router.post('/doneCutting', doneCutting);
 router.get('/getRobot', getRobot);
+router.get('/getAllPriceLists', getAllPriceLists)
 
 module.exports = router;

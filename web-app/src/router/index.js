@@ -1,10 +1,12 @@
 import {createRouter, createWebHistory} from 'vue-router';
+import { jwtDecode } from "jwt-decode";
+
 import HomeView from '@/views/HomeView.vue';
 import LoginView from '@/views/LoginView.vue';
 import SignUpView from '@/views/SignUpView.vue';
+import Pricing from '@/views/Pricing.vue';
 import CustomerProfile from '@/views/CustomerViews/CustomerProfile.vue';
 import CustomerContracts from '@/views/CustomerViews/CustomerContracts.vue';
-import { jwtDecode } from "jwt-decode";
 import Dashboard from '@/views/AdminViews/Dashboard.vue';
 import CustomerNewOrder from '@/views/CustomerViews/CustomerNewOrder.vue';
 import CustomerContract from '@/views/CustomerViews/CustomerContract.vue';
@@ -14,9 +16,11 @@ import CustomerUpdateContract from '@/views/CustomerViews/CustomerUpdateContract
 import UserManagement from '@/views/AdminViews/UserManagement.vue';
 import EditUser from '@/views/AdminViews/EditUser.vue';
 
+
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
+        // Generic Routes
         {
             path: '/',
             name: 'home',
@@ -26,7 +30,11 @@ const router = createRouter({
             path: '/login',
             name: 'login',
             component: LoginView,
-            
+        },
+        {
+            path: '/pricing',
+            name: 'pricing',
+            component: Pricing
         },
         {
             path: '/signup',

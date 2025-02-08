@@ -159,11 +159,9 @@ onMounted(async () => {
   try{
     const alternatives = await apiClient.get('/sla/getAlternatives');
     //console.log(alternatives.data);
-    
-    // Extract the height and area objects as arrays
+    // Extract the heights from height_prices and add them to the array.
     heightPrices.push(...alternatives.data.height_prices);
     maxArea.value = alternatives.data.max_area;
-
   } catch (error) {
     console.log(error);
   }

@@ -1,9 +1,8 @@
 <template>
     <Navbar />
-
-    <div class="pricing-table">
+    <div class="pricing-tables">
         <!-- Loop through the models and display them -->
-        <ModelPricing v-for="model in modelsPrices" :key="model._id" :model="model" class ="model-pricing" />
+        <ModelPricing v-for="model in modelsPrices" :key="model._id" :model="model"  />
     </div>
 </template>
 
@@ -25,14 +24,9 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.pricing-table{
+.pricing-tables{
     width: 75%;
     margin: 0 auto;
     padding: 20px;
-}
-
-.model-pricing{
-    border: black 2px solid;
-    border-radius: 10px;
 }
 </style>

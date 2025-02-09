@@ -58,20 +58,25 @@ const startedCutting  = asyncHandler(async (req, res) => {
 });
 
 
-const currentCutArea  = asyncHandler(async (req, res) => { 
+const currentCutArea  = async (req, res) => { 
     try {
         const sla = await Sla.findById(req.body.sla_id);
+        const newCutArea = parseInt(req.body.currentCutArea);
         if(sla){
-            const previousCutArea = sla.currentCutArea;
-            sla.currentCutArea = req.body.currentCutArea;
-            await sla.save();
-            const description = "The current cut are has been updated from " + 
-                                previousCutArea + " to " + sla.currentCutArea + ".";
-            const err = "Error while logging status change to active";
-            const actor = "Robot";
-            const event = "Sla current cut area update."; 
-            logSlaEvent(sla.id, event, actor, description, err);
-            res.status(200).json({message: "Updated succesfully"});
+            if (newCutArea < sla.working_area) {
+                //console.log(newCutArea)
+                const previousCutArea = sla.current_cut_area;
+                sla.current_cut_area += newCutArea;
+                await sla.save();
+                const description = "The current cut area has been updated from " + 
+                                    previousCutArea + " to " + sla.current_cut_area + " kr.";
+                const err = "Error while logging status change to active";
+                const actor = "Robot";
+                const event = "Sla current cut area update."; 
+                logSlaEvent(sla.id, event, actor, description, err);
+                res.status(200).json({message: "Updated succesfully"});    
+            }
+            
         } else {
             res.status(404).json({message: "Sla not found"});
         }
@@ -79,7 +84,8 @@ const currentCutArea  = asyncHandler(async (req, res) => {
         console.log(error);
         res.status(400).json({message: 'Server error'});
     }
-});
+};
+
 
 const doneCutting  = asyncHandler(async (req, res) => { 
     try {
@@ -113,7 +119,7 @@ const broken  = asyncHandler(async (req, res) => { // Cancel all future bookings
         const booking = robot.booking_schedule.pop();
         const sla = await Sla.findOne({_id: booking.sla_id});
 
-        if(robot && sla && log){
+        if(robot && sla){
             robot.status = "Broken";
             // todo loop over the booking shedule
             robot.booking_schedule.pop();

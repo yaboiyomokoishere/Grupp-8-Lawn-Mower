@@ -31,7 +31,7 @@ const dateCheck = async function() {
                     description = "The contract is over and the service has been completed. Status updated to Archived.";
                     await logSlaEvent(sla.id, "Sla Archived", "System", description, "Logging error while auto end sla"); 
                 }
-                robot = await Robot.findOne({sla_id: sla._id});
+                robot = await Robot.findOne({'booking_schedule.sla_id': sla._id});
                 if(robot){
                     robot.status = "Available";
                     robot.booking_schedule.pop();

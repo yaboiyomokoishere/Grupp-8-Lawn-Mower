@@ -43,7 +43,7 @@ const orderDetails = reactive({
     end_date: '',
     grass_height: 0,
     working_area: 0,
-    total_price: 0
+    total_price: 0,
 });
 
 const customerInfo= reactive({
@@ -59,7 +59,7 @@ const confirmOrder = async () => {
     try {
         const response = await apiClient.post('/sla/createSla', orderDetails);
         
-        console.log(response.data.message);
+        //console.log(response.data.message);
 
         localStorage.removeItem('newOrder');
         toast.success('Order confirmed successfully!');
@@ -93,17 +93,19 @@ orderDetails.grass_height = newOrderData.grass_height;
 orderDetails.working_area = newOrderData.working_area;
 
 try {
+    newOrderData.create_sla = true;
+    console.log(newOrderData)
     const response = await apiClient.post('/sla/getPrice', newOrderData);
-    console.log("Total price:", response.data.result);
+    //console.log("Total price:", response.data.result);
     orderDetails.total_price = Math.ceil(response.data.result);
-    console.log(orderDetails)
+    //console.log(orderDetails)
 } catch (error) {
     console.error('Error fetching total price:', error);
 }
 
 try {
     const response = await apiClient.get('/user/getCustomer');
-    console.log("User data", response.data);
+    //console.log("User data", response.data);
     customerInfo.first_name = response.data.first_name;
     customerInfo.last_name = response.data.last_name;
     customerInfo.email = response.data.email;

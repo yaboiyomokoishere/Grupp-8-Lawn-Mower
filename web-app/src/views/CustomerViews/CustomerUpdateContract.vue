@@ -97,9 +97,9 @@ async function calculateNewTotalPrice() {
             console.log('Total price calculated!');
         }
 
-        console.log(totalPrice.data.result);
-        formData.price = totalPrice.data.result;
-        updateExpenses.value = Math.round(totalPrice.data.result - sla.data.result.price);
+        //console.log(totalPrice.data.result);
+        formData.price = totalPrice.data.result + sla.data.result.price;
+        updateExpenses.value = Math.round(totalPrice.data.result);
         console.log(updateExpenses.value)
         //console.log(formData.total_price)
 

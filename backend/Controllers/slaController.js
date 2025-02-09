@@ -179,9 +179,12 @@ const getPrice  = asyncHandler(async (req, res) => {
         let startDate = new Date(req.body.start_date);
         let endDate = new Date(req.body.end_date);
         let Difference_In_Time = endDate.getTime() - startDate.getTime();
-        let duration = (Difference_In_Time)/(1000*60*60*24);      
-        
-        var result = await priceCalculator(req.body.grass_height, req.body.working_area, duration, robotModel)
+        let duration = (Difference_In_Time)/(1000*60*60*24);
+        let createSla = false;
+        if(req.body.create_sla){
+            createSla = true;
+        }
+        var result = await priceCalculator(req.body.grass_height, req.body.working_area, duration, robotModel, createSla)
         if(!result){
             res.status(404).json({message: 'result not found'});
         } else {

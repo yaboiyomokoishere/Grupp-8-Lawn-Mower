@@ -1,6 +1,6 @@
 const PriceList = require("../Models/priceListModel");
 
-const priceCalculator = async function(grassHeight, workingArea, duration, robotModel) {
+const priceCalculator = async function(grassHeight, workingArea, duration, robotModel, createSla = false) {
     if (!grassHeight || !workingArea || !robotModel || !duration) {
         throw new Error("Data is missing");
     }
@@ -19,7 +19,11 @@ const priceCalculator = async function(grassHeight, workingArea, duration, robot
             throw new Error("Height not found in price list");
         }
         
-        const installation = priceList.installation;
+        let installation = 0;
+        if (createSla) {
+            installation = priceList.installation;
+        } 
+        
         const pricePerSquareMeter = priceList.price_per_square_meter;
         const robotDailyRent = priceList.robot_daily_rent;
         const price = (heightPrice.price + pricePerSquareMeter) * workingArea + installation + robotDailyRent*duration;

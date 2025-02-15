@@ -81,9 +81,9 @@ const updateSla  = asyncHandler(async (req, res) => {
                     if(req.body.working_area){                      
                         description = "The working area changed to " + req.body.working_area + " kr  from " + sla.working_area + " kr.";
                     }
-                        sla.working_area = req.body.working_area;
+                    sla.working_area = req.body.working_area;
                     
-                    sla.price = req.body.price;
+                    sla.price += req.body.update_cost;
                     description = description + " The cost for the changes was  " + req.body.update_cost + " kr.";
                     // Update db
                     logSlaEvent(sla.id, "Sla updated", req.user.id, description, "Logging error while updating sla");
@@ -174,19 +174,18 @@ const getSla  = asyncHandler(async (req, res) => {
 //@access private
 const getPrice  = asyncHandler(async (req, res) => { 
     try {
-        // let robotModel = req.body.robot_model;
-        let robotModel = "Robot 1"; // Hardcoded for testing 
-        let startDate = new Date(req.body.start_date);
-        let endDate = new Date(req.body.end_date);
-        let differenceInTime = endDate.getTime() - startDate.getTime();
-        let duration = (differenceInTime)/(1000*60*60*24);
         let createSla = false;
         if(req.body.create_sla){ 
             createSla = true;
         }
-        var result = await priceCalculator(req.body.grass_height, req.body.working_area, duration, robotModel, createSla)
+        var result = await priceCalculator( req.body.grass_height, 
+                                            req.body.working_area, 
+                                            req.body.start_date,
+                                            req.body.end_date, 
+                                            req.body.robot_model, 
+                                            createSla)
         if(!result){
-            res.status(404).json({message: 'result not found'});
+            res.status(404).json({message: 'Error while calculating a price.'});
         } else {
             res.status(200).json({result});
         }

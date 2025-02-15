@@ -141,7 +141,8 @@ const handleSubmit = async () => {
       start_date: formData.start_date,
       end_date: formData.end_date,
       working_area: formData.working_area,
-      grass_height: formData.grass_height
+      grass_height: formData.grass_height,
+      robot_model: 'Robot 1'
     };
     //console.log(newSla);
     try {

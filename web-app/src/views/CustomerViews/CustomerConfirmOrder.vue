@@ -58,14 +58,14 @@ const customerInfo= reactive({
 const confirmOrder = async () => {
     try {
         const response = await apiClient.post('/sla/createSla', orderDetails);
-        
-        //console.log(response.data.message);
+        console.log(response.data.message);
 
         localStorage.removeItem('newOrder');
+
         toast.success('Order confirmed successfully!');
         router.push({ name: 'customer_contracts' });
     } catch (error) {
-        console.error('Error confirming order:', error.response.data.message);
+        console.error('Error confirming order:', error);
     }
 };
 
@@ -76,44 +76,46 @@ router.push({ name: 'order_contract' });
 
 
 onMounted(async () => {
+    const newOrderData = JSON.parse(localStorage.getItem('newOrder'));
 
-const newOrderData = JSON.parse(localStorage.getItem('newOrder'));
+    if (!newOrderData) {
+        console.error('form has not been filled');
+        router.push({ name: 'order_contract' });
+        return;
+    }
 
-if (!newOrderData) {
-    console.error('form has not been filled');
-    router.push({ name: 'order_contract' });
-    return;
-}
+    // console.log("------------------------")
+    // console.log(newOrderData)
+    // console.log("------------------------")
+    // Order data from the form filled by the user
+    orderDetails.address = newOrderData.address;
+    orderDetails.start_date = newOrderData.start_date ;
+    orderDetails.end_date = newOrderData.end_date;
+    orderDetails.grass_height = newOrderData.grass_height;
+    orderDetails.working_area = newOrderData.working_area;
 
-// Order data from the form filled by the user
-orderDetails.address = newOrderData.address;
-orderDetails.start_date = newOrderData.start_date ;
-orderDetails.end_date = newOrderData.end_date;
-orderDetails.grass_height = newOrderData.grass_height;
-orderDetails.working_area = newOrderData.working_area;
+    try {
+        newOrderData.create_sla = true;
+        console.log(newOrderData)
+        const response = await apiClient.post('/sla/getPrice', newOrderData);
+        //console.log("Total price:", response.data.result);
+        orderDetails.total_price = Math.ceil(response.data.result);
+        //console.log(orderDetails)
+    } catch (error) {
+        console.error('Error fetching total price:', error);
+    }
 
-try {
-    newOrderData.create_sla = true;
-    console.log(newOrderData)
-    const response = await apiClient.post('/sla/getPrice', newOrderData);
-    //console.log("Total price:", response.data.result);
-    orderDetails.total_price = Math.ceil(response.data.result);
-    //console.log(orderDetails)
-} catch (error) {
-    console.error('Error fetching total price:', error);
-}
-
-try {
-    const response = await apiClient.get('/user/getCustomer');
-    //console.log("User data", response.data);
-    customerInfo.first_name = response.data.first_name;
-    customerInfo.last_name = response.data.last_name;
-    customerInfo.email = response.data.email;
-    customerInfo.phone_number = response.data.customer_details.phone_number;
-    customerInfo.address = response.data.customer_details.address;
-} catch (error) {
-    console.error('Error fetching total price:', error);
-}
+    try {
+        const response = await apiClient.get('/user/getCustomer');
+        //console.log("User data", response.data);
+        customerInfo.first_name = response.data.first_name;
+        customerInfo.last_name = response.data.last_name;
+        customerInfo.email = response.data.email;
+        customerInfo.phone_number = response.data.customer_details.phone_number;
+        customerInfo.address = response.data.customer_details.address;
+    } catch (error) {
+        console.error('Error fetching total price:', error);
+    }
 });
 </script>
   

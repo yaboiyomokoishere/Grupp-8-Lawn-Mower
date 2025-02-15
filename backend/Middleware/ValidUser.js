@@ -12,7 +12,7 @@ const validateActiveUser = asyncHandler(async (req, res, next) => {
     }
 
     if (user.status !== 'active') {
-        res.status(403);
+        res.status(401);
         throw new Error("Access denied: User is not active");
     } else {
         //console.log("User is active");
@@ -22,4 +22,3 @@ const validateActiveUser = asyncHandler(async (req, res, next) => {
 });
 
 module.exports = validateActiveUser;
-

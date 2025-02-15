@@ -178,10 +178,10 @@ const getPrice  = asyncHandler(async (req, res) => {
         let robotModel = "Robot 1"; // Hardcoded for testing 
         let startDate = new Date(req.body.start_date);
         let endDate = new Date(req.body.end_date);
-        let Difference_In_Time = endDate.getTime() - startDate.getTime();
-        let duration = (Difference_In_Time)/(1000*60*60*24);
+        let differenceInTime = endDate.getTime() - startDate.getTime();
+        let duration = (differenceInTime)/(1000*60*60*24);
         let createSla = false;
-        if(req.body.create_sla){
+        if(req.body.create_sla){ 
             createSla = true;
         }
         var result = await priceCalculator(req.body.grass_height, req.body.working_area, duration, robotModel, createSla)

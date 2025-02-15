@@ -26,7 +26,6 @@
                         </td>
                     </tr>
                     <tr v-if = 'log.description !== "" ' :class="{hideDescription: !isActive.get(log.id)}">
-                        <td>Description: </td>
                         <td>{{ log.description }}</td>
                     </tr>
                 </tbody>

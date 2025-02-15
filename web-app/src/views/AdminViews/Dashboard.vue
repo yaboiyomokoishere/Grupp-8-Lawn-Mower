@@ -2,8 +2,7 @@
     <div class="user-page-container">
         <AdminNavBar />
         <div class = "admin-content">
-            <h1>test</h1>
-            
+            <h1>Dashboard</h1>
             
         </div>
     </div>

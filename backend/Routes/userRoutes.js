@@ -1,5 +1,5 @@
 const express = require("express");
-const validateToken = require("../Middleware/ValidateTokenHandler");
+const validateToken = require("../Middleware/validateTokenHandler");
 const validateActiveUser = require("../Middleware/ValidUser");
 
 const {

@@ -142,7 +142,7 @@ const handleSubmit = async () => {
       end_date: formData.end_date,
       working_area: formData.working_area,
       grass_height: formData.grass_height,
-      robot_model: 'Robot 1'
+      robot_model: 'Robot 1' // Hardcoded for MVP development
     };
     //console.log(newSla);
     try {

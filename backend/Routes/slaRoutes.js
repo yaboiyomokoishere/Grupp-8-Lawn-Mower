@@ -10,7 +10,7 @@ const {
     getSlaLog,
     getSlaPriceList
 } = require("../Controllers/slaController");
-const validateToken = require("../Middleware/ValidateTokenHandler");
+const validateToken = require("../Middleware/validateTokenHandler");
 const validateActiveUser = require("../Middleware/ValidUser");
 
 

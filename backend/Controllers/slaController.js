@@ -12,8 +12,8 @@ const Robot = require("../Models/robotModel");
 //@access private
 const createSla  = asyncHandler(async (req, res) => {
     try {
-        const robot = await Robot.findOne({status: "Available"});
-        if(robot){
+        const robots = await Robot.find({status: "Available"}).limit(parseInt(req.body.number_robots));
+        if(robots.length == parseInt(req.body.number_robots)){
             // create sla and insert the users id
             const sla = await Sla.create({
                 customer_id: req.user.id, 
@@ -26,11 +26,12 @@ const createSla  = asyncHandler(async (req, res) => {
             });
             //console.log(sla)
             if(sla) {
-                // scuffed booking of a robot
-                robot.status = "Unavailable";
                 const booking = {sla_id: sla._id, start_date: sla.start_date, end_date: sla.end_date};
-                robot.booking_schedule.push(booking);
-                await robot.save();
+                for(let i = 0; i < robots.length; i++) {
+                    robots[i].status = "Unavailable";
+                    robots[i].booking_schedule.push(booking);
+                    await robots[i].save();
+                }
                 // create the log for the sla
                 const date = new Date;
                 //console.log(sla.customer_id)
@@ -106,17 +107,18 @@ const updateSla  = asyncHandler(async (req, res) => {
 const cancelSla = asyncHandler (async (req, res) =>{
     try{
         const sla = await Sla.findOne({_id: req.body.id});
-        const robot = await Robot.findOne({'booking_schedule.sla_id': req.body.id});
-        //console.log(robot);
-        robot.status = "Available";
-        // Works as long as only one booking at a time
-        robot.booking_schedule.pop();
-        //console.log(robot);
-        await robot.save();
+        
         if (!sla){
             res.status(404).json({message: 'Sla or log not found'});
         }
         else {
+            const robots = await Robot.find({'booking_schedule.sla_id': req.body.id});
+            for(let i = 0; i < robots.length; i++) {
+                robots[i].status = "Available";
+                // Works as long as only one booking at a time
+                robots[i].booking_schedule.pop();
+                await robots[i].save();
+            }
             sla.status = "Cancelled";
             sla.endDate = Date.now();
             let description = "End date updated to " + sla.endDate + " from " + sla.end_date + 

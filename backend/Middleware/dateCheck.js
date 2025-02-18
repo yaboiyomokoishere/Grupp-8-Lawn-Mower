@@ -31,11 +31,14 @@ const dateCheck = async function() {
                     description = "The contract is over and the service has been completed. Status updated to Archived.";
                     await logSlaEvent(sla.id, "Sla Archived", "System", description, "Logging error while auto end sla"); 
                 }
-                robot = await Robot.findOne({'booking_schedule.sla_id': sla._id});
-                if(robot){
-                    robot.status = "Available";
-                    robot.booking_schedule.pop();
-                    await robot.save();
+                robots = await Robot.find({'booking_schedule.sla_id': sla._id});
+                if(robots){
+                    for(let i = 0; i < robots.length; i++) {
+                        robots[i].status = "Available";
+                        robots[i].booking_schedule.pop();
+                        await robots[i].save();
+                    }
+                    
                 }      
             }
         }

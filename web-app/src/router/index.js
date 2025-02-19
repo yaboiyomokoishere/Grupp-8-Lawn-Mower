@@ -136,10 +136,12 @@ router.beforeEach((to, from, next) => {
                     next();
                 } else{
                     console.log("Access denied");
+                    localStorage.removeItem('accessToken');
                     next({ name: 'home' });
                 }
             } catch (error) {
                 console.error('Token err:', error);
+                localStorage.removeItem('accessToken');
                 next({ name: 'login' });
             }
         }

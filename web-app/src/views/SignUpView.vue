@@ -122,6 +122,7 @@ function capitalizeFirstLetter(val) {
 const v$ = useVuelidate(rules, formData);
 
 const handleSubmit = async () => {
+  console.log("Hello")
   const result = await v$.value.$validate();
   
   //console.log(result);

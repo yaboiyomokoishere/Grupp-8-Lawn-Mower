@@ -76,7 +76,6 @@ const currentCutArea  = async (req, res) => {
                 logSlaEvent(sla.id, event, actor, description, err);
                 res.status(200).json({message: "Updated succesfully"});    
             }
-            
         } else {
             res.status(404).json({message: "Sla not found"});
         }

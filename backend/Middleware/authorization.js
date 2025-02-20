@@ -12,7 +12,7 @@ const authorization = (resource, action) => {
             // Check permission using Permit.io:
             // https://app.permit.io/policy-editor
             const permitted = await permit.check(user, action, resource);
-            console.log(user)
+            //console.log(user)
             if (permitted) {
                 next(); 
             } else {

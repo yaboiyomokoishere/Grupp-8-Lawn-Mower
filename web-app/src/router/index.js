@@ -15,6 +15,7 @@ import CustomerLog from '@/views/CustomerViews/CustomerLog.vue';
 import CustomerUpdateContract from '@/views/CustomerViews/CustomerUpdateContract.vue';
 import UserManagement from '@/views/AdminViews/UserManagement.vue';
 import EditUser from '@/views/AdminViews/EditUser.vue';
+import AdminContractView from '@/views/AdminViews/AdminContractView.vue';
 
 
 const router = createRouter({
@@ -41,7 +42,8 @@ const router = createRouter({
             name: 'signup',
             component: SignUpView
         },
-        // Customer Routes
+
+        // -------------------------CUSTOMER ROUTES------------------------
         {
             path: '/customer/profile',
             name: 'customer_profile',
@@ -86,7 +88,8 @@ const router = createRouter({
             component: CustomerUpdateContract,
             meta: { requiresAuth: true, role: 'customer' }
         },
-        // Admin routes
+
+        // -------------------------ADMIN  ROUTES------------------------
         {
             path: '/admin/dashboard',
             name: 'admin_dashboard',
@@ -104,6 +107,12 @@ const router = createRouter({
             path: '/admin/users/:id',
             name: 'admin_user_edit',
             component: EditUser,
+            meta: { requiresAuth: true, role: 'admin' }
+        },
+        {
+            path: '/admin/users/:id/sla:id',
+            name: 'admin_user_sla',
+            component: AdminContractView,
             meta: { requiresAuth: true, role: 'admin' }
         },
         {

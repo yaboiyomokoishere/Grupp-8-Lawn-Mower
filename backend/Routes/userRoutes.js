@@ -20,7 +20,8 @@ const { createPriceList,
         getUsers,
         getUser,
         toggleUserStatus,
-        updateUser
+        updateUser, 
+        getUserSlas
  } = require("../Controllers/adminController");
 
 const router = express.Router();
@@ -45,4 +46,5 @@ router.get('/getUsers', validateToken, authorization("CustomerAccountInfoPrivate
 router.get('/getUser', validateToken, authorization("CustomerAccountInfo", "read"), getUser);
 router.put('/toggleUserStatus', validateToken, authorization("CustomerAccountInfoPrivate", "update"), toggleUserStatus);
 router.put('/updateUser', validateToken, authorization("CustomerAccountInfoPrivate", "update"), updateUser);
+router.get('/getUserSlas', validateToken, authorization("Service_Level_Agreement", "read"), getUserSlas);
 module.exports = router;

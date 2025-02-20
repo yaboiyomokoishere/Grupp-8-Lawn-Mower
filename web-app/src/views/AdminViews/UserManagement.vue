@@ -21,7 +21,7 @@
                     <tr v-for="user in users" :key="user.id">
                         <td>{{ user.first_name }} {{ user.last_name }}</td>
                         <td>{{ user.email }}</td>
-                        <td>{{ user.status }}</td>
+                        <td>{{ user.status.charAt(0).toUpperCase() + user.status.slice(1) }}</td>
                         <td>
                             <RouterLink :to="{name: 'admin_user_edit', params: {id: user._id}}" class="edit-user-button">Edit</RouterLink>
                         </td>                        
@@ -111,5 +111,3 @@ onMounted(async () => {
     background-color: #989d8f;
 }
 </style>
-
-

@@ -27,9 +27,9 @@ app.use("/api/robot", require("./Routes/robotRoutes"));
 app.use(errorHandler);
 
 
-const job = schedule.scheduleJob('50 * * * * *', async() => {
-    await dateCheck();
-})
+// const job = schedule.scheduleJob('50 * * * * *', async() => {
+//     await dateCheck();
+// })
 
 
 app.listen(port, () => {

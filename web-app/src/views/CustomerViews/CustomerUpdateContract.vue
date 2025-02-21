@@ -32,14 +32,14 @@
                             />
                         </div>
                     </div>
-                    <p v-if="formData.price">Your changes will cost {{ updateExpenses }} kr. </p>
-
+                    
                     <div class="action-buttons">
                         <button v-if="formData.price" type="submit">Confirm</button>
                         <button v-else type="button"  @click = "calculateNewTotalPrice">Calculate</button>
                         <button type="button"  @click="goBack">Cancel</button>
                     </div>
-                    
+                    <br>
+                    <p v-if="formData.price">Your changes will cost {{ updateCost }} kr. </p>
                 </form>
             </div>
         </div>
@@ -48,12 +48,11 @@
 </template>
   
 <script setup>
-import { reactive, onMounted} from 'vue'
+import { reactive, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router';
+import { useToast } from 'vue-toastification';
 import apiClient from '@/config/axios';
 import CustomerNavBar from '@/components/CustomerNavBar.vue';
-import { ref } from 'vue';
-import { useToast } from 'vue-toastification';
 import router from '@/router';
 
 const route = useRoute();
@@ -66,10 +65,13 @@ const formData = reactive({
     price: ''
 });
 
-const currentCutArea = ref(0)
-const maxArea = ref(0)
-const availableHeights = ref([])
-const updateExpenses = ref(0)
+const currentCutArea = ref(0);
+const maxArea = ref(0);
+const workingArea = ref(0);
+
+const updateCost = ref(0);
+const availableHeights = ref([]);
+
 
 function goBack() {
     router.push({ name: 'customer_contract_view' });
@@ -79,30 +81,41 @@ async function calculateNewTotalPrice() {
     try {
         const id = formData.id
         const sla = await apiClient.get(`/sla/getSla?id=${id}`);
-
+        console.log(sla);
         if (sla.status === 200) {
             console.log('Sla data returned!');
+        } else {
+            console.log('Error while fetching the SLA.')
         }
+        // Check if the changes are realistic, i.e.,  the service new working area cannot be less than 
+        // what's already been completed.
+        if(currentCutArea.value > formData.working_area || formData.working_area > maxArea.value){
+            alert('Invalid operations: Cannot reduce below the current cut area.')
+            return;
+        }
+
+        let newAreaPrice = workingArea.value > formData.working_area
+                            ? workingArea.value - formData.working_area - currentCutArea.value
+                            :formData.working_area - workingArea.value - currentCutArea.value;
         //console.log(sla.data.result);
         const slaData = {
             id: id,
             grass_height: formData.grass_height,
-            working_area: formData.working_area,
+            working_area: newAreaPrice,
             start_date: sla.data.result.start_date,
-            end_date: sla.data.result.end_date
+            end_date: sla.data.result.end_date,
+            robot_model: sla.data.result.assigned_robot_model
         }
 
-        const totalPrice = await apiClient.post('/sla/getPrice', slaData);
-        if (totalPrice.status === 200) {
-            console.log('Total price calculated!');
+        const response = await apiClient.post('/sla/getPrice', slaData);
+        response
+        if(formData.working_area > workingArea.value){
+            updateCost.value = response.data.result;
+        } else if(formData.working_area < workingArea.value){
+            updateCost.value = - response.data.result;
         }
-
-        //console.log(totalPrice.data.result);
-        formData.price = totalPrice.data.result + sla.data.result.price;
-        updateExpenses.value = Math.round(totalPrice.data.result);
-        console.log(updateExpenses.value)
-        //console.log(formData.total_price)
-
+        formData.price = updateCost.value;
+        console.log(response.data.result);
     } catch (error) {
         console.error('Error updating SLA:', error);
     }
@@ -117,8 +130,7 @@ async function handleSubmit() {
             working_area: formData.working_area,
             start_date: route.params.start_date,
             end_date: route.params.end_date,
-            price: formData.price,
-            update_cost: updateExpenses.value
+            update_cost: formData.price
         }
         const response = await apiClient.put('/sla/updateSla', slaData);
         if (response.status === 200) {
@@ -140,11 +152,13 @@ onMounted(async () => {
         formData.grass_height = response.data.result.grass_height;
         formData.working_area = response.data.result.working_area;
         currentCutArea.value = response.data.result.current_cut_area;
+        workingArea.value = response.data.result.working_area;
+        
 
         const slaPriceList = await apiClient.get(`/sla/getSlaPriceList?id=${id}`);
-        maxArea.value = slaPriceList.data.max_area
+        maxArea.value = slaPriceList.data.max_area;
+        //console.log(maxArea.value);
         //console.log(slaPriceList.data);
-
         // Extract the height-price objects as arrays
         availableHeights.value.push(...slaPriceList.data.height_prices);
     } catch (error) {

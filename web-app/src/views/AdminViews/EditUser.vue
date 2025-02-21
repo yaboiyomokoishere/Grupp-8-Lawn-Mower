@@ -3,40 +3,74 @@
         <AdminNavBar />
         <div class="admin-content">
             <h1>Edit User</h1>
-            <div class="edit-user-form">
-                <form @submit.prevent="handleSubmit">
-                    <div class="form-row">
-                        <div class="form-group">
-                        <label for="firstName">First Name:</label>
-                        <input type="text" id="firstName" v-model="user.firstName" :readonly="!isEditing" />
-                        </div>
-                        <div class="form-group">
-                            <label for="lastName">Last Name:</label>
-                            <input type="text" id="lastName" v-model="user.lastName" :readonly="!isEditing" />
-                        </div>
-                    </div>
-                    <div class="form-row"> 
-                        <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" v-model="user.email" :readonly="!isEditing" />
-                        </div>
-                        <div class="form-group">
-                            <label for="status">Status:</label>
-                            <input type="text" id="status" v-model="user.status" readonly />
-                        </div>
 
+            <div class="go-back">
+                <RouterLink :to="{name: 'admin_users'}" >
+                    <button class="go-back-link">Go Back</button>
+                </RouterLink>
+            </div>
+            <div class="admin-user-view">
+                <div class="account-info">
+                    <div class="edit-user-form">
+                        <form @submit.prevent="handleSubmit">
+                           <div class="form-row">
+                                <div class="form-group">
+                                <label for="firstName">First Name:</label>
+                                <input type="text" id="firstName" v-model="user.firstName" :readonly="!isEditing" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Last Name:</label>
+                                    <input type="text" id="lastName" v-model="user.lastName" :readonly="!isEditing" />
+                                </div>
+                            </div>
+                            <div class="form-row"> 
+                                <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" id="email" v-model="user.email" :readonly="!isEditing" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="status">Status:</label>
+                                    <input type="text" id="status" v-model="user.status" readonly />
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label for="status">Role:</label>
+                                <input type="text" id="status" v-model="user.role" :readonly="!isEditing" />
+                            </div>
+                            <!-- Add more form fields depenging on the user role. -->
+                            <div class="form-actions">
+                                <button type="button" @click="editUser">{{ isEditing ? 'Save' : 'Edit' }}</button>
+                                <button type="button" @click="changeStatus">
+                                    {{ user.status === 'active' ? 'Deactivate' : 'Activate' }} User
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label for="status">Role:</label>
-                        <input type="text" id="status" v-model="user.role" :readonly="!isEditing" />
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" @click="editUser">{{ isEditing ? 'Save' : 'Edit' }}</button>
-                        <button type="button" @click="changeStatus">
-                            {{ user.status === 'active' ? 'Deactivate' : 'Activate' }} User
-                        </button>
-                    </div>
-                </form>
+                </div>
+                <div class="user-contracts" v-if="customerContracts.length">
+                    <h2>User Contracts</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="contract in customerContracts" :key="contract.id">
+                                <td>{{ contract.id }}</td>
+                                <td>{{ contract.status }}</td>
+                                <td>
+                                    <RouterLink :to="{ name: 'admin_user_sla', params: { id: contract.id } }">
+                                        <button>View Contract</button>
+                                    </RouterLink>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -50,6 +84,8 @@ import { useRoute } from 'vue-router';
 
 const $route = useRoute();
 const isEditing = ref(false);
+const customerContracts = ref([]);
+
 
 const user = reactive({
     firstName: '',
@@ -92,6 +128,29 @@ const changeStatus = async () => {
     
 };
 
+const fetchContracts = async () => {
+    try {
+        const userId = $route.params.id;
+        console.log(userId)
+        const response = await apiClient.get('/user/getUserSlas?userId=' + userId); 
+        //console.log(response.data.result.length);
+        if (response.data.result.length > 0){
+            for(let i = 0; i < response.data.result.length; i++){
+                let contract= {
+                    id: response.data.result[i]._id,
+                    address: response.data.result[i].address,
+                    start_date: response.data.result[i].start_date.split('T')[0],
+                    end_date: response.data.result[i].end_date.split('T')[0],
+                    status: response.data.result[i].status
+                }
+                customerContracts.value.push(contract);          
+            }
+            //console.log(customerContracts)
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
 onMounted(async () => {
     const userId = $route.params.id;
     const response = await apiClient.get(`user/getUser?id=${userId}`);
@@ -101,6 +160,8 @@ onMounted(async () => {
     user.email = response.data.email;
     user.status = response.data.status;
     user.role = response.data.role;
+
+    fetchContracts();
 });
 </script>
 
@@ -110,7 +171,7 @@ onMounted(async () => {
     display:flex;
 }
 
-form {
+form , .user-contracts{
     padding: 20px;
     border-style: solid;
     border-color: #CCCCCC;
@@ -125,9 +186,9 @@ form {
 }
 
 .form-row {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 10px;
+    display: flex;
+    gap: 20px;
+    margin-bottom: 10px;
 }
 
 label, input {
@@ -157,7 +218,7 @@ input[readonly] {
     margin-top: 20px;
 }
 
-.form-actions button {
+.form-actions button, .go-back-link {
     flex: 1;
     font-size: 1.2rem;
     padding: 10px;
@@ -168,9 +229,31 @@ input[readonly] {
     transition: all 0.3s ease;
 }
 
-.form-actions button:hover {
+.form-actions button:hover, .go-back-link:hover {
     background-color: #f0f0f0;
     border-color: #999;
 }
 
+.go-back {
+    display: flex;
+    text-decoration: none;
+    margin-bottom: 20px;
+    width: fit-content;
+    margin-left: auto;
+}
+
+.admin-user-view {
+    display: flex;
+    gap: 20px;
+}
+
+.account-info {
+    flex: 1;
+}
+
+.user-contracts {
+    flex: 1;
+}
+
 </style>
+

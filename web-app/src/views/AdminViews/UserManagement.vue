@@ -23,13 +23,13 @@
                         <td>{{ user.email }}</td>
                         <td>{{ user.status.charAt(0).toUpperCase() + user.status.slice(1) }}</td>
                         <td>
-                            <RouterLink :to="{name: 'admin_user_edit', params: {id: user._id}}" class="edit-user-button">Edit</RouterLink>
+                            <RouterLink :to="{name: 'admin_user_edit', params: {customerId: user._id}}" class="edit-user-button">Edit</RouterLink>
                         </td>                        
                     </tr>
                     
                 </tbody>
             </table>
-            <p v-else style="text-align: center">No users with the chosen type</p>
+            <p v-else style="text-align: center; font-size:20px; color:black">No users with the chosen type</p>
         </div>
     </div>
 </template>

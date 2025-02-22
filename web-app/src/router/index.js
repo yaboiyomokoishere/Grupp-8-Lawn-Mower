@@ -104,13 +104,13 @@ const router = createRouter({
             meta: { requiresAuth: true, role: 'admin' }
         },
         {
-            path: '/admin/users/:id',
+            path: '/admin/users/:customerId',
             name: 'admin_user_edit',
             component: EditUser,
             meta: { requiresAuth: true, role: 'admin' }
         },
         {
-            path: '/admin/users/:id/sla:id',
+            path: '/admin/users/:customerId/sla/:id',
             name: 'admin_user_sla',
             component: AdminContractView,
             meta: { requiresAuth: true, role: 'admin' }

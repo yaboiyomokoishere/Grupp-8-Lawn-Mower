@@ -2,7 +2,6 @@ const asyncHandler = require("express-async-handler");
 const PriceList = require("../Models/priceListModel");
 const User = require("../Models/userModel");
 const Sla = require("../Models/slaModel");
-const { get } = require("mongoose"); // ??
 
 //----------------------------------------USER ROUTES-----------------------------
 const getUsers = asyncHandler(async (req, res) => {
@@ -37,14 +36,14 @@ const toggleUserStatus = asyncHandler(async (req, res) => {
     res.status(200).json({ status: user.status });
 });
 
-
+// TO DO
 const createUser = asyncHandler(async (req, res) => {
     console.log("TBI")
 });
 
 
 const updateUser = asyncHandler(async (req, res) => {
-    // reviderassssssssssssssssssssssssssssss ssssen
+    // TO DO
     const roles = ['customer', 'technician', 'organization'];
     if (!roles.includes(req.body.role)) {
         return res.status(400).json({ message: 'Error: role must be one of ' + roles.join(', ') });
@@ -93,7 +92,7 @@ const getUserSlas = asyncHandler(async (req, res) => {
 
 
 const updateSLA = asyncHandler(async (req, res) => {
-
+    
 });
 
 

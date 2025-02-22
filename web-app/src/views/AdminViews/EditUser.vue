@@ -49,22 +49,22 @@
                     </div>
                 </div>
                 <div class="user-contracts" v-if="customerContracts.length">
-                    <h2>User Contracts</h2>
-                    <table>
+                    <h2 style="text-align: center; margin-bottom: 20px;">Contracts</h2>
+                    <table class="contracts-table">
                         <thead>
                             <tr>
                                 <th>Id</th>
                                 <th>Status</th>
-                                <th>Actions</th>
+                                <th >View</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="contract in customerContracts" :key="contract.id">
-                                <td>{{ contract.id }}</td>
+                                <td>{{ contract.id.slice(0,5) }}</td>
                                 <td>{{ contract.status }}</td>
-                                <td>
-                                    <RouterLink :to="{ name: 'admin_user_sla', params: { id: contract.id } }">
-                                        <button>View Contract</button>
+                                <td class="view-button">
+                                    <RouterLink :to="{ name: 'admin_user_sla', params: { id: contract.id,  } }">
+                                        <button>View</button>
                                     </RouterLink>
                                 </td>
                             </tr>
@@ -116,7 +116,7 @@ const editUser = () => {
 };
 
 const changeStatus = async () => {
-    const userId = $route.params.id;
+    const userId = $route.params.customerId;
     try {
         const response = await apiClient.put('user/toggleUserStatus', { id: userId });
         //console.log(response.data);
@@ -130,7 +130,7 @@ const changeStatus = async () => {
 
 const fetchContracts = async () => {
     try {
-        const userId = $route.params.id;
+        const userId = $route.params.customerId;
         console.log(userId)
         const response = await apiClient.get('/user/getUserSlas?userId=' + userId); 
         //console.log(response.data.result.length);
@@ -151,8 +151,9 @@ const fetchContracts = async () => {
         console.error(error);
     }
 }
+
 onMounted(async () => {
-    const userId = $route.params.id;
+    const userId = $route.params.customerId;
     const response = await apiClient.get(`user/getUser?id=${userId}`);
     console.log(response.data);
     user.firstName = response.data.first_name;
@@ -255,5 +256,31 @@ input[readonly] {
     flex: 1;
 }
 
+.user-contracts table {
+    width: 100%;
+    border-collapse: collapse; 
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.user-contracts th, .user-contracts td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.user-contracts th {
+    background-color: #f7fafc;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.user-contracts tr:hover {
+    background-color: #f8fafc;
+}
+
+.view-button {
+   display: inline-block;
+}
 </style>
 

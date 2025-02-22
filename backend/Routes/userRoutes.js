@@ -41,7 +41,7 @@ router.put('/updateCustomer', validateToken, validateActiveUser, authorization("
 
 
 // Admin routes
-router.post('/createPriceList', validateToken, createPriceList); // kräver ny resurs i permitio?
+router.post('/createPriceList', validateToken, createPriceList); // ny resurs i permitio?
 router.get('/getUsers', validateToken, authorization("CustomerAccountInfoPrivate", "read"), getUsers);
 router.get('/getUser', validateToken, authorization("CustomerAccountInfo", "read"), getUser);
 router.put('/toggleUserStatus', validateToken, authorization("CustomerAccountInfoPrivate", "update"), toggleUserStatus);

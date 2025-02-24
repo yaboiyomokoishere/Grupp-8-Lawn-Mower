@@ -3,10 +3,10 @@
         <AdminNavBar />
         <div class="customer-content">
             <h1>Service Level Agreement</h1>
-
+            <!-- -->
             <div class="sla-view">
                 <div class="action-buttons">
-                    <RouterLink :to="{name: 'customer_update_contract',  params: {id: slaDetails.id} }" 
+                    <RouterLink :to="{name: 'update_as_customer',  params: {id: slaDetails.id} }" 
                     v-if="validStatuses.includes(slaDetails.status)">
                             <button class="sla-button">Update as Customer</button>
                     </RouterLink>
@@ -21,7 +21,7 @@
                 </div>
                 
                 <div class="status">
-                    <form @submit.prevent="updateStatus">
+                    <form @submit.prevent="updateStatus" class="status-form">
                         <p>Status: 
                             <select v-model="slaDetails.status">
                                 <option v-for="status in validStatuses" :key="status" :value="status">{{ status }}</option>
@@ -42,17 +42,37 @@
                     </div>
                     
                     <h2>Service Details</h2>
-                    <form @submit.prevent="updateServiceDetails">
-                        <div class="service-details">
-                            <p><strong>Service Address:</strong> <input v-model="slaDetails.address" type="text"></p>
-                            <p><strong>Start Date:</strong> <input v-model="slaDetails.start_date" type="date"></p>
-                            <p><strong>End Date:</strong> <input v-model="slaDetails.end_date" type="date"></p>
-                            <p><strong>Grass Height:</strong> <input v-model="slaDetails.grass_height" type="number"> cm</p>
-                            <p><strong>Working Area:</strong> <input v-model="slaDetails.working_area" type="number"> m²</p>
+                    <form @submit.prevent="updateServiceDetails" class="service-details-form">
+                        <div class="form-row">
+                            <label for="address"><strong>Service Address:</strong></label>
+                            <input id="address" v-model="slaDetails.address" type="text">
                         </div>
-                        <button type="submit" class="sla-button">Update Service Details</button>
+                        <div class="form-row">
+                            <label for="start-date"><strong>Start Date:</strong></label>
+                            <input id="start-date" v-model="slaDetails.start_date" type="date">
+                        </div>
+                        <div class="form-row">
+                            <label for="end-date"><strong>End Date:</strong></label>
+                            <input id="end-date" v-model="slaDetails.end_date" type="date">
+                        </div>
+                        <div class="form-row">
+                            <label for="grass-height"><strong>Grass Height (cm):</strong></label>
+                            <input id="grass-height" v-model="slaDetails.grass_height" type="number">
+                        </div>
+                        <div class="form-row">
+                            <label for="working-area"><strong>Working Area (m²):</strong></label>
+                            <input id="working-area" v-model="slaDetails.working_area" type="number">
+                        </div>
+                        <div class="form-row">
+                            <label for="current-cut-area"><strong>Current cut area (m²):</strong></label>
+                            <input id="current-cut-area" v-model="slaDetails.current_cut_area" type="number">
+                        </div>
+                        <div class="form-row">
+                            <label for="price"><strong>Total price (kr):</strong></label>
+                            <input id="price" v-model="slaDetails.price" type="number">
+                        </div>
+                        <button type="submit" class="update-service-details-button">Update Service Details</button>
                     </form>
-                    <p class="total-price">Total Price: {{ slaDetails.price }} kr</p>
                 </div>
             </div>
         </div>
@@ -60,14 +80,15 @@
 </template>
 
 <script setup>
-import { onMounted, reactive } from 'vue';
-import { useRoute } from 'vue-router';
+import { onMounted, reactive, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import  apiClient from '@/config/axios';
 import AdminNavBar from '@/components/AdminNavBar.vue';
 
 
 const $route = useRoute();
-const validStatuses = ['Active', 'Paid', 'Pending', 'Completed'];
+const router = useRouter();
+const validStatuses = ['Active', 'Paid', 'Pending', 'Completed', 'Fault'];
 
 const slaDetails = reactive({
     address: '',
@@ -78,7 +99,7 @@ const slaDetails = reactive({
     working_area: 0,
     status: '',
     price: 0,
-
+    current_cut_area: 0
 });
 
 const customerInfo= reactive({
@@ -98,12 +119,47 @@ const cancelOrder = async () => {
         if(response.status == 200){
             console.log(response.data.message);
             //toast.success("Cancelled order successfully!");
-            window.location.reload();
+            router.go();
         }
     } catch (error) {
         console.error('Error cancelling order:', error);
     }
 };
+
+const updateStatus = async() => {
+    try {
+        const args = {
+            id: $route.params.id,
+            status: slaDetails.status
+        }
+
+        const response = await apiClient.put('/user/updateSlaStatus', args);
+        //console.log(response)
+        if(response.status == 200){
+            console.log("Status updated successfully");
+            router.go();
+            return;
+        }
+        console.log("Something went wrong while updating the status.")
+    } catch (error) {
+        console.log('Error: ', error);
+    }
+}
+
+const updateServiceDetails = async () => {
+    try {
+        const id = {id: $route.params.id}
+        const response = await apiClient.put('/user/updateServiceDetails', {slaDetails, id});
+        //console.log(response)
+        if(response.status == 200){
+            console.log("Status updated successfully");
+            router.go();
+            return;
+        }
+    } catch (error) {
+        console.log('Error: ', error);
+    }
+}
 
 const fetchSla = async () => {
     try {
@@ -120,6 +176,7 @@ const fetchSla = async () => {
         slaDetails.working_area = response.data.result.working_area;
         slaDetails.status = response.data.result.status;
         slaDetails.price = Math.round(response.data.result.price);
+        slaDetails.current_cut_area = response.data.result.current_cut_area;
     } catch (error) {
         console.log(error);
     }
@@ -153,19 +210,36 @@ onMounted(async () => {
     padding: 20px;
 }
 
-.customer-info, .sla-view,  .service-details, .status {
+.customer-info, .sla-view,  .service-details-form, .status {
     margin-bottom: 20px;
     padding: 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
+.service-details-form {
+    height: 200px;
+}
+
+.form-row {
+    display: flex;
+    margin-bottom:5px;
+}
+.form-row label {
+    flex: 1; 
+}
+
+.form-row input {
+    flex: 1; 
+    max-width: 150px;
+}
 
 .total-price {
     text-align: center;
     font-size: 1.5rem;
     font-weight: bold;
 }
+
 .status {
     display: flex;
     justify-content: space-between;
@@ -174,9 +248,15 @@ onMounted(async () => {
     font-weight: bold;
 }
 
+.status-form {
+    display: flex;
+    gap: 10px;
+}
+
 .customer-content{
     padding-top: 0;
 }
+
 h3 {
     color: #333;
 }
@@ -209,5 +289,10 @@ button {
 button:hover{
     background-color: #989d8f;
     color:black;
+}
+
+.status-form button, .update-service-details-button {
+    font-size: 0.9rem;
+    padding: 5px;
 }
 </style>

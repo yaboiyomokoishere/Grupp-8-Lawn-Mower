@@ -125,7 +125,6 @@ const changeStatus = async () => {
     } catch(error) {
         console.error(error);
     }
-    
 };
 
 const fetchContracts = async () => {
@@ -280,7 +279,7 @@ input[readonly] {
 }
 
 .view-button {
-   display: inline-block;
+    display: inline-block;
 }
 </style>
 

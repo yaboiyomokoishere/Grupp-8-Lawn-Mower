@@ -4,8 +4,8 @@
         <div class="customer-content">
             <h1>SLA - ID: {{ $route.params.id }}</h1>
             <div class="back-button-container">
-                <RouterLink :to="{name: 'customer_contract_view', paramas: {id: $route.params.id}}" class="back-button">
-                    <button>Go back</button>
+                <RouterLink  class="back-button">
+                    <button @click="$router.back()" >Go back</button>
                 </RouterLink>
             </div>
             <table v-if= "customerLogs.length" >
@@ -44,6 +44,7 @@ import CustomerNavBar from '@/components/CustomerNavBar.vue';
 import { onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useRoute } from 'vue-router';
+
 
 const $route = useRoute();
 const customerLogs = ref([]);

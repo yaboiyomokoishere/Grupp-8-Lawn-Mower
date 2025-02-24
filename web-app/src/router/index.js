@@ -16,6 +16,7 @@ import CustomerUpdateContract from '@/views/CustomerViews/CustomerUpdateContract
 import UserManagement from '@/views/AdminViews/UserManagement.vue';
 import EditUser from '@/views/AdminViews/EditUser.vue';
 import AdminContractView from '@/views/AdminViews/AdminContractView.vue';
+import UpdateContractAsCustomer from '@/views/AdminViews/UpdateContractAsCustomer.vue';
 
 
 const router = createRouter({
@@ -56,37 +57,37 @@ const router = createRouter({
             name: 'customer_contracts',
             component: CustomerContracts,
             // Require authentication based on the meta property, see the beforeach guard below
-            meta: { requiresAuth: true, role: 'customer' },
+            meta: { requiresAuth: true, role: ['customer'] },
         }, 
         {
             path: '/customer/contracts/orderContract',
             name: 'order_contract',
             component: CustomerNewOrder,
-            meta: { requiresAuth: true, role: 'customer' },
+            meta: { requiresAuth: true, role: ['customer'] },
         },
         {
             path: '/customer/contracts/viewContract/:id',
             name: 'customer_contract_view',
             component: CustomerContract,
-            meta: { requiresAuth: true, role: 'customer' },
+            meta: { requiresAuth: true, role: ['customer'] },
         },
         {
             path: '/customer/contracts/confirmOrder/',
             name: 'confirm_order',
             component: CustomerConfirmOrder,
-            meta: { requiresAuth: true, role: 'customer' }
+            meta: { requiresAuth: true, role: ['customer'] }
         },
         {
             path: '/customer/contracts/viewContract/viewLog/:id',
             name: 'customer_Log_view',
             component: CustomerLog,
-            meta: { requiresAuth: true, role: 'customer' },
+            meta: { requiresAuth: true, role: ['customer', 'admin'] },
         },
         {
             path: '/customer/contracts/updateContract/:id',
             name: 'customer_update_contract',
             component: CustomerUpdateContract,
-            meta: { requiresAuth: true, role: 'customer' }
+            meta: { requiresAuth: true, role: ['customer'] }
         },
 
         // -------------------------ADMIN  ROUTES------------------------
@@ -95,25 +96,31 @@ const router = createRouter({
             name: 'admin_dashboard',
             component: Dashboard,
             // Require authentication based on the meta property, see the beforeach guard below
-            meta: { requiresAuth: true, role: 'admin' }
+            meta: { requiresAuth: true, role: ['admin'] }
         },
         {
             path: '/admin/users',
             name: 'admin_users',
             component: UserManagement,
-            meta: { requiresAuth: true, role: 'admin' }
+            meta: { requiresAuth: true, role: ['admin'] }
         },
         {
-            path: '/admin/users/:id',
+            path: '/admin/users/:customerId',
             name: 'admin_user_edit',
             component: EditUser,
-            meta: { requiresAuth: true, role: 'admin' }
+            meta: { requiresAuth: true, role: ['admin'] }
         },
         {
-            path: '/admin/users/:id/sla:id',
+            path: '/admin/users/:customerId/sla/:id',
             name: 'admin_user_sla',
             component: AdminContractView,
-            meta: { requiresAuth: true, role: 'admin' }
+            meta: { requiresAuth: true, role: ['admin'] }
+        },
+        {
+            path: '/admin/users/:customerId/sla/:id/updateAsCustomer',
+            name: 'update_as_customer',
+            component: UpdateContractAsCustomer,
+            meta: { requiresAuth: true, role: ['admin'] }
         },
         {
             path: '/:catchAll(.*)', // Catch-all route for any unmatched routes
@@ -140,7 +147,7 @@ router.beforeEach((to, from, next) => {
             try {
                 const decodedToken = jwtDecode(token);
                 // Check token expiration if needed
-                if(to.meta.role === decodedToken.user.role) {
+                if(to.meta.role.includes(decodedToken.user.role)) {
                     console.log("Access granted");
                     next();
                 } else{

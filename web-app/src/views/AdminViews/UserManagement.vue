@@ -8,6 +8,7 @@
                 <option value="technician">Technicians</option>
                 <option value="organization">Organizations</option>
             </select>
+            <RouterLink :to="{name:'admin_create_user'}"><button>Create New User</button></RouterLink>
             <table v-if="users.length">
                 <thead>
                     <tr>
@@ -26,7 +27,6 @@
                             <RouterLink :to="{name: 'admin_user_edit', params: {customerId: user._id}}" class="edit-user-button">Edit</RouterLink>
                         </td>                        
                     </tr>
-                    
                 </tbody>
             </table>
             <p v-else style="text-align: center; font-size:20px; color:black">No users with the chosen type</p>

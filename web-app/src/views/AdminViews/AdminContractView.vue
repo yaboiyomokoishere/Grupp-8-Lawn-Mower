@@ -3,12 +3,13 @@
         <AdminNavBar />
         <div class="customer-content">
             <h1>Service Level Agreement</h1>
-            <!-- -->
+
             <div class="back-button-container">
                 <RouterLink  class="back-button">
                     <button @click="$router.back()">Go back</button>
                 </RouterLink>
             </div>
+            
             <div class="sla-view">
                 <div class="action-buttons">
                     <RouterLink :to="{name: 'update_as_customer',  params: {id: slaDetails.id} }" 

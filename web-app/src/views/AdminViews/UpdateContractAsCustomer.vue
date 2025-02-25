@@ -1,6 +1,6 @@
 <template>
     <div class="user-page-container">
-        <CustomerNavBar />
+        <AdminNavBar />
         <div class="customer-content">
             <h1>Update Service Details</h1>
             <div class="update-service-form">
@@ -49,13 +49,14 @@
   
 <script setup>
 import { reactive, onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import apiClient from '@/config/axios';
-import CustomerNavBar from '@/components/CustomerNavBar.vue';
+import AdminNavBar from '@/components/AdminNavBar.vue';
 import router from '@/router';
 
 const route = useRoute();
+//const router = useRouter();
 const toast = useToast();
 
 const formData = reactive({
@@ -74,7 +75,7 @@ const availableHeights = ref([]);
 
 
 function goBack() {
-    router.push({ name: 'update_as_customer' });
+    router.go(-1);
 }
 
 async function calculateNewTotalPrice() {

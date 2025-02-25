@@ -97,17 +97,17 @@ const user = reactive({
 });
 
 
-const editUser = () => {
+const editUser = async () => {
     if (isEditing.value) {
         const updatedUser = {
-            id: $route.params.id,
+            id: $route.params.customerId,
             first_name: user.firstName,
             last_name: user.lastName,
             email: user.email,
             role: user.role,
             email: user.email
         }
-        const response = apiClient.put('user/updateUser', updatedUser);
+        const response = await apiClient.put('user/updateUser', updatedUser);
         console.log(response);
         isEditing.value = false;
     } else {
@@ -161,7 +161,7 @@ onMounted(async () => {
     user.status = response.data.status;
     user.role = response.data.role;
 
-    fetchContracts();
+    await fetchContracts();
 });
 </script>
 

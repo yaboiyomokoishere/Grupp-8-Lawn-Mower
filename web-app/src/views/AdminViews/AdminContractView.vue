@@ -4,6 +4,11 @@
         <div class="customer-content">
             <h1>Service Level Agreement</h1>
             <!-- -->
+            <div class="back-button-container">
+                <RouterLink  class="back-button">
+                    <button @click="$router.back()">Go back</button>
+                </RouterLink>
+            </div>
             <div class="sla-view">
                 <div class="action-buttons">
                     <RouterLink :to="{name: 'update_as_customer',  params: {id: slaDetails.id} }" 
@@ -57,11 +62,16 @@
                         </div>
                         <div class="form-row">
                             <label for="grass-height"><strong>Grass Height (cm):</strong></label>
-                            <input id="grass-height" v-model="slaDetails.grass_height" type="number">
+                            <select v-model="slaDetails.grass_height" name="grass_height" id="grass_height" required>
+                                <option :value="slaDetails.grass_height">{{ slaDetails.grass_height }}</option>
+                                <option v-for="heightObj in availableHeights.filter((h) => h.height != slaDetails.grass_height)">
+                                    {{ heightObj.height }}
+                                </option>
+                            </select>
                         </div>
                         <div class="form-row">
                             <label for="working-area"><strong>Working Area (m²):</strong></label>
-                            <input id="working-area" v-model="slaDetails.working_area" type="number">
+                            <input id="working-area" v-model="slaDetails.working_area" type="number" :min="slaDetails.current_cut_area" max="5000">
                         </div>
                         <div class="form-row">
                             <label for="current-cut-area"><strong>Current cut area (m²):</strong></label>
@@ -85,10 +95,11 @@ import { useRoute, useRouter } from 'vue-router';
 import  apiClient from '@/config/axios';
 import AdminNavBar from '@/components/AdminNavBar.vue';
 
-
 const $route = useRoute();
 const router = useRouter();
-const validStatuses = ['Active', 'Paid', 'Pending', 'Completed', 'Fault'];
+const validStatuses = ['Active', 'Paid', 'Pending', 'Completed', 'Fault', 'Cancelled'];
+const availableHeights = ref([]);
+
 
 const slaDetails = reactive({
     address: '',
@@ -121,6 +132,7 @@ const cancelOrder = async () => {
             //toast.success("Cancelled order successfully!");
             router.go();
         }
+        
     } catch (error) {
         console.error('Error cancelling order:', error);
     }
@@ -147,6 +159,7 @@ const updateStatus = async() => {
 }
 
 const updateServiceDetails = async () => {
+    //console.log(slaDetails)
     try {
         const id = {id: $route.params.id}
         const response = await apiClient.put('/user/updateServiceDetails', {slaDetails, id});
@@ -200,6 +213,9 @@ const fetchUser = async() => {
 onMounted(async () => {
     await fetchSla();
     await fetchUser();
+    console.log(slaDetails.grass_height)
+    const slaPriceList = await apiClient.get(`/sla/getSlaPriceList?id=${ $route.params.id }`);
+    availableHeights.value.push(...slaPriceList.data.height_prices);
 });    
 </script>
 

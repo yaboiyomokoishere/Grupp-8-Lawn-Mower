@@ -17,6 +17,8 @@ import UserManagement from '@/views/AdminViews/UserManagement.vue';
 import EditUser from '@/views/AdminViews/EditUser.vue';
 import AdminContractView from '@/views/AdminViews/AdminContractView.vue';
 import UpdateContractAsCustomer from '@/views/AdminViews/UpdateContractAsCustomer.vue';
+import AdminCreateUser from '@/views/AdminViews/AdminCreateUser.vue';
+import CustomerContractReport from '@/views/CustomerViews/CustomerContractReport.vue';
 
 
 const router = createRouter({
@@ -89,7 +91,12 @@ const router = createRouter({
             component: CustomerUpdateContract,
             meta: { requiresAuth: true, role: ['customer'] }
         },
-
+        {
+            path: '/customer/contracts/reports/:id',
+            name: 'customer_contract_report',
+            component: CustomerContractReport,
+            meta: { requiresAuth: true, role: ['customer', 'admin', 'technician'] }
+        },
         // -------------------------ADMIN  ROUTES------------------------
         {
             path: '/admin/dashboard',
@@ -120,6 +127,12 @@ const router = createRouter({
             path: '/admin/users/:customerId/sla/:id/updateAsCustomer',
             name: 'update_as_customer',
             component: UpdateContractAsCustomer,
+            meta: { requiresAuth: true, role: ['admin'] }
+        },
+        {
+            path: '/admin/users/createUser',
+            name: 'admin_create_user',
+            component: AdminCreateUser,
             meta: { requiresAuth: true, role: ['admin'] }
         },
         {

@@ -15,8 +15,9 @@ const {
     getCustomerInfo, 
     updateCustomerProfile ,
     sendReport,
-    getReportCustomer,
+    getCustomerReports,
     getAllReport,
+    updateReportStatus
 } = require("../Controllers/customerController");
 
 const { createPriceList,
@@ -46,7 +47,7 @@ router.post('/refresh', refreshToken); // Refreshes access token with refresh to
 router.get('/getCustomer', validateToken, validateActiveUser,authorization("CustomerAccountInfo", "read"), getCustomerInfo); 
 router.put('/updateCustomer', validateToken, validateActiveUser, authorization("CustomerAccountInfo", "update"), updateCustomerProfile);
 router.post('/sendReport', validateToken, validateActiveUser, sendReport);
-router.get('/getReportCustomer', validateToken, validateActiveUser, getReportCustomer);
+router.get('/getReports', validateToken, validateActiveUser, getCustomerReports);
 
 // Admin routes
 router.post('/createPriceList', validateToken, createPriceList); // ny resurs i permitio?
@@ -56,11 +57,12 @@ router.put('/toggleUserStatus', validateToken, authorization("CustomerAccountInf
 router.post('/createUser', validateToken, authorization("CustomerAccountInfoPrivate", 'create'), createUser);
 router.put('/updateUser', validateToken, authorization("CustomerAccountInfoPrivate", "update"), updateUser);
 router.get('/getUserSlas', validateToken, authorization("Service_Level_Agreement", "read"), getUserSlas);
+router.put('/updateReportStatus', validateToken,  updateReportStatus);
 
 
 // technican routes
-router.get('/getReportCustomer', validateToken, getReportCustomer);
-router.get('/getAllReport', validateToken, getAllReport);
+//router.get('/getReportCustomer', validateToken, getReportCustomer);
+router.get('/getAllReports', validateToken, getAllReport);
 
 
 router.put('/updateSlaStatus', validateToken, authorization("Service_Level_Agreement", "update"), updateSlaStatus);

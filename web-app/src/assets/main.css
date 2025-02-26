@@ -33,7 +33,7 @@ button {
 
 
 /* Form styles */
-.login-signup-form-container {
+.login-signup-form-container, .create-user-form-container {
   display: flex;
   margin: 2rem;
 }

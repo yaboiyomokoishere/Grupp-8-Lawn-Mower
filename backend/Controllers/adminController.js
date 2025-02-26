@@ -39,19 +39,21 @@ const toggleUserStatus = asyncHandler(async (req, res) => {
 });
 
 const createUser = asyncHandler(async (req, res) => {
+    // console.log(req.body)
+    // console.log("hej")
     try {
         const { 
-            first_name, 
-            last_name, 
+            firstName, 
+            lastName, 
             email, 
             password, 
             role, 
-            customer_details, 
-            technician_details, 
-            admin_details 
+            customerDetails, 
+            technicianDetails, 
+            adminDetails 
         } = req.body;
         
-        if (!first_name || !last_name || !email || !password || !role) {
+        if (!firstName || !lastName || !email || !password || !role) {
             return res.status(400).json({message: 'Required fields missing'});
         }
 
@@ -62,16 +64,16 @@ const createUser = asyncHandler(async (req, res) => {
         
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({ message: 'Email already registered' });
+            return res.status(406).json({ message: 'Email already registered' });
         }
         
         if (role === 'customer') {
-            if (!customer_details) {
+            if (!customerDetails) {
                 return res.status(400).json({ message: 'Customer details required',
                                               requiredFields: ['address', 'postal_code', 'phone_number']});
             }
             
-            if (!customer_details.address || !customer_details.postal_code || !customer_details.phone_number) {
+            if (!customerDetails.address || !customerDetails.postal_code || !customerDetails.phone_number) {
                 return res.status(400).json({message: 'Missing a customer details field'});
             }
         }
@@ -80,14 +82,14 @@ const createUser = asyncHandler(async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10); // weakest salt in the west
 
         const userData = {
-            first_name,
-            last_name,
+            first_name: firstName,
+            last_name: lastName,
             email,
             password: hashedPassword,
             role,
-            customer_details,
-            technician_details,
-            admin_details
+            customer_details: customerDetails,
+            technician_details: technicianDetails,
+            admin_details: adminDetails
         };
 
         // Create user
@@ -160,8 +162,17 @@ const updateSlaStatus = asyncHandler(async (req, res) => {
         if (validStatuses.includes(status)){
             console.log('Input: ', id, ' ', status);
             const sla = await Sla.findById(id);
+            const oldStatus = sla.status;
             sla.status = status;
             sla.save();
+            description = `Status updated from ${ oldStatus } to ${ sla.status }.`;
+            await logSlaEvent(
+                sla._id,
+                'Status Update',
+                'Admin',  
+                description,
+                'Failed to log SLA update event'
+            );
             return res.status(200).json({ message:"Status updated successfully" });    
         } else {
             console.log("Invalid status at updateSlaStatus.");
@@ -194,7 +205,6 @@ const updateServiceDetails = asyncHandler(async (req, res) => {
             price: sla.price
         };
 
-        // Update SLA properties
         sla.address = address;
         sla.start_date = start_date;
         sla.end_date = end_date;
@@ -224,7 +234,7 @@ const updateServiceDetails = asyncHandler(async (req, res) => {
         await logSlaEvent(
             sla._id,
             'Service Update',
-            'Admin',  // Assuming authenticated user's ID is available
+            'Admin',  
             description,
             'Failed to log SLA update event'
         );

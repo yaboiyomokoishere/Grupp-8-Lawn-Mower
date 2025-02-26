@@ -19,8 +19,9 @@
                     <RouterLink :to="{name: 'customer_Log_view',  params: {id: slaDetails.id} }">
                         <button class="sla-button">View Log</button>
                     </RouterLink>
-
-                    <button class="sla-button">Report Error</button>
+                    <RouterLink :to="{name: 'customer_contract_report',  params: {id: slaDetails.id} }">
+                        <button class="sla-button">Report Error</button>
+                    </RouterLink>
                 </div>
                 
                 <div class="status">

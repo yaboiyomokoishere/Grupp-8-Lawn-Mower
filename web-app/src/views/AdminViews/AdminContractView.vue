@@ -3,12 +3,13 @@
         <AdminNavBar />
         <div class="customer-content">
             <h1>Service Level Agreement</h1>
-            <!-- -->
+
             <div class="back-button-container">
                 <RouterLink  class="back-button">
                     <button @click="$router.back()">Go back</button>
                 </RouterLink>
             </div>
+            
             <div class="sla-view">
                 <div class="action-buttons">
                     <RouterLink :to="{name: 'update_as_customer',  params: {id: slaDetails.id} }" 
@@ -22,6 +23,9 @@
 
                     <RouterLink :to="{name: 'customer_Log_view',  params: {id: slaDetails.id} }">
                         <button class="sla-button">View Log</button>
+                    </RouterLink>
+                    <RouterLink :to="{name: 'customer_contract_report',  params: {id: slaDetails.id} }">
+                        <button class="sla-button">Report Error</button>
                     </RouterLink>
                 </div>
                 
@@ -234,13 +238,14 @@ onMounted(async () => {
 }
 
 .service-details-form {
-    height: 200px;
+    height: 300px;
 }
 
 .form-row {
     display: flex;
     margin-bottom:5px;
 }
+
 .form-row label {
     flex: 1; 
 }
@@ -307,7 +312,7 @@ button:hover{
     color:black;
 }
 
-.status-form button, .update-service-details-button {
+.status-form button, .update-service-details-button, input, .status-form input {
     font-size: 0.9rem;
     padding: 5px;
 }

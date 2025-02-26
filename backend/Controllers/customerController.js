@@ -3,6 +3,7 @@ const User = require("../Models/userModel");
 const bcrypt = require("bcrypt");
 const Report = require("../Models/reportModel");
 const Sla = require("../Models/slaModel")
+const logSlaEvent = require ("../Middleware/logSlaEvent");
 
 const getCustomerInfo = asyncHandler(async (req,res) => {
     const {id} = req.user;
@@ -132,4 +133,29 @@ const getAllReport = asyncHandler(async (req, res) => {
     }
 })
 
-module.exports = {getUser, getCustomerInfo, updateCustomerProfile, sendReport, getCustomerReports, getAllReport};
+const updateReportStatus = asyncHandler(async (req,res) => {
+    try {
+        const report = await Report.findById(req.body.id);
+        console.log(report.sla_id);
+        if(report) {
+            report.status = 'Solved';
+            report.save();
+            description = `The issue with the report ${ report.title } has been resolved. Report archived.`;
+            await logSlaEvent(
+                report.sla_id,
+                'Report Update',
+                'Admin/Technician',  
+                description,
+                'Failed to log SLA update event'
+            );
+            res.status(200).json({message: 'Report status updated', data: report});
+        } else {
+            res.status(400).json({message: 'No report found'});
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: 'Server error'});
+    }
+});
+
+module.exports = {getUser, getCustomerInfo, updateCustomerProfile, sendReport, getCustomerReports, getAllReport, updateReportStatus};

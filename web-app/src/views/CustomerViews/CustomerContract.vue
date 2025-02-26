@@ -22,7 +22,6 @@
                     <RouterLink :to="{name: 'customer_contract_report',  params: {id: slaDetails.id} }">
                         <button class="sla-button">Report Error</button>
                     </RouterLink>
-                    
                 </div>
                 
                 <div class="status">

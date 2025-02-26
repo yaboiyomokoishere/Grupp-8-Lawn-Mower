@@ -95,7 +95,7 @@ const router = createRouter({
             path: '/customer/contracts/reports/:id',
             name: 'customer_contract_report',
             component: CustomerContractReport,
-            meta: { requiresAuth: true, role: ['customer'] }
+            meta: { requiresAuth: true, role: ['customer', 'admin', 'technician'] }
         },
         // -------------------------ADMIN  ROUTES------------------------
         {

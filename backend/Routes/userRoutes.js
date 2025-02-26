@@ -17,6 +17,7 @@ const {
     sendReport,
     getCustomerReports,
     getAllReport,
+    updateReportStatus
 } = require("../Controllers/customerController");
 
 const { createPriceList,
@@ -56,11 +57,12 @@ router.put('/toggleUserStatus', validateToken, authorization("CustomerAccountInf
 router.post('/createUser', validateToken, authorization("CustomerAccountInfoPrivate", 'create'), createUser);
 router.put('/updateUser', validateToken, authorization("CustomerAccountInfoPrivate", "update"), updateUser);
 router.get('/getUserSlas', validateToken, authorization("Service_Level_Agreement", "read"), getUserSlas);
+router.put('/updateReportStatus', validateToken,  updateReportStatus);
 
 
 // technican routes
 //router.get('/getReportCustomer', validateToken, getReportCustomer);
-router.get('/getAllReport', validateToken, getAllReport);
+router.get('/getAllReports', validateToken, getAllReport);
 
 
 router.put('/updateSlaStatus', validateToken, authorization("Service_Level_Agreement", "update"), updateSlaStatus);

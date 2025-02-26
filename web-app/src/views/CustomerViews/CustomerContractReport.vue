@@ -55,6 +55,8 @@
                             <td>{{ report.createdAt.split('T')[0] }}</td>
                             <td>
                                 <button @click="toggleDescription(report._id)">Description</button>
+                                <!-- Is appearing before the description button, but can't really tell why. DOM issue?  -->
+                                <button v-if="canEdit" @click="updateReport(report._id)" style="margin-right:10px;">Archive</button>
                             </td>
                         </tr>
                         <tr v-if="reportsIds.has(report._id)">
@@ -70,10 +72,11 @@
 
 <script setup>
 import CustomerNavBar from '@/components/CustomerNavBar.vue';
-import { ref, reactive, computed, watch, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import apiClient from '@/config/axios';
+import { jwtDecode } from 'jwt-decode';
 
 
 const route = useRoute();
@@ -82,6 +85,7 @@ const toast = useToast();
 const reports = ref([]);
 const status = ref('all');
 const showCreateForm = ref(false);
+const canEdit = ref(false);
 const newReport = reactive({
     id: route.params.id,
     title: '',
@@ -143,11 +147,30 @@ const hideForm = () => {
     newReport.description = '';
 };
 
-// // Update the reports when the sorting status is changed 
-// watch(status, fetchReports);
+const updateReport = async (reportId) => {
+    try {
+        const response = await apiClient.put('/user/updateReportStatus', {id: reportId});
+        //console.log(response);
+        if(response.status == 200){
+            // toast.success('Report status updated successfully!');
+            router.go();
+        } 
+    } catch (error) {
+        console.error('Error returned: ', error);
+        toast.error('Something went wrong while updating the status of the report');
+    }
+}
 
 onMounted( async()=>{
     await fetchReports();
+    const token = localStorage.getItem('accessToken');
+    if(token){
+        const decodedToken = jwtDecode(token);
+        console.log('Accessing the page as ' + decodedToken.user.role);
+        if(['admin', 'technician'].includes(decodedToken.user.role)){
+            canEdit.value = true;
+        }
+    }
 })
 </script>
 

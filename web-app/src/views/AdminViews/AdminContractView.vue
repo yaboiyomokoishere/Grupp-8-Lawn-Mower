@@ -235,13 +235,14 @@ onMounted(async () => {
 }
 
 .service-details-form {
-    height: 200px;
+    height: 300px;
 }
 
 .form-row {
     display: flex;
     margin-bottom:5px;
 }
+
 .form-row label {
     flex: 1; 
 }
@@ -308,7 +309,7 @@ button:hover{
     color:black;
 }
 
-.status-form button, .update-service-details-button {
+.status-form button, .update-service-details-button, input, .status-form input {
     font-size: 0.9rem;
     padding: 5px;
 }

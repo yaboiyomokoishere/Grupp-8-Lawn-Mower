@@ -179,17 +179,19 @@ onMounted(async () => {
     gap: 2rem;
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size:1.2rem;
+    font-size:1rem;
 }
+
 .current-details {
     display: flex;
     gap: 1rem;
     align-items: center;
     justify-content: center;
 }
+
 .form-row {
     display: flex;
-    gap: 20px;
+    gap: 10px;
 }
 form {
     display: flex;
@@ -203,9 +205,8 @@ label {
 }
 
 input, option, select {
-    margin: 30px;
-    font-size: 1.2rem;
-    padding: 10px;
+    margin: 5px;
+    font-size: 1rem;
     box-sizing: border-box;
     width: 100px
 }
@@ -223,7 +224,7 @@ input, label, option, select {
 button {
     font-size: 1rem;
     text-decoration: none;
-    padding: 10px 15px;
+    padding: 10px;
     border-radius: 5px;
     border: 2px solid black;
 }

@@ -30,9 +30,7 @@ const { createPriceList,
         updateServiceDetails,
  } = require("../Controllers/adminController");
 
-const {
-    getReports,
-} = require("../Controllers/technicanController");
+
 const router = express.Router();
 
 // Authentication routes

@@ -18,6 +18,7 @@ import EditUser from '@/views/AdminViews/EditUser.vue';
 import AdminContractView from '@/views/AdminViews/AdminContractView.vue';
 import UpdateContractAsCustomer from '@/views/AdminViews/UpdateContractAsCustomer.vue';
 import AdminCreateUser from '@/views/AdminViews/AdminCreateUser.vue';
+import CustomerContractReport from '@/views/CustomerViews/CustomerContractReport.vue';
 
 
 const router = createRouter({
@@ -88,6 +89,12 @@ const router = createRouter({
             path: '/customer/contracts/updateContract/:id',
             name: 'customer_update_contract',
             component: CustomerUpdateContract,
+            meta: { requiresAuth: true, role: ['customer'] }
+        },
+        {
+            path: '/customer/contracts/reports/:id',
+            name: 'customer_contract_report',
+            component: CustomerContractReport,
             meta: { requiresAuth: true, role: ['customer'] }
         },
         // -------------------------ADMIN  ROUTES------------------------

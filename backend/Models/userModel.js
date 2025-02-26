@@ -18,12 +18,7 @@ const customerDetailsSchema = mongoose.Schema({
 
 // Subschema for technician-specific details
 const technicianDetailsSchema = mongoose.Schema({
-    jobs: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'sla',
-        default: null
-    }]
-    // Calender
+    // TBD
 }, { _id: false });
 
 // Subschema for admin-specific details

@@ -4,8 +4,6 @@ const Sla  = require('../Models/slaModel');
 var nodemailer = require('nodemailer');
 
 
-
-
 const logSlaEvent = async function (sla_id, action, actor, description = "", err_message) {
     const log  = await Log.findOne({sla_id: sla_id});
     

@@ -44,6 +44,7 @@
                         <p><strong>End Date:</strong> {{ slaDetails.end_date }}</p>
                         <p><strong>Grass Height:</strong> {{ slaDetails.grass_height }} cm</p>
                         <p><strong>Working Area:</strong> {{ slaDetails.working_area }} m²</p>
+                        <p><strong>Current Cut Area:</strong> {{ slaDetails.current_cut_area }} m²</p>
                     </div>
                     <p class="total-price">Total Price: {{ slaDetails.price }} kr</p>
                 </div>
@@ -67,6 +68,7 @@ const slaDetails = reactive({
     end_date: '',
     grass_height: 0,
     working_area: 0,
+    current_cut_area: 0,
     status: '',
     price: 0,
 
@@ -114,7 +116,7 @@ onMounted(async () => {
         slaDetails.working_area = response.data.result.working_area;
         slaDetails.status = response.data.result.status;
         slaDetails.price = Math.round(response.data.result.price);
-
+        slaDetails.current_cut_area = response.data.result.current_cut_area;
     } catch (error) {
         console.log(error);
     }

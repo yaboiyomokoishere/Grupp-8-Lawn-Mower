@@ -7,12 +7,10 @@ const logSlaEvent = require("../Middleware/logSlaEvent");
 
 
 const registerRobot  = asyncHandler(async (req, res) => { 
-    for (let i = 0; i < 200; i++) {
-        const robot = await Robot.create({
-            serial_number: i,
-        });
-        console.log(robot);
-    }
+    // for (let i = 0; i < 200; i++) {
+    const robot = await Robot.create({ serial_number: i });
+    console.log(robot);
+    // }
     res.status(200).json({message: 'Robots created successfully'});
     // try {
     //     const robot = await Robot.create({

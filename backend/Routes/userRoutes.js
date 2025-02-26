@@ -23,8 +23,11 @@ const { createPriceList,
         getUsers,
         getUser,
         toggleUserStatus,
+        createUser,
         updateUser, 
-        getUserSlas
+        getUserSlas,
+        updateSlaStatus,
+        updateServiceDetails,
  } = require("../Controllers/adminController");
 
 const {
@@ -48,14 +51,20 @@ router.post('/sendReport', validateToken, validateActiveUser, sendReport);
 router.get('/getReportCustomer', validateToken, validateActiveUser, getReportCustomer);
 
 // Admin routes
-router.post('/createPriceList', validateToken, createPriceList); // kräver ny resurs i permitio?
+router.post('/createPriceList', validateToken, createPriceList); // ny resurs i permitio?
 router.get('/getUsers', validateToken, authorization("CustomerAccountInfoPrivate", "read"), getUsers);
 router.get('/getUser', validateToken, authorization("CustomerAccountInfo", "read"), getUser);
 router.put('/toggleUserStatus', validateToken, authorization("CustomerAccountInfoPrivate", "update"), toggleUserStatus);
+router.post('/createUser', validateToken, authorization("CustomerAccountInfoPrivate", 'create'), createUser);
 router.put('/updateUser', validateToken, authorization("CustomerAccountInfoPrivate", "update"), updateUser);
 router.get('/getUserSlas', validateToken, authorization("Service_Level_Agreement", "read"), getUserSlas);
+
 
 // technican routes
 router.get('/getReportCustomer', validateToken, getReportCustomer);
 router.get('/getAllReport', validateToken, getAllReport);
+
+
+router.put('/updateSlaStatus', validateToken, authorization("Service_Level_Agreement", "update"), updateSlaStatus);
+router.put('/updateServiceDetails', validateToken, authorization("Service_Level_Agreement", "update"), updateServiceDetails);
 module.exports = router;

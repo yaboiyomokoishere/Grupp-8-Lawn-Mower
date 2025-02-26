@@ -3,6 +3,8 @@
         <div class="navbar-links">
             <RouterLink :to="{name: 'admin_dashboard'}" class="navbar-item">Dashboard</RouterLink>
             <RouterLink :to="{name: 'admin_users'}" class="navbar-item">Users</RouterLink>
+            <RouterLink to="#" class="navbar-item">Mowers</RouterLink>
+            <RouterLink to="#" class="navbar-item">Reports</RouterLink>
         </div>
         <div class="logout-button">
             <Logout />

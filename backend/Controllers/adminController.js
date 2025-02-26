@@ -3,6 +3,7 @@ const PriceList = require("../Models/priceListModel");
 const User = require("../Models/userModel");
 const Sla = require("../Models/slaModel");
 const { get } = require("mongoose"); // ??
+const Report = require("../Models/reportModel");
 
 //----------------------------------------USER ROUTES-----------------------------
 const getUsers = asyncHandler(async (req, res) => {
@@ -122,5 +123,20 @@ const createPriceList = asyncHandler(async (req, res) => {
     }
 });
 
+const updateReport = asyncHandler(async(req, res) => {
+    try {
+        const report = Report.findById(req.body.id);
+        if(report) {
+            report.status = req.body.status;
+            res.status(200).json({message: 'Report updated successfully'});
+        } else {
+            res.status(400).json({message: 'Report not found'});
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: 'Server error, updating report'});
+    }
+})
 
-module.exports = {createPriceList, getUsers, getUser, toggleUserStatus, updateUser, getUserSlas, updateSLA};
+
+module.exports = {createPriceList, getUsers, getUser, toggleUserStatus, updateUser, getUserSlas, updateSLA, updateReport};

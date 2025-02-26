@@ -24,12 +24,11 @@ const { createPriceList,
         getUser,
         toggleUserStatus,
         updateUser, 
-        getUserSlas
+        getUserSlas,
+        updateReport
  } = require("../Controllers/adminController");
 
-const {
-    getReports,
-} = require("../Controllers/technicanController");
+
 const router = express.Router();
 
 // Authentication routes
@@ -54,6 +53,7 @@ router.get('/getUser', validateToken, authorization("CustomerAccountInfo", "read
 router.put('/toggleUserStatus', validateToken, authorization("CustomerAccountInfoPrivate", "update"), toggleUserStatus);
 router.put('/updateUser', validateToken, authorization("CustomerAccountInfoPrivate", "update"), updateUser);
 router.get('/getUserSlas', validateToken, authorization("Service_Level_Agreement", "read"), getUserSlas);
+router.put('updateReport', validateToken, authorization("", "update"), updateReport);
 
 // technican routes
 router.get('/getReportCustomer', validateToken, getReportCustomer);

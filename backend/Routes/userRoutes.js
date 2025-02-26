@@ -15,7 +15,7 @@ const {
     getCustomerInfo, 
     updateCustomerProfile ,
     sendReport,
-    getReportCustomer,
+    getCustomerReports,
     getAllReport,
 } = require("../Controllers/customerController");
 
@@ -46,7 +46,7 @@ router.post('/refresh', refreshToken); // Refreshes access token with refresh to
 router.get('/getCustomer', validateToken, validateActiveUser,authorization("CustomerAccountInfo", "read"), getCustomerInfo); 
 router.put('/updateCustomer', validateToken, validateActiveUser, authorization("CustomerAccountInfo", "update"), updateCustomerProfile);
 router.post('/sendReport', validateToken, validateActiveUser, sendReport);
-router.get('/getReportCustomer', validateToken, validateActiveUser, getReportCustomer);
+router.get('/getReports', validateToken, validateActiveUser, getCustomerReports);
 
 // Admin routes
 router.post('/createPriceList', validateToken, createPriceList); // ny resurs i permitio?
@@ -59,7 +59,7 @@ router.get('/getUserSlas', validateToken, authorization("Service_Level_Agreement
 
 
 // technican routes
-router.get('/getReportCustomer', validateToken, getReportCustomer);
+//router.get('/getReportCustomer', validateToken, getReportCustomer);
 router.get('/getAllReport', validateToken, getAllReport);
 
 

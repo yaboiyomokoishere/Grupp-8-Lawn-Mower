@@ -162,8 +162,17 @@ const updateSlaStatus = asyncHandler(async (req, res) => {
         if (validStatuses.includes(status)){
             console.log('Input: ', id, ' ', status);
             const sla = await Sla.findById(id);
+            const oldStatus = sla.status;
             sla.status = status;
             sla.save();
+            description = `Status updated from ${ oldStatus } to ${ sla.status }.`;
+            await logSlaEvent(
+                sla._id,
+                'Status Update',
+                'Admin',  
+                description,
+                'Failed to log SLA update event'
+            );
             return res.status(200).json({ message:"Status updated successfully" });    
         } else {
             console.log("Invalid status at updateSlaStatus.");
@@ -196,7 +205,6 @@ const updateServiceDetails = asyncHandler(async (req, res) => {
             price: sla.price
         };
 
-        // Update SLA properties
         sla.address = address;
         sla.start_date = start_date;
         sla.end_date = end_date;
@@ -226,7 +234,7 @@ const updateServiceDetails = asyncHandler(async (req, res) => {
         await logSlaEvent(
             sla._id,
             'Service Update',
-            'Admin',  // Assuming authenticated user's ID is available
+            'Admin',  
             description,
             'Failed to log SLA update event'
         );

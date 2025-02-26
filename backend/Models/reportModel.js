@@ -21,6 +21,7 @@ const reportSchema = mongoose.Schema({
     },
     status: {
         type: String,
+        enum: ["Received", "Solved"],
         default: "Received",
     },
 },

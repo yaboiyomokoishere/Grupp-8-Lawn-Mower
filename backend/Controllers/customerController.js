@@ -79,6 +79,7 @@ const getUser = asyncHandler(async (req) => {
 })
 
 const sendReport = asyncHandler(async (req, res) => {
+    //console.log(req.body)
     try {
         const sla = await Sla.findById(req.body.id);
         if(sla.status == "Pending" || sla.status == "Paid" || sla.status == "Active" || sla.status == "Fault") {
@@ -91,9 +92,10 @@ const sendReport = asyncHandler(async (req, res) => {
                 description: req.body.description,
                 title: req.body.title,
             });
+            
             res.status(200).json({message: 'Report submitted'});
         } else {
-            res.status(403).json({message: 'Can not report closed SLA'});
+            res.status(400).json({message: 'Can not report closed SLA'});
         }
     } catch {
         console.log(error);
@@ -101,11 +103,12 @@ const sendReport = asyncHandler(async (req, res) => {
     }
 })
 
-const getReportCustomer = asyncHandler(async (req, res) => {
+const getCustomerReports = asyncHandler(async (req, res) => {
     try {
-        const report = await Report.find({sender_id: req.user.id});
+        const report = await Report.find({sla_id: req.query.id});
+
         if(report.length > 0) {
-            res.status(200).json({message: 'Report found', data: report});
+            res.status(200).json({message: 'Reports found', data: report});
         } else {
             res.status(400).json({message: 'No report found'});
         }
@@ -129,4 +132,4 @@ const getAllReport = asyncHandler(async (req, res) => {
     }
 })
 
-module.exports = {getUser, getCustomerInfo, updateCustomerProfile, sendReport, getReportCustomer, getAllReport};
+module.exports = {getUser, getCustomerInfo, updateCustomerProfile, sendReport, getCustomerReports, getAllReport};

@@ -13,7 +13,10 @@ const {
 
 const { 
     getCustomerInfo, 
-    updateCustomerProfile 
+    updateCustomerProfile ,
+    sendReport,
+    getReportCustomer,
+    getAllReport,
 } = require("../Controllers/customerController");
 
 const { createPriceList,
@@ -24,6 +27,9 @@ const { createPriceList,
         getUserSlas
  } = require("../Controllers/adminController");
 
+const {
+    getReports,
+} = require("../Controllers/technicanController");
 const router = express.Router();
 
 // Authentication routes
@@ -38,7 +44,8 @@ router.post('/refresh', refreshToken); // Refreshes access token with refresh to
 // Customer routes
 router.get('/getCustomer', validateToken, validateActiveUser,authorization("CustomerAccountInfo", "read"), getCustomerInfo); 
 router.put('/updateCustomer', validateToken, validateActiveUser, authorization("CustomerAccountInfo", "update"), updateCustomerProfile);
-
+router.post('/sendReport', validateToken, validateActiveUser, sendReport);
+router.get('/getReportCustomer', validateToken, validateActiveUser, getReportCustomer);
 
 // Admin routes
 router.post('/createPriceList', validateToken, createPriceList); // kräver ny resurs i permitio?
@@ -47,4 +54,8 @@ router.get('/getUser', validateToken, authorization("CustomerAccountInfo", "read
 router.put('/toggleUserStatus', validateToken, authorization("CustomerAccountInfoPrivate", "update"), toggleUserStatus);
 router.put('/updateUser', validateToken, authorization("CustomerAccountInfoPrivate", "update"), updateUser);
 router.get('/getUserSlas', validateToken, authorization("Service_Level_Agreement", "read"), getUserSlas);
+
+// technican routes
+router.get('/getReportCustomer', validateToken, getReportCustomer);
+router.get('/getAllReport', validateToken, getAllReport);
 module.exports = router;

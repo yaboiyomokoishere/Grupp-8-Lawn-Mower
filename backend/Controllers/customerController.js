@@ -1,8 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../Models/userModel");
 const bcrypt = require("bcrypt");
-
-
+const Report = require("../Models/reportModel");
+const Sla = require("../Models/slaModel")
 
 const getCustomerInfo = asyncHandler(async (req,res) => {
     const {id} = req.user;
@@ -78,4 +78,55 @@ const getUser = asyncHandler(async (req) => {
     return user;
 })
 
-module.exports = {getUser, getCustomerInfo, updateCustomerProfile};
+const sendReport = asyncHandler(async (req, res) => {
+    try {
+        const sla = await Sla.findById(req.body.id);
+        if(sla.status == "Pending" || sla.status == "Paid" || sla.status == "Active" || sla.status == "Fault") {
+            console.log(req.user.id);
+            console.log(sla.id);
+            console.log(req.body.description); 
+            const report = await Report.create({
+                sender_id: req.user.id,
+                sla_id: sla._id,
+                description: req.body.description,
+                title: req.body.title,
+            });
+            res.status(200).json({message: 'Report submitted'});
+        } else {
+            res.status(403).json({message: 'Can not report closed SLA'});
+        }
+    } catch {
+        console.log(error);
+        res.status(500).json({message: 'Server error'});
+    }
+})
+
+const getReportCustomer = asyncHandler(async (req, res) => {
+    try {
+        const report = await Report.find({sender_id: req.user.id});
+        if(report.length > 0) {
+            res.status(200).json({message: 'Report found', data: report});
+        } else {
+            res.status(400).json({message: 'No report found'});
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: 'Server error'});
+    }
+})
+
+const getAllReport = asyncHandler(async (req, res) => {
+    try {
+        const report = await Report.find();
+        if(report.length > 0) {
+            res.status(200).json({message: 'Report found', data: report});
+        } else {
+            res.status(400).json({message: 'No report found'});
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: 'Server error'});
+    }
+})
+
+module.exports = {getUser, getCustomerInfo, updateCustomerProfile, sendReport, getReportCustomer, getAllReport};

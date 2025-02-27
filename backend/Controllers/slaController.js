@@ -12,7 +12,7 @@ const Robot = require("../Models/robotModel");
 //@access private
 const createSla  = asyncHandler(async (req, res) => {
     try {
-        const robot = await Robot.findOne({status: "Available"});
+        const robot = await Robot.findOne({status: "Available" }); // add assigned model
         if(robot){
             // create sla and insert the users id
             const sla = await Sla.create({
@@ -23,6 +23,7 @@ const createSla  = asyncHandler(async (req, res) => {
                 grass_height: req.body.grass_height,
                 working_area: req.body.working_area,
                 price: req.body.total_price,
+                // assigned model
             });
             //console.log(sla)
             if(sla) {
@@ -228,7 +229,7 @@ const getPrice  = asyncHandler(async (req, res) => {
 const getHeightAndWorkingAreaAlternatives = asyncHandler(async (req, res) => {
     try {
         const alternatives = await PriceList.findOne({ model: "Robot 1" }); // Hardcoded for testing
-        //console.log(alternatives);
+        console.log(alternatives);
         res.status(200).json(alternatives);
     } catch (error) {
         console.log(error);
@@ -257,6 +258,7 @@ const getSlaPriceList = asyncHandler(async (req, res) => {
         const id = req.query.id
         
         const sla = await Sla.findById(id)
+
         if(!sla){
             res.status(404).json({message: 'Sla not found'});
         }

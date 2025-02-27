@@ -4,9 +4,9 @@
         <div class="customer-content">
             <h1>SLA - ID: {{ $route.params.id }}</h1>
             <div class="back-button-container">
-                <RouterLink  class="back-button">
-                    <button @click="$router.back()" >Go back</button>
-                </RouterLink>
+            
+            <button @click="$router.go(-1)" >Go back</button>
+            
             </div>
             <table v-if= "customerLogs.length" >
                 <thead>

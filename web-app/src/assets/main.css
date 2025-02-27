@@ -53,6 +53,12 @@ legend {
   display: flex;
   min-height: 100vh;
 }
+.tech-content{
+  padding:2rem;
+  flex-grow: 1;
+  min-height: 100vh;
+  margin-left: 200px;
+}
 
 .customer-content, .admin-content{
   padding: 2rem;
@@ -62,7 +68,7 @@ legend {
   
 }
 
-.customer-content h1, .admin-content h1{
+.customer-content h1, .admin-content h1, .tech-content h1{
   text-align: center;
   font-weight: bold;
   font-size: 2.5rem;

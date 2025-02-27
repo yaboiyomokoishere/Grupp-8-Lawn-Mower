@@ -7,8 +7,8 @@ const {
     loginUser,
     logoutUser,
     refreshToken,
-    registerCustomer
-    //registerAdmin
+    registerCustomer,
+    registerAdmin
 } = require("../Controllers/userController");
 
 const { 

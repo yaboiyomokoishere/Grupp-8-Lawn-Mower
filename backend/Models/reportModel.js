@@ -24,6 +24,11 @@ const reportSchema = mongoose.Schema({
         enum: ["Received", "Solved"],
         default: "Received",
     },
+    messages: [
+        {
+            type: String
+        }
+    ]
 },
 {
     timestamps: true,

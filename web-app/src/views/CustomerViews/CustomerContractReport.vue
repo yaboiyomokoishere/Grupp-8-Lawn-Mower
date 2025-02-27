@@ -57,6 +57,7 @@
                                 <button @click="toggleDescription(report._id)">Description</button>
                                 <!-- Is appearing before the description button, but can't really tell why. DOM issue?  -->
                                 <button v-if="canEdit" @click="updateReport(report._id)" style="margin-right:10px;">Archive</button>
+                                <button v-if="canEdit" @click="addComment(report._id)" style="margin-right:10px;">Comment</button>
                             </td>
                         </tr>
                         <tr v-if="reportsIds.has(report._id)">

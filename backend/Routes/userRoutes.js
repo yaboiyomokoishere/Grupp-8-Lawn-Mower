@@ -16,7 +16,7 @@ const {
     updateCustomerProfile ,
     sendReport,
     getCustomerReports,
-    getAllReport,
+    getAllReports,
     updateReportStatus
 } = require("../Controllers/customerController");
 
@@ -62,7 +62,7 @@ router.put('/updateReportStatus', validateToken,  updateReportStatus);
 
 // technican routes
 //router.get('/getReportCustomer', validateToken, getReportCustomer);
-router.get('/getAllReports', validateToken, getAllReport);
+router.get('/getAllReports', validateToken, getAllReports);
 
 
 router.put('/updateSlaStatus', validateToken, authorization("Service_Level_Agreement", "update"), updateSlaStatus);

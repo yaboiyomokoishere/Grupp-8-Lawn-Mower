@@ -119,7 +119,7 @@ const getCustomerReports = asyncHandler(async (req, res) => {
     }
 })
 
-const getAllReport = asyncHandler(async (req, res) => {
+const getAllReports = asyncHandler(async (req, res) => {
     try {
         const report = await Report.find();
         if(report.length > 0) {
@@ -140,7 +140,7 @@ const updateReportStatus = asyncHandler(async (req,res) => {
         if(report) {
             report.status = 'Solved';
             report.save();
-            description = `The issue with the report ${ report.title } has been resolved. Report archived.`;
+            description = `The issue with the report - ${ report.title } -has been resolved. Report archived.`;
             await logSlaEvent(
                 report.sla_id,
                 'Report Update',
@@ -158,4 +158,4 @@ const updateReportStatus = asyncHandler(async (req,res) => {
     }
 });
 
-module.exports = {getUser, getCustomerInfo, updateCustomerProfile, sendReport, getCustomerReports, getAllReport, updateReportStatus};
+module.exports = {getUser, getCustomerInfo, updateCustomerProfile, sendReport, getCustomerReports, getAllReports, updateReportStatus};

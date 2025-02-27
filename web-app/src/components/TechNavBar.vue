@@ -1,11 +1,8 @@
 <template>
-    <nav class="admin-navbar">
+    <nav class="tech-navbar">
         <div class="navbar-links">
-            <RouterLink :to="{name: 'admin_dashboard'}" class="navbar-item">Dashboard</RouterLink>
-            <RouterLink :to="{name: 'admin_users'}" class="navbar-item">Users</RouterLink>
-            <RouterLink :to="{name: 'admin_mowers'}" class="navbar-item">Mowers</RouterLink>
-            <RouterLink to="#" class="navbar-item">Reports</RouterLink>
-            <RouterLink to="#" class="navbar-item">Models</RouterLink>
+            <RouterLink :to="{name: 'technician_mowers'}" class="navbar-item">Mowers</RouterLink>
+            <RouterLink :to="{name: 'technician_reports'}" class="navbar-item">Reports</RouterLink>
         </div>
         <div class="logout-button">
             <Logout />
@@ -18,7 +15,7 @@ import Logout from '@/components/Logout.vue';
 </script>
 
 <style scoped>
-.admin-navbar {
+.tech-navbar {
     position: fixed;
     top: 0;
     left: 0;

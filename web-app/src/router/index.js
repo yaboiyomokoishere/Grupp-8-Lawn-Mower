@@ -20,7 +20,13 @@ import UpdateContractAsCustomer from '@/views/AdminViews/UpdateContractAsCustome
 import AdminCreateUser from '@/views/AdminViews/AdminCreateUser.vue';
 import CustomerContractReport from '@/views/CustomerViews/CustomerContractReport.vue';
 import PriceLists from '@/views/AdminViews/PriceLists.vue';
-
+import TechHomeView from '@/views/TechnicianViews/TechHomeView.vue';
+import TechMowersView from '@/views/TechnicianViews/TechMowersView.vue';
+import TechReportsView from '@/views/TechnicianViews/TechReportsView.vue';
+import EditMower from '@/views/TechnicianViews/EditMower.vue';
+import TechHandleReportView from '@/views/TechnicianViews/TechHandleReportView.vue';
+import AdminaddMowerView from '@/views/AdminViews/AdminaddMowerView.vue';
+import AdminMowersView from '@/views/AdminViews/AdminMowerView.vue';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,7 +52,6 @@ const router = createRouter({
             name: 'signup',
             component: SignUpView
         },
-
         // -------------------------CUSTOMER ROUTES------------------------
         {
             path: '/customer/profile',
@@ -141,6 +146,51 @@ const router = createRouter({
             name: 'admin_price_lists',
             component: PriceLists,
             meta: { requiresAuth: true, role: ['admin'] }
+        },
+        {
+            path: '/admin/mowers',
+            name: 'admin_mowers',
+            component: AdminMowersView,
+            meta: { requiresAuth: true, role: ['admin'] }
+
+        },
+        {
+            path: '/admin/mowers/add_mower',
+            name: 'admin_add_mower',
+            component: AdminaddMowerView,
+            meta: { requiresAuth: true, role: ['admin']}
+        },
+
+        // -------------------------Technician  ROUTES------------------------
+        {
+            path: '/technician/home',
+            name: 'technician_home',
+            component: TechHomeView,
+            meta: { requiresAuth: true, role: ['technician'] }
+        },
+        {
+            path: '/technician/mowers',
+            name: 'technician_mowers',
+            component: TechMowersView,
+            meta: { requiresAuth: true, role: ['technician'] }
+        },
+        {
+            path: '/technician/reports',
+            name: 'technician_reports',
+            component: TechReportsView,
+            meta: { requiresAuth: true, role: ['technician', 'admin'] }
+        },
+        {
+            path: '/technician/mower/:id',
+            name: 'technician_mower_edit',
+            component: EditMower,
+            meta: { requiresAuth: true, role: ['technician', 'admin']}
+        },
+        {
+            path: '/technician/report/:id',
+            name: 'technician_report_view',
+            component: TechHandleReportView,
+            meta: { requiresAuth: true, role: ['technician']}
         },
         {
             path: '/:catchAll(.*)', // Catch-all route for any unmatched routes

@@ -8,7 +8,8 @@ const logSlaEvent = require("../Middleware/logSlaEvent");
 
 const registerRobot  = asyncHandler(async (req, res) => { 
     // for (let i = 0; i < 200; i++) {
-    const robot = await Robot.create({ serial_number: i });
+    const serial_number = req.body.serial_number;
+    const robot = await Robot.create({ serial_number });
     console.log(robot);
     // }
     res.status(200).json({message: 'Robots created successfully'});
@@ -30,6 +31,8 @@ const registerRobot  = asyncHandler(async (req, res) => {
     //     res.status(400).json({message: 'Could not register robot'});
     // }
 });
+
+
 
 const startedCutting  = asyncHandler(async (req, res) => { 
     try {
@@ -169,6 +172,16 @@ const getRobot = asyncHandler(async (req, res) => {
     }
 });
 
+const getAllRobots = asyncHandler(async (req, res) => {
+    const robots = await Robot.find({status: req.query.status});
+    //console.log(robots);
+    if(!robots) {
+        res.status(404);
+        throw new Error("No robots found");
+    }
+    res.json(robots);
+});
+
 // låtsas ping till robot
 const getBooking = asyncHandler(async (req, res) => { 
     try {
@@ -208,4 +221,4 @@ const createPriceList = asyncHandler(async (req, res) => {
 
 
 
-module.exports = {registerRobot, doneCutting, startedCutting, broken, currentCutArea, getRobot, maintenance, getBooking, getAllPriceLists};
+module.exports = {registerRobot, doneCutting, startedCutting, broken, currentCutArea, getRobot,getAllRobots, maintenance, getBooking, getAllPriceLists};

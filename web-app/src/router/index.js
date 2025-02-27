@@ -23,7 +23,7 @@ import TechHomeView from '@/views/TechnicianViews/TechHomeView.vue';
 import TechMowersView from '@/views/TechnicianViews/TechMowersView.vue';
 import TechReportsView from '@/views/TechnicianViews/TechReportsView.vue';
 import EditMower from '@/views/TechnicianViews/EditMower.vue';
-import TechHandleReportview from '@/views/TechnicianViews/TechHandleReportview.vue';
+import TechHandleReportView from '@/views/TechnicianViews/TechHandleReportView.vue';
 import AdminaddMowerView from '@/views/AdminViews/AdminaddMowerView.vue';
 import AdminMowersView from '@/views/AdminViews/AdminMowerView.vue';
 const router = createRouter({
@@ -50,7 +50,6 @@ const router = createRouter({
             name: 'signup',
             component: SignUpView
         },
-
         // -------------------------CUSTOMER ROUTES------------------------
         {
             path: '/customer/profile',
@@ -159,31 +158,31 @@ const router = createRouter({
             path: '/technician/home',
             name: 'technician_home',
             component: TechHomeView,
-            meta: { requiresAuth: true, role: 'technician' }
+            meta: { requiresAuth: true, role: ['technician'] }
         },
         {
             path: '/technician/mowers',
             name: 'technician_mowers',
             component: TechMowersView,
-            meta: { requiresAuth: true, role: 'technician' }
+            meta: { requiresAuth: true, role: ['technician'] }
         },
         {
             path: '/technician/reports',
             name: 'technician_reports',
             component: TechReportsView,
-            meta: { requiresAuth: true, role: 'technician' }
+            meta: { requiresAuth: true, role: ['technician', 'admin'] }
         },
         {
             path: '/technician/mower/:id',
             name: 'technician_mower_edit',
             component: EditMower,
-            meta: { requiresAuth: true, role: 'technician'}
+            meta: { requiresAuth: true, role: ['technician', 'admin']}
         },
         {
             path: '/technician/report/:id',
             name: 'technician_report_view',
-            component: TechHandleReportview,
-            meta: { requiresAuth: true, role: 'technician'}
+            component: TechHandleReportView,
+            meta: { requiresAuth: true, role: ['technician']}
         },
         {
             path: '/:catchAll(.*)', // Catch-all route for any unmatched routes

@@ -5,6 +5,7 @@
             <RouterLink :to="{name: 'admin_users'}" class="navbar-item">Users</RouterLink>
             <RouterLink to="#" class="navbar-item">Mowers</RouterLink>
             <RouterLink to="#" class="navbar-item">Reports</RouterLink>
+            <RouterLink to="#" class="navbar-item">Models</RouterLink>
         </div>
         <div class="logout-button">
             <Logout />

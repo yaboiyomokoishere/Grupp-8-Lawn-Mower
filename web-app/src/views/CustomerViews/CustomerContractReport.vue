@@ -12,7 +12,7 @@
                     </select>
                     
                     <button @click="showCreateForm = true" class="create-button">Create Report</button>
-                    <RouterLink  class="back-button" >
+                    <RouterLink  class="back-button">
                         <button @click="$router.back()" >Go back</button>
                     </RouterLink>
                 </div>
@@ -87,6 +87,7 @@ const reports = ref([]);
 const status = ref('all');
 const showCreateForm = ref(false);
 const canEdit = ref(false);
+const role = ref('');
 const newReport = reactive({
     id: route.params.id,
     title: '',
@@ -170,9 +171,10 @@ onMounted( async()=>{
         console.log('Accessing the page as ' + decodedToken.user.role);
         if(['admin', 'technician'].includes(decodedToken.user.role)){
             canEdit.value = true;
+            role.value = decodedToken.user.role;
         }
     }
-})
+});
 </script>
 
 <style scoped>

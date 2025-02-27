@@ -19,6 +19,7 @@ import AdminContractView from '@/views/AdminViews/AdminContractView.vue';
 import UpdateContractAsCustomer from '@/views/AdminViews/UpdateContractAsCustomer.vue';
 import AdminCreateUser from '@/views/AdminViews/AdminCreateUser.vue';
 import CustomerContractReport from '@/views/CustomerViews/CustomerContractReport.vue';
+import PriceLists from '@/views/AdminViews/PriceLists.vue';
 
 
 const router = createRouter({
@@ -133,6 +134,12 @@ const router = createRouter({
             path: '/admin/users/createUser',
             name: 'admin_create_user',
             component: AdminCreateUser,
+            meta: { requiresAuth: true, role: ['admin'] }
+        },
+        {
+            path: '/admin/priceLists',
+            name: 'admin_price_lists',
+            component: PriceLists,
             meta: { requiresAuth: true, role: ['admin'] }
         },
         {

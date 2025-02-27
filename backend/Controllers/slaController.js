@@ -107,7 +107,7 @@ const cancelSla = asyncHandler (async (req, res) =>{
     try{
         const sla = await Sla.findOne({_id: req.body.id});
         const robot = await Robot.findOne({'booking_schedule.sla_id': req.body.id});
-        //console.log(robot);
+        console.log(robot);
         robot.status = "Available";
         // Works as long as only one booking at a time
         robot.booking_schedule.pop();
@@ -124,6 +124,35 @@ const cancelSla = asyncHandler (async (req, res) =>{
             logSlaEvent(sla.id, "Manual Cancellation", req.user.id, description, "Logging error while cancelling sla");
             await sla.save();
             res.status(200).json({message: 'Cancellation successful'});
+        }
+    } catch (error){
+        console.log(error);
+        res.status(400).json({message: 'Server error'});
+    }
+});
+
+const deleteSla = asyncHandler (async (req, res) =>{
+    try{
+
+         const robot = await Robot.findOne({'booking_schedule.sla_id': req.body.id});
+         console.log(robot);
+         robot.status = "Available";
+         robot.booking_schedule.pop();
+        
+        await robot.save();
+
+        const sla = await Sla.deleteOne({_id: req.body.id});
+        const log = await Log.deleteOne({sla_id: req.body.id});
+        
+        // Works as long as only one booking at a time
+        
+        //console.log(robot);
+        
+        if (!sla){
+            res.status(404).json({message: 'Sla or log not found'});
+        }
+        else {
+            res.status(200).json({message: 'Deletion successful'});
         }
     } catch (error){
         console.log(error);
@@ -260,6 +289,7 @@ module.exports = {createSla,
                 getSla, 
                 getHeightAndWorkingAreaAlternatives,
                 cancelSla, 
+                deleteSla,
                 getSlaLog,
                 getSlaPriceList, 
             };

@@ -57,9 +57,9 @@ const registerCustomer = asyncHandler(async (req,res) => {
     }
 });
 
-//@desc Register an admin
-//@route POST /api/user/registerAdmin
-//@access private
+// @desc Register an admin
+// @route POST /api/user/registerAdmin
+// @access private
 // const registerAdmin = asyncHandler(async (req,res) => {
 //     const { firstName, 
 //             lastName, 

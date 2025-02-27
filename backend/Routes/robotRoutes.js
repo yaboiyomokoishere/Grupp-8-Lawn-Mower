@@ -8,11 +8,12 @@ const {
     broken,
     doneCutting,
     getRobot,
+    getAllRobots,
     maintenance,
     getAllPriceLists
     //getBooking
 } = require("../Controllers/robotController");
-const validateToken = require("../Middleware/validateTokenHandler");
+const validateToken = require("../Middleware/validateTokenHandler")
 
 const router = express.Router();
 
@@ -23,6 +24,7 @@ router.post('/broken', broken);
 router.post('/maintenance', validateToken, authorization("Robot", "update"), maintenance);
 router.post('/doneCutting', doneCutting);
 router.get('/getRobot', validateToken, authorization("Robot", "read"), getRobot);
-router.get('/getAllPriceLists', getAllPriceLists)
+router.get('/getAllPriceLists', getAllPriceLists);
+router.get('/getAllRobots', getAllRobots);
 
 module.exports = router;

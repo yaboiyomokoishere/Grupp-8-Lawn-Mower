@@ -21,7 +21,7 @@ const robotSchema = mongoose.Schema({
         unique: [true, "Serial number already taken"]
     },
     last_maintenance_date: {
-        type: Date,
+        type: Date
     },
     booking_schedule:[{
         sla_id: {

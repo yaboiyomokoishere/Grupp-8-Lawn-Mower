@@ -334,10 +334,27 @@ const getPriceLists = asyncHandler(async (req, res) => {
     }
 });
 
+const getPriceList = asyncHandler(async (req, res) => { 
+    try {
+        const id = req.query.id
+        
+        const priceList = await PriceList.findById(id)
+
+        if(!priceList){
+            res.status(404).json({message: 'Price list not found'});
+        }
+        res.status(200).json(priceList);    
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({message: 'Server error'});
+    }
+});
+
 
 module.exports = {
                 createPriceList, 
                 getPriceLists,
+                getPriceList,
                 updatePriceList,
                 getUsers, 
                 getUser, 

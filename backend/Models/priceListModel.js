@@ -38,6 +38,9 @@ const priceListSchema = mongoose.Schema({
         required: [true, "Price required"],
         default: 10 // kr
     }
+}, 
+{
+    timestamps: true
 }); 
 
 module.exports = mongoose.model("price_list", priceListSchema );

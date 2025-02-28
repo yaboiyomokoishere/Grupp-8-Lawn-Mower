@@ -42,7 +42,6 @@
 import apiClient from '@/config/axios';
 import CustomerNavBar from '@/components/CustomerNavBar.vue';
 import { onMounted, ref } from 'vue';
-import { RouterLink } from 'vue-router';
 import { useRoute } from 'vue-router';
 
 
@@ -83,7 +82,7 @@ onMounted(async () => {
             //logData.date = response.data.events[i].date.split('T')[0];
             customerLogs.value.push(log);
         }
-        //console.log(customerLogs.value);
+        console.log(customerLogs.value);
 
     } catch (error) {
         console.log(error);
@@ -91,8 +90,7 @@ onMounted(async () => {
 });
 </script>
 
-<style>
-
+<style scoped>
 .customer-content table {
     width: 75%;
     max-width: 75%;

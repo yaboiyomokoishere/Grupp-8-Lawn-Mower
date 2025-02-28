@@ -27,6 +27,7 @@ import EditMower from '@/views/TechnicianViews/EditMower.vue';
 import TechHandleReportView from '@/views/TechnicianViews/TechHandleReportView.vue';
 import AdminaddMowerView from '@/views/AdminViews/AdminaddMowerView.vue';
 import AdminMowersView from '@/views/AdminViews/AdminMowerView.vue';
+import UpdatePriceList from '@/views/AdminViews/UpdatePriceList.vue';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -145,6 +146,12 @@ const router = createRouter({
             path: '/admin/priceLists',
             name: 'admin_price_lists',
             component: PriceLists,
+            meta: { requiresAuth: true, role: ['admin'] }
+        },
+        {
+            path: '/admin/priceLists/update/:id',
+            name: 'admin_price_lists_update',
+            component: UpdatePriceList,
             meta: { requiresAuth: true, role: ['admin'] }
         },
         {

@@ -26,9 +26,7 @@ router.post('/getPrice', validateToken, validateActiveUser, getPrice);
 router.post('/cancelSla', validateToken, validateActiveUser, authorization("Service_Level_Agreement", "update"), cancelSla);
 
 router.get('/getSlaLog', validateToken, validateActiveUser, authorization("Service_Level_Agreement", "read"), getSlaLog);
-
-
-router.get('/getAlternatives', validateToken, getHeightAndWorkingAreaAlternatives); 
+ 
 router.get('/getSlaPriceList', validateToken, getSlaPriceList);
 
 

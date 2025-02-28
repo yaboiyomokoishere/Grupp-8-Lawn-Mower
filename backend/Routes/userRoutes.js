@@ -72,7 +72,6 @@ router.put('/updateReportStatus', validateToken,  updateReportStatus);
 //router.get('/getReportCustomer', validateToken, getReportCustomer);
 router.get('/getAllReports', validateToken, getAllReports);
 
-
 router.put('/updateSlaStatus', validateToken, authorization("Service_Level_Agreement", "update"), updateSlaStatus);
 router.put('/updateServiceDetails', validateToken, authorization("Service_Level_Agreement", "update"), updateServiceDetails);
 module.exports = router;

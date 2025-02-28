@@ -23,7 +23,7 @@ const createSla  = asyncHandler(async (req, res) => {
                 grass_height: req.body.grass_height,
                 working_area: req.body.working_area,
                 price: req.body.total_price,
-                // assigned model
+                assigned_robot_model: req.body.robot_model
             });
             //console.log(sla)
             if(sla) {
@@ -208,12 +208,14 @@ const getPrice  = asyncHandler(async (req, res) => {
         if(req.body.create_sla){ 
             createSla = true;
         }
-        var result = await priceCalculator( req.body.grass_height, 
-                                            req.body.working_area, 
-                                            req.body.start_date,
-                                            req.body.end_date, 
-                                            req.body.robot_model, 
-                                            createSla)
+        var result = await priceCalculator( 
+            req.body.grass_height, 
+            req.body.working_area, 
+            req.body.start_date,
+            req.body.end_date, 
+            req.body.robot_model, 
+            createSla
+        )
         if(!result){
             res.status(404).json({message: 'Error while calculating a price.'});
         } else {

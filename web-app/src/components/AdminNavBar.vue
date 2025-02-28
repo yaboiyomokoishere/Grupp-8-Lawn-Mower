@@ -4,7 +4,8 @@
             <RouterLink :to="{name: 'admin_dashboard'}" class="navbar-item">Dashboard</RouterLink>
             <RouterLink :to="{name: 'admin_users'}" class="navbar-item">Users</RouterLink>
             <RouterLink :to="{name: 'admin_mowers'}" class="navbar-item">Mowers</RouterLink>
-            <RouterLink to="#" class="navbar-item">Reports</RouterLink>
+            <RouterLink :to="{ name: 'admin_price_lists' }" class="navbar-item">Pricing</RouterLink>
+            <RouterLink :to="{name: 'technician_reports'}" class="navbar-item">Reports</RouterLink>
         </div>
         <div class="logout-button">
             <Logout />

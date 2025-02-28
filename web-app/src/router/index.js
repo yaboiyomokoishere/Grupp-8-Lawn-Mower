@@ -19,6 +19,7 @@ import AdminContractView from '@/views/AdminViews/AdminContractView.vue';
 import UpdateContractAsCustomer from '@/views/AdminViews/UpdateContractAsCustomer.vue';
 import AdminCreateUser from '@/views/AdminViews/AdminCreateUser.vue';
 import CustomerContractReport from '@/views/CustomerViews/CustomerContractReport.vue';
+import PriceLists from '@/views/AdminViews/PriceLists.vue';
 import TechHomeView from '@/views/TechnicianViews/TechHomeView.vue';
 import TechMowersView from '@/views/TechnicianViews/TechMowersView.vue';
 import TechReportsView from '@/views/TechnicianViews/TechReportsView.vue';
@@ -26,6 +27,8 @@ import EditMower from '@/views/TechnicianViews/EditMower.vue';
 import TechHandleReportView from '@/views/TechnicianViews/TechHandleReportView.vue';
 import AdminaddMowerView from '@/views/AdminViews/AdminaddMowerView.vue';
 import AdminMowersView from '@/views/AdminViews/AdminMowerView.vue';
+import UpdatePriceList from '@/views/AdminViews/UpdatePriceList.vue';
+
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -99,7 +102,7 @@ const router = createRouter({
             path: '/customer/contracts/reports/:id',
             name: 'customer_contract_report',
             component: CustomerContractReport,
-            meta: { requiresAuth: true, role: ['customer', 'admin', 'technician'] }
+            meta: { requiresAuth: true, role: ['customer', 'admin'] }
         },
         // -------------------------ADMIN  ROUTES------------------------
         {
@@ -137,6 +140,18 @@ const router = createRouter({
             path: '/admin/users/createUser',
             name: 'admin_create_user',
             component: AdminCreateUser,
+            meta: { requiresAuth: true, role: ['admin'] }
+        },
+        {
+            path: '/admin/priceLists',
+            name: 'admin_price_lists',
+            component: PriceLists,
+            meta: { requiresAuth: true, role: ['admin'] }
+        },
+        {
+            path: '/admin/priceLists/update/:id',
+            name: 'admin_price_lists_update',
+            component: UpdatePriceList,
             meta: { requiresAuth: true, role: ['admin'] }
         },
         {

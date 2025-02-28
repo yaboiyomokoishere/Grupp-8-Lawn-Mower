@@ -1,60 +1,76 @@
 <template>
     <div class="tech-page-container">
-        <TechNavBar />
+        <div v-if="role == 'technician'">
+            <TechNavBar />
+        </div>
+        <div v-else-if="role == 'admin'">
+            <AdminNavBar />
+        </div>
+        
         <div class = "tech-content">
             <h1>Reports</h1>
             <select v-model="reportStatus">
                 <option value="Received">Received</option>
                 <option value="Solved">Solved</option>
             </select>
-        <table v-if="reports.length">
-            <thead>
-                <tr>
-                    <th>Sender</th>
-                    <th>Title</th>
-                    <th>Status</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="report in reports" :key="report.id">
-                    <td>{{ report.sender_id }}</td>
-                    <td>{{ report.title }}</td>
-                    <td> {{ report.status }}</td>
-                    <td>
-                     <RouterLink :to="{name: 'technician_report_view', params: {id: report._id}}"  class="edit-report-button">View</RouterLink> 
-                    </td>
-                </tr>
-            </tbody>
-        </table> 
-        <p v-else style="text-align:center; font-size:20px; color:black">No Reports Found</p>   
+            <table v-if="reports.length">
+                <thead>
+                    <tr>
+                        <th>Sender</th>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="report in reports" :key="report.id">
+                        <td>{{ report.sender_id }}</td>
+                        <td>{{ report.title }}</td>
+                        <td> {{ report.status }}</td>
+                        <td>
+                        <RouterLink :to="{name: 'technician_report_view', params: {id: report._id}}"  class="edit-report-button">View</RouterLink> 
+                        </td>
+                    </tr>
+                </tbody>
+            </table> 
+            <p v-else style="text-align:center; font-size:20px; color:black">No Reports Found</p>   
         </div>
     </div>
-    
 </template>
 
 <script setup>
 import TechNavBar from '@/components/TechNavBar.vue';
+import AdminNavBar from '@/components/AdminNavBar.vue';
 import apiClient from '@/config/axios';
-import { onMounted,ref,watch } from 'vue';
+import { jwtDecode } from 'jwt-decode';
+import { onMounted, ref, watch } from 'vue';
 
 const reports = ref([]);
 const reportStatus = ref("Received");
+const role = ref('');
 
 const fetchReports = async () => {
-   
     const response = await apiClient.get(`/user/getAllReports?status=${reportStatus.value}`);
     console.log(response.data.data)
     reports.value = response.data.data;
-
 }
+
 watch(reportStatus, async () => {
     await fetchReports();
 });
+
 onMounted(async () => {
     await fetchReports();
-}); 
 
+    const token = localStorage.getItem('accessToken');
+    if(token){
+        const decodedToken = jwtDecode(token);
+        console.log('Accessing the page as ' + decodedToken.user.role);
+        if(['admin', 'technician'].includes(decodedToken.user.role)){
+            role.value = decodedToken.user.role;
+        }
+    }
+}); 
 </script>
 
 <style>

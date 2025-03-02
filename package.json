@@ -4,7 +4,7 @@
   "description": "Erik Helgesson,       rekhel-9@student.ltu.se <br>\r Kalle Hedberg,        kalhed-2@student.ltu.se <br>\r Sebastian Pettersson, sebpet-9@student.ltu.se <br>\r Nahor Haile Tsegay,   nahtse-2@student.ltu.se <br>",
   "main": "index.js",
   "scripts": {
-    "install:all": "concurrently \"cd backend && npm install\" \"cd frontend && npm install\"", 
+    "install:all": "concurrently \"cd backend && npm install\" \"cd frontend && npm install\"",
     "dev": "concurrently \"cd backend && npm run dev\" \"cd web-app && npm run dev\"",
     "start": "npm run install:all && npm run dev"
   },
@@ -13,5 +13,8 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^9.1.2"
+  },
+  "dependencies": {
+    "axios": "^1.8.1"
   }
 }

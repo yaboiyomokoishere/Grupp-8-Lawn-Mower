@@ -7,7 +7,6 @@ const {
     getPrice,
     getAllSla,
     getSla,
-    getHeightAndWorkingAreaAlternatives,
     cancelSla,
     getSlaLog,
     getSlaPriceList

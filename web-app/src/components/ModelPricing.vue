@@ -30,6 +30,7 @@
       </tr>
     </tbody>
   </table>
+  <br>
 </template>
 
 <script setup>

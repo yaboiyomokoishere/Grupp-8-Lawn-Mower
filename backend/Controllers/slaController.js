@@ -208,6 +208,7 @@ const getPrice  = asyncHandler(async (req, res) => {
         if(req.body.create_sla){ 
             createSla = true;
         }
+        console.log(req.body)
         var result = await priceCalculator( 
             req.body.grass_height, 
             req.body.working_area, 
@@ -226,19 +227,6 @@ const getPrice  = asyncHandler(async (req, res) => {
         res.status(400).json({message: 'Server error'});
     }
 });
-
-
-const getHeightAndWorkingAreaAlternatives = asyncHandler(async (req, res) => {
-    try {
-        const alternatives = await PriceList.findOne({ model: "Robot 1" }); // Hardcoded for testing
-        console.log(alternatives);
-        res.status(200).json(alternatives);
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({message: 'Could not fetch parameter alternatives'});
-    }
-});
-
 
 const getSlaLog = asyncHandler(async (req, res) => { 
     try {
@@ -290,8 +278,7 @@ module.exports = {createSla,
                 updateSla, 
                 getPrice, 
                 getAllSla, 
-                getSla, 
-                getHeightAndWorkingAreaAlternatives,
+                getSla,
                 cancelSla, 
                 deleteSla,
                 getSlaLog,

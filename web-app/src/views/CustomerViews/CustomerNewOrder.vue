@@ -51,6 +51,7 @@
 								name="working_area" 
 								id="working_area" 
 								v-model="formData.working_area"
+								min="500"
 								:max="selectedModel.max_area"
 								required 
 								/>

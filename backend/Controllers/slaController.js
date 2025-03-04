@@ -202,29 +202,38 @@ const getSla  = asyncHandler(async (req, res) => {
 //@desc getPrice
 //@route GET /api/sla/getPrice
 //@access private
-const getPrice  = asyncHandler(async (req, res) => { 
+const getPrice  = asyncHandler(async (req, res) => {
+    console.log("--------------------")
+    console.log(req.body) 
+    console.log("--------------------")
     try {
         let createSla = false;
         if(req.body.create_sla){ 
             createSla = true;
+            console.log("Creating SLA...");
+        } else {
+            console.log("Updating SLA...");
         }
-        console.log(req.body)
+
         var result = await priceCalculator( 
             req.body.grass_height, 
             req.body.working_area, 
             req.body.start_date,
             req.body.end_date, 
             req.body.robot_model, 
-            createSla
+            req.body.id,
+            createSla,
         )
+         
+        console.log("The price is ", result)
         if(!result){
             res.status(404).json({message: 'Error while calculating a price.'});
         } else {
             res.status(200).json({result});
         }
-    } catch(error){
-        console.log(error);
-        res.status(400).json({message: 'Server error'});
+    } catch(err){
+        console.log(err);
+        res.status(400).json({error: 'Server error: ' + err});
     }
 });
 

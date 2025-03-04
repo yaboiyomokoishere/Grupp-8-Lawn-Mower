@@ -160,7 +160,7 @@ onMounted(async () => {
 
         const slaPriceList = await apiClient.get(`/sla/getSlaPriceList?id=${ route.params.id }`);
         maxArea.value = slaPriceList.data.max_area;
-        // Extract the height-price objects as arrays
+        // Extract the height-price objects as elements.
         availableHeights.value.push(...slaPriceList.data.height_prices);
 
         // Determine the user for the correct navbar.

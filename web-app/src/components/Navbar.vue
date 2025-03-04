@@ -4,9 +4,6 @@
             <RouterLink :to="{name: 'home'}" class="navbar-item">Home</RouterLink>
         </div>
         <div class="navbar-links">
-            <!-- 
-            <RouterLink  class="navbar-item">About</RouterLink> 
-            -->
             <RouterLink :to="{name: 'pricing'}"  class="navbar-item">Pricing</RouterLink>
 
             <div v-if="!loggedIn" >
@@ -33,15 +30,15 @@ import { ref } from 'vue';
 import Logout from '@/components/Logout.vue';
 import { jwtDecode } from 'jwt-decode';
 
-// Needs to be a reactive variable in order to update the buttons after logout.
+
 const loggedIn = ref(isAuthenticated()); 
 const token = localStorage.getItem('accessToken');
 const userRole = ref('');
+
 if(token){
     const decodedToken = jwtDecode(token);
     userRole.value = decodedToken.user.role;
 }
-
 </script>
   
 <style scoped>

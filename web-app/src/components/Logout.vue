@@ -9,14 +9,14 @@ import axios from "axios";
 const router = useRouter();
 
 const logout = async () => {
-  try {
-    const response = await axios.post('http://localhost:3001/api/user/logout', {}, { withCredentials: true });
-    console.log(response);
-    localStorage.removeItem('accessToken');
-    router.push({name: 'login'});
-  } catch (error) {
-    console.log('Error creating customer:', error);
-  }
+	try {
+		const response = await axios.post('http://localhost:3001/api/user/logout', {}, { withCredentials: true });
+		console.log(response.data.message);
+		localStorage.removeItem('accessToken');
+		router.push({name: 'login'});
+		} catch (error) {
+		console.log('Error creating customer:', error);
+	}
 }
 </script>
 
@@ -34,5 +34,4 @@ const logout = async () => {
     background-color: inherit; 
     color: #2563eb;
 }
-
 </style>

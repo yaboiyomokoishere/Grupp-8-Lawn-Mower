@@ -4,7 +4,6 @@
             <RouterLink :to="{name: 'home'}" class="navbar-item">Home</RouterLink> <!-- Temporary for testing -->
             <RouterLink :to="{name: 'customer_profile'}" class="navbar-item">Profile</RouterLink>
             <RouterLink :to="{name: 'customer_contracts'}" class="navbar-item">Contracts</RouterLink>
-            <!-- <RouterLink :to="{name: 'home'}" class="navbar-item">Reports</RouterLink> -->
         </div>
         <div class="logout-button">
             <Logout />

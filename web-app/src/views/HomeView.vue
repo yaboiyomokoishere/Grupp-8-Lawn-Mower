@@ -5,5 +5,5 @@ import Navbar from '@/components/Navbar.vue';
 
 <template>
     <Navbar />
-    <!-- Content for the Home page, such as information, or a landing page -->
+    <!-- Content for the Home page, such as information and images, i.e., a landing page -->
 </template>

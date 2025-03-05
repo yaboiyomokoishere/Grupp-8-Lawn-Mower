@@ -1,12 +1,6 @@
 <template>
     <div class="tech-page-container">
-        <div v-if="role == 'technician'">
-            <TechNavBar />
-        </div>
-        <div v-else-if="role == 'admin'">
-            <AdminNavBar />
-        </div>
-        
+        <TechNavBar />
         <div class = "tech-content">
             <h1>Reports</h1>
             <select v-model="reportStatus">
@@ -48,23 +42,22 @@
             </tbody>
         </table> 
         <p v-else style="text-align:center; font-size:20px; color:black">No Reports Found</p>   
-
         </div>
     </div>
+    
 </template>
 
 <script setup>
 import TechNavBar from '@/components/TechNavBar.vue';
-import AdminNavBar from '@/components/AdminNavBar.vue';
 import apiClient from '@/config/axios';
+import router from '@/router';
+import { all } from 'axios';
 import { onMounted,ref,reactive, watch } from 'vue';
-import { jwtDecode } from 'jwt-decode';
-
-
+import { RouterLink } from 'vue-router';
+import { useRoute } from 'vue-router';
 
 const isActive = ref(new Map());
 const reportStatus = ref("Received");
-
 const reports = ref([]);
 
 
@@ -112,23 +105,13 @@ const handleSubmit = async (id) => {
         console.error('Error creating report:', error);
     }
 }
-
-
-const fetchReports = async () => {
-    const response = await apiClient.get(`/user/getAllReports?status=${reportStatus.value}`);
-    console.log(response.data.data)
-    reports.value = response.data.data;
-}
-
-watch(reportStatus, async () => {
-
+watch (reportStatus, async () => {
     await fetchReports();
     console.log("hello");
 });
 
 onMounted(async () => {
     await fetchReports();
-
     for (let i = 0; i < reports.value.length; i++) {
         let report ={
             sender_id: response.data.data[i].sender_id,
@@ -145,15 +128,6 @@ onMounted(async () => {
 
 
 
-    const token = localStorage.getItem('accessToken');
-    if(token){
-        const decodedToken = jwtDecode(token);
-        console.log('Accessing the page as ' + decodedToken.user.role);
-        if(['admin', 'technician'].includes(decodedToken.user.role)){
-            role.value = decodedToken.user.role;
-        }
-    }
-}); 
 </script>
 
 <style>

@@ -23,7 +23,7 @@ import TechHomeView from '@/views/TechnicianViews/TechHomeView.vue';
 import TechMowersView from '@/views/TechnicianViews/TechMowersView.vue';
 import TechReportsView from '@/views/TechnicianViews/TechReportsView.vue';
 import EditMower from '@/views/TechnicianViews/EditMower.vue';
-import TechHandleReportview from '@/views/TechnicianViews/TechHandleReportview.vue';
+import TechHandleReportview from '@/views/TechnicianViews/TechHandleReportView.vue';
 import AdminaddMowerView from '@/views/AdminViews/AdminaddMowerView.vue';
 import AdminMowersView from '@/views/AdminViews/AdminMowerView.vue';
 const router = createRouter({

@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const Report = require("../Models/reportModel");
 const Sla = require("../Models/slaModel")
 const logSlaEvent = require ("../Middleware/logSlaEvent");
+const { json } = require("express");
 
 const getCustomerInfo = asyncHandler(async (req,res) => {
     const {id} = req.user;
@@ -104,6 +105,7 @@ const sendReport = asyncHandler(async (req, res) => {
     }
 })
 
+
 const getCustomerReports = asyncHandler(async (req, res) => {
     try {
         const report = await Report.find({sla_id: req.query.id});
@@ -121,12 +123,14 @@ const getCustomerReports = asyncHandler(async (req, res) => {
 
 const getAllReport = asyncHandler(async (req, res) => {
     try {
-        const report = await Report.find();
-        if(report.length > 0) {
-            res.status(200).json({message: 'Report found', data: report});
-        } else {
-            res.status(400).json({message: 'No report found'});
-        }
+        const report = await Report.find({status: req.query.status});
+        console.log(report);
+        // if(report.length > 0) {
+        //     res.status(200).json({message: 'Report found',report});
+        // } else {
+        //     res.status(400).json({message: 'No report found'});
+        // }
+        res.json(report);
     } catch (error) {
         console.log(error);
         res.status(500).json({message: 'Server error'});

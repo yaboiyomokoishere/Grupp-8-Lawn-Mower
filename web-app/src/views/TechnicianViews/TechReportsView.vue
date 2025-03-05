@@ -13,27 +13,42 @@
                 <option value="Received">Received</option>
                 <option value="Solved">Solved</option>
             </select>
-            <table v-if="reports.length">
-                <thead>
-                    <tr>
-                        <th>Sender</th>
-                        <th>Title</th>
-                        <th>Status</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="report in reports" :key="report.id">
-                        <td>{{ report.sender_id }}</td>
-                        <td>{{ report.title }}</td>
-                        <td> {{ report.status }}</td>
-                        <td>
-                        <RouterLink :to="{name: 'technician_report_view', params: {id: report._id}}"  class="edit-report-button">View</RouterLink> 
-                        </td>
-                    </tr>
-                </tbody>
-            </table> 
-            <p v-else style="text-align:center; font-size:20px; color:black">No Reports Found</p>   
+        <table v-if="reports.length">
+            <thead>
+                <tr>
+                    <th>Sender</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody v-for="report in reports" :key="report.sender_id">
+                <tr class="report_body">
+                    <td>{{ report.sender_id }}</td>
+                    <td>{{ report.title }}</td>
+                    <td> {{ report.status }}</td>
+                    <td>
+                    <button @click="showDescription(report._id)">Description</button> 
+                    </td>
+                </tr>
+                <tr  v-if = 'report.description !== "" ' :class ="{hideDescription: !isActive.get(report._id)}">
+                    <th  colspan="4" style="position:absolute">Report description: {{ report.description }} </th>
+                    
+                    <ol style="margin-top: 70px; margin-left: 50px;">
+                        <lh style="padding:15px;">Technician replies:</lh>
+                        <li v-for="(message, index) in report.messages" :key="index" colspan="4" class = "replymessage"> 
+                        {{ message }}
+                        </li>
+                    </ol>
+                        <textarea placeholder="Reply" type="text" v-model="formData.messages" style="width:240px; height:150px; margin-left: 50px;"></textarea>
+                        <button @click="handleSubmit(report)">Send</button>
+                    
+                </tr>
+            </tbody>
+        </table> 
+        <p v-else style="text-align:center; font-size:20px; color:black">No Reports Found</p>   
+
         </div>
     </div>
 </template>
@@ -42,12 +57,62 @@
 import TechNavBar from '@/components/TechNavBar.vue';
 import AdminNavBar from '@/components/AdminNavBar.vue';
 import apiClient from '@/config/axios';
+import { onMounted,ref,reactive, watch } from 'vue';
 import { jwtDecode } from 'jwt-decode';
-import { onMounted, ref, watch } from 'vue';
+
+
+
+const isActive = ref(new Map());
+const reportStatus = ref("Received");
 
 const reports = ref([]);
-const reportStatus = ref("Received");
-const role = ref('');
+
+
+const showDescription = function(id) {
+    if (isActive.value.get(id)) {
+        isActive.value.set(id, false);
+       console.log(isActive.value);
+    } else {
+        isActive.value.set(id, true);
+        console.log(isActive.value);  
+    }
+}
+
+
+const fetchReports = async () => {
+
+    const response = await apiClient.get(`/user/getAllReports?status=${reportStatus.value}`);
+    console.log(response.data);
+    reports.value = response.data;
+    
+}
+const formData = reactive ({
+    messages: "",
+});
+const handleSubmit = async (id) => {
+    console.log(formData.messages);
+    const send = {
+        id: id._id,
+        messages: formData.messages,
+    }
+    try {
+        const response = await apiClient.put(`/user/respondReport`, send);
+        console.log(response);
+        if (response.status == 200) {
+            console.log("Message sent successfully");
+            formData.messages = "";
+            isActive.value.set(id, false);
+            console.log(isActive.value);
+            window.location.reload()
+        }
+        else {
+            console.log("Failed to send message");
+        }
+    } catch (error) {
+        console.error('Error creating report:', error);
+    }
+}
+
 
 const fetchReports = async () => {
     const response = await apiClient.get(`/user/getAllReports?status=${reportStatus.value}`);
@@ -56,11 +121,29 @@ const fetchReports = async () => {
 }
 
 watch(reportStatus, async () => {
+
     await fetchReports();
+    console.log("hello");
 });
 
 onMounted(async () => {
     await fetchReports();
+
+    for (let i = 0; i < reports.value.length; i++) {
+        let report ={
+            sender_id: response.data.data[i].sender_id,
+            title: response.data.data[i].title,
+            description: response.data.data[i].description,
+            status: response.data.data[i].status,
+            messages: response.data.data[i].messages,
+            sla_id: response.data.data[i].sla_id,
+        }
+        isActive.value.set(i, false);
+        reports.value.push(report);
+    }
+ }); 
+
+
 
     const token = localStorage.getItem('accessToken');
     if(token){
@@ -74,6 +157,16 @@ onMounted(async () => {
 </script>
 
 <style>
+ol li{
+    list-style:none;
+
+}
+.hideDescription{
+    padding: 0px;
+}
+.replymessage {
+    padding: 15px;
+}
 .tech-content select {
     padding: 1rem;
     font-size: 1.2rem;
@@ -91,7 +184,7 @@ onMounted(async () => {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.tech-content th, .tech-content td {
+.tech-content th, .report_body td {
     padding: 1rem;
     text-align: left;
     border-bottom: 1px solid #e2e8f0;

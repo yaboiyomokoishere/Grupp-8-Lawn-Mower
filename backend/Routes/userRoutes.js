@@ -15,6 +15,7 @@ const {
     getCustomerInfo, 
     updateCustomerProfile ,
     sendReport,
+    
     getCustomerReports,
     getAllReports,
     updateReportStatus
@@ -32,6 +33,7 @@ const { createPriceList,
         getUserSlas,
         updateSlaStatus,
         updateServiceDetails,
+        respondReport
  } = require("../Controllers/adminController");
 
 
@@ -66,11 +68,13 @@ router.put('/updateUser', validateToken, authorization("CustomerAccountInfoPriva
 // Sla related 
 router.get('/getUserSlas', validateToken, authorization("Service_Level_Agreement", "read"), getUserSlas);
 router.put('/updateReportStatus', validateToken,  updateReportStatus);
-
+router.put('/respondReport', validateToken, respondReport);
 
 // Technician routes
 //router.get('/getReportCustomer', validateToken, getReportCustomer);
+
 router.get('/getAllReports', validateToken, getAllReports);
+
 
 router.put('/updateSlaStatus', validateToken, authorization("Service_Level_Agreement", "update"), updateSlaStatus);
 router.put('/updateServiceDetails', validateToken, authorization("Service_Level_Agreement", "update"), updateServiceDetails);

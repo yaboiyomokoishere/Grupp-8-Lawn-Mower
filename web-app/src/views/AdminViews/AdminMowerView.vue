@@ -53,9 +53,8 @@ const fetchMowers = async () => {
     mowers.value.forEach(mower => {
         mower.last_maintenance_date = new Date(mower.last_maintenance_date).toLocaleDateString();
     });
-    
-
 };
+
 watch(mowerStatus, async () => {
     await fetchMowers();
 });

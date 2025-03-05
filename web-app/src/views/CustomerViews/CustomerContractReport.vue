@@ -1,6 +1,12 @@
 <template>
     <div class="user-page-container">
-        <CustomerNavBar />
+        <div v-if="role == 'admin'">
+            <AdminNavBar />
+        </div>
+        <div v-else-if="role == 'customer'">
+            <CustomerNavBar />
+        </div>
+        
         <div class="customer-content">
             <div class="top-bar-section">
                 <h1>Service Reports</h1>
@@ -12,9 +18,7 @@
                     </select>
                     
                     <button @click="showCreateForm = true" class="create-button">Create Report</button>
-                    <RouterLink  class="back-button" >
-                        <button @click="$router.back()" >Go back</button>
-                    </RouterLink>
+                    <button @click="router.go(-1)" >Go back</button>
                 </div>
             </div>
 
@@ -57,6 +61,7 @@
                                 <button @click="toggleDescription(report._id)">Description</button>
                                 <!-- Is appearing before the description button, but can't really tell why. DOM issue?  -->
                                 <button v-if="canEdit" @click="updateReport(report._id)" style="margin-right:10px;">Archive</button>
+                                <button v-if="canEdit" @click="addComment(report._id)" style="margin-right:10px;">Comment</button>
                             </td>
                         </tr>
                         <tr v-if="reportsIds.has(report._id)">
@@ -67,6 +72,7 @@
                                 {{ message }}
                                 </li>
                             </ol>
+
                         </tr>
                     </template>
                 </tbody>
@@ -78,6 +84,7 @@
 
 <script setup>
 import CustomerNavBar from '@/components/CustomerNavBar.vue';
+import AdminNavBar from '@/components/AdminNavBar.vue';
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
@@ -92,6 +99,7 @@ const reports = ref([]);
 const status = ref('all');
 const showCreateForm = ref(false);
 const canEdit = ref(false);
+const role = ref('');
 const newReport = reactive({
     id: route.params.id,
     title: '',
@@ -173,11 +181,12 @@ onMounted( async()=>{
     if(token){
         const decodedToken = jwtDecode(token);
         console.log('Accessing the page as ' + decodedToken.user.role);
-        if(['admin', 'technician'].includes(decodedToken.user.role)){
+        if(['admin', 'customer'].includes(decodedToken.user.role)){
             canEdit.value = true;
+            role.value = decodedToken.user.role;
         }
     }
-})
+});
 </script>
 
 <style scoped>

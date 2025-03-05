@@ -35,7 +35,7 @@
                     
                     <div class="action-buttons">
                         <button v-if="formData.price" type="submit">Confirm</button>
-                        <button v-else type="button"  @click = "calculateNewTotalPrice">Calculate</button>
+                        <button type="button"  @click = "calculateNewTotalPrice">Calculate</button>
                         <button type="button"  @click="goBack">Cancel</button>
                     </div>
                     <br>

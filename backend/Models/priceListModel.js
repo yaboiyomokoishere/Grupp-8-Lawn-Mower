@@ -3,10 +3,12 @@ const mongoose = require("mongoose");
 const priceListSchema = mongoose.Schema({
     model: {
         type: String,
-        required: [true, "model required"],
+        required: [true, "Model required"],
+        unique: [true, "Model name already taken"],
         default: "Robot 1"
     },
     height_prices: [{
+        _id:false,
         height:{
             type: Number,
             required: [true, "Height required"],
@@ -14,7 +16,7 @@ const priceListSchema = mongoose.Schema({
         price:{
             type: Number,
             required: [true, "price required"],
-        }    
+        }, 
     }],
     max_area: {
         type: Number,
@@ -36,6 +38,9 @@ const priceListSchema = mongoose.Schema({
         required: [true, "Price required"],
         default: 10 // kr
     }
+}, 
+{
+    timestamps: true
 }); 
 
 module.exports = mongoose.model("price_list", priceListSchema );

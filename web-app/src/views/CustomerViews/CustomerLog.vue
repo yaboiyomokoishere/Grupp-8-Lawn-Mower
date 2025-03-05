@@ -4,9 +4,9 @@
         <div class="customer-content">
             <h1>SLA - ID: {{ $route.params.id }}</h1>
             <div class="back-button-container">
-                <RouterLink  class="back-button">
-                    <button @click="$router.back()" >Go back</button>
-                </RouterLink>
+            
+            <button @click="$router.go(-1)" >Go back</button>
+            
             </div>
             <table v-if= "customerLogs.length" >
                 <thead>
@@ -42,7 +42,6 @@
 import apiClient from '@/config/axios';
 import CustomerNavBar from '@/components/CustomerNavBar.vue';
 import { onMounted, ref } from 'vue';
-import { RouterLink } from 'vue-router';
 import { useRoute } from 'vue-router';
 
 
@@ -83,7 +82,7 @@ onMounted(async () => {
             //logData.date = response.data.events[i].date.split('T')[0];
             customerLogs.value.push(log);
         }
-        //console.log(customerLogs.value);
+        console.log(customerLogs.value);
 
     } catch (error) {
         console.log(error);
@@ -91,8 +90,7 @@ onMounted(async () => {
 });
 </script>
 
-<style>
-
+<style scoped>
 .customer-content table {
     width: 75%;
     max-width: 75%;

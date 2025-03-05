@@ -13,6 +13,7 @@
         <p><strong>Service Address:</strong> {{ orderDetails.address }}</p>
         <p><strong>Start Date:</strong> {{ orderDetails.start_date }}</p>
         <p><strong>End Date:</strong> {{ orderDetails.end_date }}</p>
+        <p><strong>Robot Model:</strong> {{ orderDetails.robot_model }}</p>
         <p><strong>Grass Height:</strong> {{ orderDetails.grass_height }} cm</p>
         <p><strong>Working Area:</strong> {{ orderDetails.working_area }} m²</p>
       </div>
@@ -43,6 +44,7 @@ const orderDetails = reactive({
     end_date: '',
     grass_height: 0,
     working_area: 0,
+    robot_model: '',
     total_price: 0,
 });
 
@@ -74,8 +76,7 @@ localStorage.removeItem('newOrder');
 router.push({ name: 'order_contract' });
 };
 
-
-onMounted(async () => {
+const getNewOrderDetails = async () => {
     const newOrderData = JSON.parse(localStorage.getItem('newOrder'));
 
     if (!newOrderData) {
@@ -83,16 +84,15 @@ onMounted(async () => {
         router.push({ name: 'order_contract' });
         return;
     }
+    console.log('New order data: ', newOrderData);
 
-    // console.log("------------------------")
-    // console.log(newOrderData)
-    // console.log("------------------------")
     // Order data from the form filled by the user
     orderDetails.address = newOrderData.address;
     orderDetails.start_date = newOrderData.start_date ;
     orderDetails.end_date = newOrderData.end_date;
     orderDetails.grass_height = newOrderData.grass_height;
     orderDetails.working_area = newOrderData.working_area;
+    orderDetails.robot_model = newOrderData.robot_model;
 
     try {
         newOrderData.create_sla = true;
@@ -104,7 +104,9 @@ onMounted(async () => {
     } catch (error) {
         console.error('Error fetching total price:', error);
     }
+}
 
+const getCustomerInfo = async () => {
     try {
         const response = await apiClient.get('/user/getCustomer');
         //console.log("User data", response.data);
@@ -116,6 +118,11 @@ onMounted(async () => {
     } catch (error) {
         console.error('Error fetching total price:', error);
     }
+}
+
+onMounted(async () => {
+    await getNewOrderDetails();
+    await getCustomerInfo();
 });
 </script>
   

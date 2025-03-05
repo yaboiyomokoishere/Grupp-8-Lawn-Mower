@@ -275,18 +275,17 @@ const updateServiceDetails = asyncHandler(async (req, res) => {
 
 //----------------------------------------??? ROUTES-----------------------------
 const createPriceList = asyncHandler(async (req, res) => {
-    // Created a price list for testing. Most values are defaults in the model and the
-    // height prices are hardcoded. The actual implementation should receive all values  
-    // from the request. 
+    //console.log(req.body);
     try {
-        heightPrices = [
-            {height:1.5, price:0},
-            {height:1.0, price:0.01},
-            {height:0.5, price:0.02}
-        ];
+        const { model, heightPrices, maxArea, pricePerSquareMeter, installation, dailyRent} = req.body;
         
         await PriceList.create({ 
-            height_prices: heightPrices
+            model, 
+            height_prices: heightPrices,
+            max_area: maxArea,
+            price_per_square_meter: pricePerSquareMeter,
+            installation,
+            robot_daily_rent: dailyRent
         });
         res.status(200).json({message: 'Price list created successfully.'});
     } catch (error) {
@@ -295,8 +294,94 @@ const createPriceList = asyncHandler(async (req, res) => {
     }
 });
 
+const updatePriceList = asyncHandler(async (req, res) => {
+    try {
+        const {id, model, heightPrices, maxArea, pricePerSquareMeter, installation, dailyRent } = req.body;
 
-module.exports = {createPriceList, 
+        const modelPrices = await PriceList.findById(id);
+        if(!modelPrices){
+            return res.status(404).json("Price list not found.");
+        }
+
+        if(model && model != modelPrices.model){
+            const modelExists = await PriceList.findOne({ model: model });
+            if (modelExists ) { 
+                return res.status(400).json({ message: 'Model name already taken.' });
+            } else { 
+                modelPrices.model = model;
+                console.log("Model name updated.")
+            }
+        }
+        
+        if (heightPrices && JSON.stringify(heightPrices) !== JSON.stringify(modelPrices.height_prices)) {
+            console.log(heightPrices)
+            console.log(modelPrices.height_prices)
+            modelPrices.height_prices = heightPrices;
+            console.log("Height prices updated.")
+        }
+        if (maxArea && maxArea != modelPrices.max_area) {
+            modelPrices.max_area = maxArea;
+            console.log("Max area updated.")
+        }
+        if (pricePerSquareMeter && pricePerSquareMeter != modelPrices.price_per_square_meter) {
+            modelPrices.price_per_square_meter = pricePerSquareMeter;
+            console.log("Price per sqm updated.")
+        }
+        if (installation && installation != modelPrices.installation) {
+            modelPrices.installation = installation;
+            console.log("Installation price updated.")
+        }
+        if (dailyRent && dailyRent != modelPrices.robot_daily_rent) {
+            modelPrices.robot_daily_rent = dailyRent;
+            console.log("Daily rent  updated.")
+        }
+
+        await modelPrices.save();
+
+        res.status(200).json({ message: 'Price list updated successfully.' });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ message: 'Error while updating price list.' });
+    }
+});
+
+const getPriceLists = asyncHandler(async (req, res) => { 
+    try {
+        const priceLists = await PriceList.find();
+        if(!priceLists){
+            res.status(404).json({message: 'Price lists unavailable'});
+        } else {
+            //console.log(prices);
+            res.status(200).json(priceLists);
+        }    
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: 'Server error'});
+    }
+});
+
+const getPriceList = asyncHandler(async (req, res) => { 
+    try {
+        const id = req.query.id
+        
+        const priceList = await PriceList.findById(id)
+
+        if(!priceList){
+            res.status(404).json({message: 'Price list not found'});
+        }
+        res.status(200).json(priceList);    
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({message: 'Server error'});
+    }
+});
+
+
+module.exports = {
+                createPriceList, 
+                getPriceLists,
+                getPriceList,
+                updatePriceList,
                 getUsers, 
                 getUser, 
                 toggleUserStatus, 

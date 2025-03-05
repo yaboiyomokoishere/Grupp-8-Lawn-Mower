@@ -15,10 +15,9 @@ import { onMounted, ref } from 'vue';
 const modelsPrices = ref([]);
 
 onMounted(async () => {
-    // Fetch all model prices.
+    // Fetch the price lists for all available models.
     const response = await apiClient.get('/robot/getAllPriceLists');
     modelsPrices.value = response.data;
-    //console.log(modelsPrices.value);
 })
 
 </script>

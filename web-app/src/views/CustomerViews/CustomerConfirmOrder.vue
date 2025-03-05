@@ -72,8 +72,8 @@ const confirmOrder = async () => {
 };
 
 const cancelOrder = () => {
-localStorage.removeItem('newOrder');
-router.push({ name: 'order_contract' });
+    localStorage.removeItem('newOrder');
+    router.push({ name: 'order_contract' });
 };
 
 const getNewOrderDetails = async () => {
@@ -95,6 +95,7 @@ const getNewOrderDetails = async () => {
     orderDetails.robot_model = newOrderData.robot_model;
 
     try {
+        // Append the create_sla variable to follow the price calculator documentation.
         newOrderData.create_sla = true;
         console.log(newOrderData)
         const response = await apiClient.post('/sla/getPrice', newOrderData);

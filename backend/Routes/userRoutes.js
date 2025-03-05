@@ -55,10 +55,10 @@ router.post('/sendReport', validateToken, validateActiveUser, sendReport);
 router.get('/getReports', validateToken, validateActiveUser, getCustomerReports);
 
 // -----------------------Admin routes------------------------------------------
-router.post('/createPriceList',  createPriceList); // validateToken,
-router.get('/getPriceLists',  getPriceLists); // validateToken,
-router.get('/getPriceList', getPriceList)
-router.put('/updatePriceList', updatePriceList)
+router.post('/createPriceList', validateToken, createPriceList);
+router.get('/getPriceLists',  getPriceLists); 
+router.get('/getPriceList', validateToken, getPriceList)
+router.put('/updatePriceList', validateToken, updatePriceList)
 // Users management
 router.get('/getUsers', validateToken, authorization("CustomerAccountInfoPrivate", "read"), getUsers);
 router.get('/getUser', validateToken, authorization("CustomerAccountInfo", "read"), getUser);

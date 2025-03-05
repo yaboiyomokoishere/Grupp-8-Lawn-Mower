@@ -1,6 +1,11 @@
 <template>
     <div class="user-page-container">
-        <CustomerNavBar />
+        <div v-if="role == 'admin'">
+            <AdminNavBar />
+        </div>
+        <div v-else-if="role == 'customer'">
+            <CustomerNavBar />
+        </div>
         <div class="customer-content">
             <h1>Update Service Details</h1>
             <div class="update-service-form">
@@ -13,10 +18,9 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="grassHeight">Grass Height (cm):</label>
-                            <select name="grass_height" id="grass_height" required>
-                                <option :value="formData.grass_height">{{ formData.grass_height }}</option>
-                                <option v-for="heightObj in availableHeights.filter((h) => h.height != formData.grass_height)">
-                                {{ heightObj.height }}
+                            <select name="grass_height" id="grass_height" v-model="formData.grass_height" required>
+                                <option v-for="heightObj in availableHeights" :value="heightObj.height">
+                                    {{ heightObj.height }}
                                 </option>
                             </select>
                         </div>
@@ -39,7 +43,7 @@
                         <button type="button"  @click="goBack">Cancel</button>
                     </div>
                     <br>
-                    <p v-if="formData.price">Your changes will cost {{ updateCost }} kr. </p>
+                    <p v-if="formData.price">Your changes will cost {{ formData.price }} kr. </p>
                 </form>
             </div>
         </div>
@@ -53,23 +57,30 @@ import { useRoute } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import apiClient from '@/config/axios';
 import CustomerNavBar from '@/components/CustomerNavBar.vue';
+import AdminNavBar from '@/components/AdminNavBar.vue';
 import router from '@/router';
+import { jwtDecode } from 'jwt-decode';
 
 const route = useRoute();
 const toast = useToast();
+const role = ref('');
 
 const formData = reactive({
     grass_height: route.params.grass_height,
     working_area: route.params.working_area,
+    start_date: null,
+    end_date: null,
+    robot_model: null,
     id: route.params.id,
     price: ''
 });
 
 const currentCutArea = ref(0);
 const maxArea = ref(0);
-const workingArea = ref(0);
+// Current contract values to prevent unneccesary api clients -> validation. 
+const currentWorkingArea = ref(0);
+const currentGrassHeight = ref(0);
 
-const updateCost = ref(0);
 const availableHeights = ref([]);
 
 
@@ -78,46 +89,26 @@ function goBack() {
 }
 
 async function calculateNewTotalPrice() {
+    // Check that atleast one field is being updated.
+    if (currentWorkingArea.value == formData.working_area && currentGrassHeight.value == formData.grass_height){
+        alert("Must update a value before calculating a new price.");
+    } 
+
+    const slaData = {
+        id: formData.id,
+        grass_height: formData.grass_height,
+        working_area: formData.working_area,
+        start_date: formData.start_date,
+        end_date: formData.end_date,
+        robot_model: formData.robot_model
+    }
     try {
-        const id = formData.id
-        const sla = await apiClient.get(`/sla/getSla?id=${id}`);
-        console.log(sla);
-        if (sla.status === 200) {
-            console.log('Sla data returned!');
-        } else {
-            console.log('Error while fetching the SLA.')
-        }
-        // Check if the changes are realistic, i.e.,  the service new working area cannot be less than 
-        // what's already been completed.
-        if(currentCutArea.value > formData.working_area || formData.working_area > maxArea.value){
-            alert('Invalid operations: Cannot reduce below the current cut area.')
-            return;
-        }
-
-        let newAreaPrice = workingArea.value > formData.working_area
-                            ? workingArea.value - formData.working_area - currentCutArea.value
-                            :formData.working_area - workingArea.value - currentCutArea.value;
-        //console.log(sla.data.result);
-        const slaData = {
-            id: id,
-            grass_height: formData.grass_height,
-            working_area: newAreaPrice,
-            start_date: sla.data.result.start_date,
-            end_date: sla.data.result.end_date,
-            robot_model: sla.data.result.assigned_robot_model
-        }
-
         const response = await apiClient.post('/sla/getPrice', slaData);
-        response
-        if(formData.working_area > workingArea.value){
-            updateCost.value = response.data.result;
-        } else if(formData.working_area < workingArea.value){
-            updateCost.value = - response.data.result;
-        }
-        formData.price = updateCost.value;
         console.log(response.data.result);
+        formData.price = response.data.result;
+        // Price NAN WHEN EDITING THE WORKING AREA, WHY???    
     } catch (error) {
-        console.error('Error updating SLA:', error);
+        console.log(error)
     }
 }
 
@@ -143,24 +134,44 @@ async function handleSubmit() {
     }
 }
 
-
-onMounted(async () => {
+const fetchSlaData = async () => {
     try {
         const id = route.params.id
-        //console.log(id);
         const response = await apiClient.get(`/sla/getSla?id=${id}`); 
         formData.grass_height = response.data.result.grass_height;
         formData.working_area = response.data.result.working_area;
-        currentCutArea.value = response.data.result.current_cut_area;
-        workingArea.value = response.data.result.working_area;
-        
+        formData.start_date = response.data.result.start_date;
+        formData.end_date = response.data.result.end_date;
+        formData.robot_model = response.data.result.assigned_robot_model;
+        console.log(formData)
 
-        const slaPriceList = await apiClient.get(`/sla/getSlaPriceList?id=${id}`);
+        currentCutArea.value = response.data.result.current_cut_area;
+        currentWorkingArea.value = response.data.result.working_area;
+        currentGrassHeight.value =response.data.result.grass_height; 
+    } catch (err){
+        console.log("Error while fetching the sla: ", err);
+    }
+}
+
+
+onMounted(async () => {
+    try {
+        await fetchSlaData();
+
+        const slaPriceList = await apiClient.get(`/sla/getSlaPriceList?id=${ route.params.id }`);
         maxArea.value = slaPriceList.data.max_area;
-        //console.log(maxArea.value);
-        //console.log(slaPriceList.data);
-        // Extract the height-price objects as arrays
+        // Extract the height-price objects as elements.
         availableHeights.value.push(...slaPriceList.data.height_prices);
+
+        // Determine the user for the correct navbar.
+        const token = localStorage.getItem('accessToken');
+        if(token){
+            const decodedToken = jwtDecode(token);
+            console.log('Accessing the page as ' + decodedToken.user.role);
+            if(['admin', 'customer'].includes(decodedToken.user.role)){
+                role.value = decodedToken.user.role;
+            }
+        }
     } catch (error) {
         console.log(error);
     }

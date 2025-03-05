@@ -100,9 +100,9 @@ const formData = reactive({
 	confirmPassword: ''
 });
 
-
 const alphaOnly = (value) => /^[a-zA-Z]+$/i.test(value); // Only letters 
 const alphaNum = value => /^[0-9]+$/.test(value) // Only numbers
+
 
 const rules = computed(() => ({ 
 	firstName: { required, alphaOnly },
@@ -122,35 +122,34 @@ function capitalizeFirstLetter(val) {
 const v$ = useVuelidate(rules, formData);
 
 const handleSubmit = async () => {
-	console.log("Hello")
+	console.log("Registering user...");
 	const result = await v$.value.$validate();
 
-	//console.log(result);
 	if (result) {
-	formData.phoneNumber = parseInt(formData.phoneNumber);
-	formData.postalCode = parseInt(formData.postalCode);
-	const newCustomer = {
-		firstName: capitalizeFirstLetter(formData.firstName),
-		lastName: capitalizeFirstLetter(formData.lastName),
-		email: formData.userEmail,
-		address: capitalizeFirstLetter(formData.address),
-		phone: formData.phoneNumber,
-		postalCode: formData.postalCode,
-		password: formData.password
-	};
+		formData.phoneNumber = parseInt(formData.phoneNumber);
+		formData.postalCode = parseInt(formData.postalCode);
+		const newCustomer = {
+			firstName: capitalizeFirstLetter(formData.firstName),
+			lastName: capitalizeFirstLetter(formData.lastName),
+			email: formData.userEmail,
+			address: capitalizeFirstLetter(formData.address),
+			phone: formData.phoneNumber,
+			postalCode: formData.postalCode,
+			password: formData.password
+		};
 
-    try {
-		//console.log(newCustomer);
-		const response = await axios.post('http://localhost:3001/api/user/register', newCustomer);
-		console.log(response.data); // Log the response data obtained from the backend
-		toast.success('Account created successfully');
-      
-		router.push({name: 'login'}); // Redirect to the login page after sucessful signup
-    } catch (error) {
-		console.log('Error creating customer:', error);
-		toast.error(error.message);
-    }
-  }
+		try {
+			const response = await axios.post('http://localhost:3001/api/user/register', newCustomer);
+			console.log(response.data.message); // Should return successful registration.
+			toast.success('Successfull registration.');
+			router.push({name: 'login'}); // Redirect to the login page after sucessful signup
+		} catch (error) {
+			console.log('Error while registering a customer:', error);
+			toast.error(error.message);
+		}
+  	} else {
+		console.log("Registration canceled: invalid input.");
+	}
 }
 </script>
 

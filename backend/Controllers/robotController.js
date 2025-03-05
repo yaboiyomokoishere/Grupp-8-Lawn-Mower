@@ -210,15 +210,4 @@ const getAllPriceLists = asyncHandler(async (req, res) => {
 });
 
 
-const createPriceList = asyncHandler(async (req, res) => {
-    const { } = req.body;
-
-    return res.status(200).json(priceLists);
-    
-    // return res.status(404).json({message: 'Error while fetching price lists.'}); 
-});
-
-
-
-
 module.exports = {registerRobot, doneCutting, startedCutting, broken, currentCutArea, getRobot,getAllRobots, maintenance, getBooking, getAllPriceLists};

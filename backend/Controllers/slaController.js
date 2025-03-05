@@ -12,7 +12,7 @@ const Robot = require("../Models/robotModel");
 //@access private
 const createSla  = asyncHandler(async (req, res) => {
     try {
-        const robot = await Robot.findOne({status: "Available" }); // add assigned model
+        const robot = await Robot.findOne({status: "Available", model: req.body.robot_model }); // add assigned model
         if(robot){
             // create sla and insert the users id
             const sla = await Sla.create({

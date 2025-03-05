@@ -113,13 +113,6 @@ const handleSubmit = async (id) => {
     }
 }
 
-
-const fetchReports = async () => {
-    const response = await apiClient.get(`/user/getAllReports?status=${reportStatus.value}`);
-    console.log(response.data.data)
-    reports.value = response.data.data;
-}
-
 watch(reportStatus, async () => {
 
     await fetchReports();
@@ -141,9 +134,6 @@ onMounted(async () => {
         isActive.value.set(i, false);
         reports.value.push(report);
     }
- }); 
-
-
 
     const token = localStorage.getItem('accessToken');
     if(token){

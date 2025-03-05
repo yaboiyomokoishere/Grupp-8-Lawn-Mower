@@ -136,7 +136,7 @@ ol li{
 
 }
 .hideDescription{
-    padding: 0px;
+    display:none;
 }
 .replymessage {
     padding: 15px;

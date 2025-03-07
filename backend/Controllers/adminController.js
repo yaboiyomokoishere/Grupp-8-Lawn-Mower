@@ -110,7 +110,6 @@ const createUser = asyncHandler(async (req, res) => {
 
 const updateUser = asyncHandler(async (req, res) => {
     // Updates only the generic fields of each user account. 
-    // TODO: Implement role specific validation.
     const roles = ['customer', 'technician', 'organization'];
     if (!roles.includes(req.body.role)) {
         return res.status(400).json({ message: 'Error: role must be one of ' + roles.join(', ') });

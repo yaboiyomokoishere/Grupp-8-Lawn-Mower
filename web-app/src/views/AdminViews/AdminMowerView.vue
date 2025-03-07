@@ -47,12 +47,20 @@ const mowers = ref([]);
 const mowerStatus = ref('Available');
 
 const fetchMowers = async () => {
-    const response = await apiClient.get(`/robot/getAllRobots?status=${mowerStatus.value}`);
-    mowers.value = response.data;
-    console.log(mowers.value);
-    mowers.value.forEach(mower => {
-        mower.last_maintenance_date = new Date(mower.last_maintenance_date).toLocaleDateString();
-    });
+    try {
+        console.log("Loading the list of mowers.")
+        const response = await apiClient.get(`/robot/getAllRobots?status=${mowerStatus.value}`);
+        if(response.status == 200){
+            mowers.value = response.data;
+            
+            mowers.value.forEach(mower => {
+                mower.last_maintenance_date = new Date(mower.last_maintenance_date).toLocaleDateString();
+            });
+            console.log("List loaded successfully: ", mowers.value);
+        }
+    } catch (error) {
+        console.log(error)
+    }
 };
 
 watch(mowerStatus, async () => {
@@ -60,7 +68,7 @@ watch(mowerStatus, async () => {
 });
 
 onMounted(async () => {
-    fetchMowers();
+    await fetchMowers();
 });
 
 </script>

@@ -15,8 +15,8 @@
                         <form @submit.prevent="handleSubmit">
                            <div class="form-row">
                                 <div class="form-group">
-                                <label for="firstName">First Name:</label>
-                                <input type="text" id="firstName" v-model="user.firstName" :readonly="!isEditing" />
+                                    <label for="firstName">First Name:</label>
+                                    <input type="text" id="firstName" v-model="user.firstName" :readonly="!isEditing" />
                                 </div>
                                 <div class="form-group">
                                     <label for="lastName">Last Name:</label>
@@ -25,8 +25,8 @@
                             </div>
                             <div class="form-row"> 
                                 <div class="form-group">
-                                <label for="email">Email:</label>
-                                <input type="email" id="email" v-model="user.email" :readonly="!isEditing" />
+                                    <label for="email">Email:</label>
+                                    <input type="email" id="email" v-model="user.email" :readonly="!isEditing" />
                                 </div>
                                 <div class="form-group">
                                     <label for="status">Status:</label>
@@ -38,7 +38,7 @@
                                 <label for="status">Role:</label>
                                 <input type="text" id="status" v-model="user.role" :readonly="!isEditing" />
                             </div>
-                            <!-- Add more form fields depenging on the user role. -->
+
                             <div class="form-actions">
                                 <button type="button" @click="editUser">{{ isEditing ? 'Save' : 'Edit' }}</button>
                                 <button type="button" @click="changeStatus">
@@ -108,8 +108,12 @@ const editUser = async () => {
             email: user.email
         }
         const response = await apiClient.put('user/updateUser', updatedUser);
-        console.log(response);
-        isEditing.value = false;
+        if (response.status == 200){
+            console.log("User updated successfullyresponse");
+            isEditing.value = false;
+        } else {
+            console.log("Something went wrong while editing the user data.")
+        }
     } else {
         isEditing.value = true;
     }
@@ -119,9 +123,10 @@ const changeStatus = async () => {
     const userId = $route.params.customerId;
     try {
         const response = await apiClient.put('user/toggleUserStatus', { id: userId });
-        //console.log(response.data);
-        user.status = response.data.status;    
-        console.log("Status updated successfully to " + user.status);
+        if(response.status == 200){
+            user.status = response.data.status;    
+            console.log("Status updated successfully to " + user.status);
+        }
     } catch(error) {
         console.error(error);
     }
@@ -132,7 +137,7 @@ const fetchContracts = async () => {
         const userId = $route.params.customerId;
         console.log(userId)
         const response = await apiClient.get('/user/getUserSlas?userId=' + userId); 
-        //console.log(response.data.result.length);
+        console.log("Loading user contracts...");
         if (response.data.result.length > 0){
             for(let i = 0; i < response.data.result.length; i++){
                 let contract= {
@@ -144,7 +149,8 @@ const fetchContracts = async () => {
                 }
                 customerContracts.value.push(contract);          
             }
-            //console.log(customerContracts)
+            console.log("Contracts loaded successfully!");
+            return;
         }
     } catch (error) {
         console.error(error);
@@ -166,7 +172,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-
 .edit-user-form {
     display:flex;
 }
@@ -179,7 +184,6 @@ form , .user-contracts{
     border-radius: 5px;
     background-color: white;
 }
-
 
 .form-group {
     margin-bottom: 20px;
@@ -282,4 +286,3 @@ input[readonly] {
     display: inline-block;
 }
 </style>
-

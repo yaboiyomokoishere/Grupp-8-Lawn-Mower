@@ -7,7 +7,6 @@ import SignUpView from '@/views/SignUpView.vue';
 import Pricing from '@/views/Pricing.vue';
 import CustomerProfile from '@/views/CustomerViews/CustomerProfile.vue';
 import CustomerContracts from '@/views/CustomerViews/CustomerContracts.vue';
-import Dashboard from '@/views/AdminViews/Dashboard.vue';
 import CustomerNewOrder from '@/views/CustomerViews/CustomerNewOrder.vue';
 import CustomerContract from '@/views/CustomerViews/CustomerContract.vue';
 import CustomerConfirmOrder from '@/views/CustomerViews/CustomerConfirmOrder.vue';
@@ -107,16 +106,10 @@ const router = createRouter({
         },
         // -------------------------ADMIN  ROUTES------------------------
         {
-            path: '/admin/dashboard',
-            name: 'admin_dashboard',
-            component: Dashboard,
-            // Require authentication based on the meta property, see the beforeach guard below
-            meta: { requiresAuth: true, role: ['admin'] }
-        },
-        {
             path: '/admin/users',
             name: 'admin_users',
             component: UserManagement,
+            // Require authentication based on the meta property, see the beforeach guard below
             meta: { requiresAuth: true, role: ['admin'] }
         },
         {

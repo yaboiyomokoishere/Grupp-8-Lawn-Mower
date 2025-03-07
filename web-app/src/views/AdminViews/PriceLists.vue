@@ -124,7 +124,7 @@
 <script setup>
 import AdminNavBar from '@/components/AdminNavBar.vue';
 import { onMounted, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import apiClient from '@/config/axios';
 import { reactive } from 'vue';
 
@@ -149,9 +149,8 @@ const fetchPriceLists = async() => {
     try {
         const response = await apiClient.get('/user/getPriceLists');
         if(response.status == 200){
-            console.log("Price lists returned successfully.");
             priceLists.value.push(...response.data);
-            console.log(priceLists.value);
+            console.log("Price lists returned successfully. Data: ", priceLists.value);
         } else {
             console.log('Error while fetching the price lists.')
         }
@@ -161,7 +160,6 @@ const fetchPriceLists = async() => {
 }
 
 const createPriceList = async () =>{
-    //console.log(newPriceList)
     try {
         const response = await apiClient.post('/user/createPriceList', newPriceList);
         if(response.status == 200){
@@ -182,8 +180,9 @@ const addHeightPrice = () => {
 const removeHeightPrice = (index) => {
     if (index != 0 && newPriceList.heightPrices.length > 1) { 
         newPriceList.heightPrices.splice(index, 1); // Delete one element at the respective index.
+        console.log("Row removed.")
     } else {
-        console.log("Must have atleast one pair!!!!!!!")
+        console.log("Must have at least one height/price row.")
     }
 };
 
@@ -305,7 +304,6 @@ button:hover{
     height: fit-content;
     align-self: center;
 }
-
 
 .form-actions {
     display: flex;

@@ -102,7 +102,6 @@ const router = useRouter();
 const validStatuses = ['Active', 'Paid', 'Pending', 'Completed', 'Fault', 'Cancelled'];
 const availableHeights = ref([]);
 
-
 const slaDetails = reactive({
     address: '',
     start_date: '',
@@ -130,11 +129,9 @@ const cancelOrder = async () => {
     
         const response = await apiClient.post('/sla/cancelSla', id);
         if(response.status == 200){
-            console.log(response.data.message);
-            //toast.success("Cancelled order successfully!");
+            console.log("Cancelled order successfully! Message: ", response.data.message);
             router.go();
-        }
-        
+        }    
     } catch (error) {
         console.error('Error cancelling order:', error);
     }
@@ -148,10 +145,9 @@ const updateStatus = async() => {
         }
 
         const response = await apiClient.put('/user/updateSlaStatus', args);
-        //console.log(response)
         if(response.status == 200){
-            console.log("Status updated successfully");
-            router.go();
+            alert("Status updated successfully");
+            await router.go();
             return;
         }
         console.log("Something went wrong while updating the status.")
@@ -161,14 +157,12 @@ const updateStatus = async() => {
 }
 
 const updateServiceDetails = async () => {
-    //console.log(slaDetails)
     try {
         const id = {id: $route.params.id}
         const response = await apiClient.put('/user/updateServiceDetails', {slaDetails, id});
-        //console.log(response)
         if(response.status == 200){
-            console.log("Status updated successfully");
-            router.go();
+            alert("Status updated successfully");
+            await router.go();
             return;
         }
     } catch (error) {
@@ -178,11 +172,10 @@ const updateServiceDetails = async () => {
 
 const fetchSla = async () => {
     try {
+        console.log("Loading contract details...")
         const id = $route.params.id
-        //console.log(id);
         const response = await apiClient.get(`/sla/getSla?id=${id}`); 
         console.log('AdminContract - fetchSla: ', response.data.result);
-    
         slaDetails.address = response.data.result.address;
         slaDetails.start_date = response.data.result.start_date.split('T')[0];
         slaDetails.end_date = response.data.result.end_date.split('T')[0];
@@ -192,6 +185,7 @@ const fetchSla = async () => {
         slaDetails.status = response.data.result.status;
         slaDetails.price = Math.round(response.data.result.price);
         slaDetails.current_cut_area = response.data.result.current_cut_area;
+        console.log("Details loaded successfully!");
     } catch (error) {
         console.log(error);
     }
@@ -199,6 +193,7 @@ const fetchSla = async () => {
 
 const fetchUser = async() => {
     try {
+        console.log("Loading user data...");
         const customerId =  $route.params.customerId;
         const response = await apiClient.get('/user/getUser?id=' + customerId);
         console.log("AdminContract - fetchUser: ", response.data);
@@ -207,6 +202,7 @@ const fetchUser = async() => {
         customerInfo.email = response.data.email;
         customerInfo.phone_number = response.data.customer_details.phone_number;
         customerInfo.address = response.data.customer_details.address;
+        console.log("User data loaded successfully!");
     } catch (error) {
         console.error('Error fetching total price:', error);
     }

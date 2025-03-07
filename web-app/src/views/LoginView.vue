@@ -54,7 +54,7 @@ const handleSubmit = async () => {
 			router.push({ name: 'customer_contracts' });
 		} else if (userRole === 'admin') {
 			console.log("User is an admin.");
-			router.push({ name: 'admin_dashboard' });
+			router.push({ name: 'admin_users' });
 		} else if (userRole === 'technician') {
 			console.log("User is a technician.");
 			router.push({ name: 'technician_home' });

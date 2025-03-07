@@ -43,7 +43,6 @@
             </div>
         </div>
     </div>
-
 </template>
   
 <script setup>
@@ -72,11 +71,12 @@ const maxArea = ref(0);
 // Current contract values to prevent unneccesary api clients -> validation. 
 const currentWorkingArea = ref(0);
 const currentGrassHeight = ref(0);
-
+// Stores the available height choices for the robot model assigned to the contract.
 const availableHeights = ref([]);
 
 
 function goBack() {
+    // Redirects to the previous page.
     router.go(-1);
 }
 
@@ -96,9 +96,9 @@ async function calculateNewTotalPrice() {
     }
     try {
         const response = await apiClient.post('/sla/getPrice', slaData);
-        console.log(response.data.result);
+        console.log("The computed price is ", response.data.result);
         formData.price = response.data.result;
-        // Price NAN WHEN EDITING THE WORKING AREA, WHY???    
+        console.log("Price displayed in the form.");
     } catch (error) {
         console.log(error)
     }
@@ -183,6 +183,7 @@ onMounted(async () => {
     display: flex;
     gap: 10px;
 }
+
 form {
     display: flex;
     flex-direction: column;

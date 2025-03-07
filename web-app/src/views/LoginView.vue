@@ -57,7 +57,7 @@ const handleSubmit = async () => {
 			router.push({ name: 'admin_dashboard' });
 		} else if (userRole === 'technician') {
 			console.log("User is a technician.");
-			router.push({ name: 'technician_home' });
+			router.push({ name: 'technician_mowers' });
 		} else {
 			toast.error('Invalid email or password');
 		}

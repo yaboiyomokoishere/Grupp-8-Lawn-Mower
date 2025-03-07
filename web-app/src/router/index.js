@@ -20,7 +20,6 @@ import UpdateContractAsCustomer from '@/views/AdminViews/UpdateContractAsCustome
 import AdminCreateUser from '@/views/AdminViews/AdminCreateUser.vue';
 import CustomerContractReport from '@/views/CustomerViews/CustomerContractReport.vue';
 import PriceLists from '@/views/AdminViews/PriceLists.vue';
-import TechHomeView from '@/views/TechnicianViews/TechHomeView.vue';
 import TechMowersView from '@/views/TechnicianViews/TechMowersView.vue';
 import TechReportsView from '@/views/TechnicianViews/TechReportsView.vue';
 import EditMower from '@/views/TechnicianViews/EditMower.vue';
@@ -169,12 +168,6 @@ const router = createRouter({
         },
 
         // -------------------------Technician  ROUTES------------------------
-        {
-            path: '/technician/home',
-            name: 'technician_home',
-            component: TechHomeView,
-            meta: { requiresAuth: true, role: ['technician'] }
-        },
         {
             path: '/technician/mowers',
             name: 'technician_mowers',

@@ -7,7 +7,6 @@
 
 ## How to Use
 
-
 ## Directory Structure
 ├── README.md
 ├── backend

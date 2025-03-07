@@ -2,7 +2,7 @@
     <nav class="admin-navbar">
         <div class="navbar-links">
             <RouterLink :to="{name: 'admin_users'}" class="navbar-item">Users</RouterLink>
-            <RouterLink :to="{name: 'admin_mowers'}" class="navbar-item">Mowers</RouterLink>
+            <RouterLink :to="{name: 'technician_mowers'}" class="navbar-item">Mowers</RouterLink>
             <RouterLink :to="{ name: 'admin_price_lists' }" class="navbar-item">Pricing</RouterLink>
             <RouterLink :to="{name: 'technician_reports'}" class="navbar-item">Reports</RouterLink>
         </div>

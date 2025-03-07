@@ -23,7 +23,6 @@ import TechMowersView from '@/views/TechnicianViews/TechMowersView.vue';
 import TechReportsView from '@/views/TechnicianViews/TechReportsView.vue';
 import EditMower from '@/views/TechnicianViews/EditMower.vue';
 import TechHandleReportView from '@/views/TechnicianViews/TechHandleReportView.vue';
-import AdminaddMowerView from '@/views/AdminViews/AdminaddMowerView.vue';
 import AdminMowersView from '@/views/AdminViews/AdminMowerView.vue';
 import UpdatePriceList from '@/views/AdminViews/UpdatePriceList.vue';
 import TechAddMower from '@/views/TechnicianViews/TechAddMower.vue';
@@ -147,26 +146,12 @@ const router = createRouter({
             component: UpdatePriceList,
             meta: { requiresAuth: true, role: ['admin'] }
         },
-        {
-            path: '/admin/mowers',
-            name: 'admin_mowers',
-            component: AdminMowersView,
-            meta: { requiresAuth: true, role: ['admin'] }
-
-        },
-        {
-            path: '/admin/mowers/add_mower',
-            name: 'admin_add_mower',
-            component: AdminaddMowerView,
-            meta: { requiresAuth: true, role: ['admin']}
-        },
-
         // -------------------------Technician  ROUTES------------------------
         {
             path: '/technician/mowers',
             name: 'technician_mowers',
             component: TechMowersView,
-            meta: { requiresAuth: true, role: ['technician'] }
+            meta: { requiresAuth: true, role: ['technician', 'admin'] }
         },
         {
             path: '/technician/reports',
@@ -190,7 +175,7 @@ const router = createRouter({
             path: '/technician/report/:id',
             name: 'technician_report_view',
             component: TechHandleReportView,
-            meta: { requiresAuth: true, role: ['technician']}
+            meta: { requiresAuth: true, role: ['technician', 'admin']}
         },
         {
             path: '/:catchAll(.*)', // Catch-all route for any unmatched routes

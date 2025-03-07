@@ -1,6 +1,11 @@
 <template>
     <div class="user-page-container">
-        <TechNavBar />
+        <div v-if="role == 'technician'">
+            <TechNavBar />
+        </div>
+        <div v-else-if="role == 'admin'">
+            <AdminNavBar />
+        </div>
         <div class = "tech-content">
             <h1>Mower management</h1>
             <select v-model="mowerStatus">
@@ -9,7 +14,7 @@
                 <option value="Unavailable">Unavailable</option>
             </select>
             
-            <button @click="router.push({name: 'technician_add_mower'})">Add Mower</button>
+            <button v-if="role == 'admin'" @click="router.push({name: 'technician_add_mower'})">Add Mower</button>
             <table v-if="mowers.length">
                 <thead>
                     <tr>
@@ -43,19 +48,20 @@
 
 <script setup>
 import TechNavBar from '@/components/TechNavBar.vue';
+import AdminNavBar from '@/components/AdminNavBar.vue';
 import apiClient from '@/config/axios';
 import { ref, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { jwtDecode } from 'jwt-decode';
 
 const router = useRouter();
 const mowers = ref([]);
 const mowerStatus = ref('Available');
+const role = ref('');
 
 const fetchMowers = async () => {
     const response = await apiClient.get(`/robot/getAllRobots?status=${mowerStatus.value}`);
-    //console.log(mowerStatus.value);
     mowers.value = response.data;
-    //console.log(mowers.value);
     mowers.value.forEach(mower => {
         mower.last_maintenance_date = new Date(mower.last_maintenance_date).toLocaleDateString();
     });
@@ -79,7 +85,16 @@ const fixRobot = async (serialNumber) => {
 };
 
 onMounted(async () => {
-    fetchMowers();
+    await fetchMowers();
+
+    const token = localStorage.getItem('accessToken');
+    if(token){
+        const decodedToken = jwtDecode(token);
+        console.log('Accessing the page as ' + decodedToken.user.role);
+        if(['admin', 'technician'].includes(decodedToken.user.role)){
+            role.value = decodedToken.user.role;
+        }
+    }
 });
 
 </script>

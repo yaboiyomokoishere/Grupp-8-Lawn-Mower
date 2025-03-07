@@ -1,6 +1,12 @@
 <template>
     <div class="user-page-container">
-        <TechNavBar />
+        <div v-if="role == 'technician'">
+            <TechNavBar />
+        </div>
+        <div v-else-if="role == 'admin'">
+            <AdminNavBar />
+        </div>
+
         <div class = "customer-content">
             <h1>Add Mower</h1>
             <div class="form-container">
@@ -19,103 +25,100 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div>    
+</template>
     
-    
-    
-    
-    
-    
-    </template>
-    
-    <script setup>
-    import AdminNavBar from '@/components/TechNavBar.vue';
-    import { onMounted } from 'vue';
-    import { reactive } from 'vue';
-    import apiClient from '@/config/axios';
-    import { useRouter } from 'vue-router';
+<script setup>
+import AdminNavBar from '@/components/TechNavBar.vue';
 import TechNavBar from '@/components/TechNavBar.vue';
+import { onMounted } from 'vue';
+import { reactive } from 'vue';
+import apiClient from '@/config/axios';
+import { useRouter } from 'vue-router';
 import { ref } from 'vue';
+import { jwtDecode } from 'jwt-decode';
 
+
+const router = useRouter();
+const mowers = ref([]);
+const role = ref('');
+
+const formData = reactive({
+    serial_number: '',
     
-    const router = useRouter();
-    const mowers = ref([]);
+})
+
+const handleSubmit = async () => {
+    if (isNaN(formData.serial_number)){
+        alert('inkorrekt inmatning');
+        return;
+    }
+    const addRobot ={
+        serial_number: formData.serial_number,
+        model: formData.robot_model
+    }
+    try {
+        const response = await apiClient.post('/robot/registerRobot', addRobot);
+        console.log(response.data);
+        //router.push({ name: 'technician_add_mower' });
+        alert('robot tillagd');
+        await router.go();
+    } catch (error) {
+        console.error('Error creating robot:', error);
+    }
+};
     
-    const formData = reactive({
-        serial_number: '',
-        
-    })
-    
-    const handleSubmit = async () => {
-        if (isNaN(formData.serial_number)){
-            alert('inkorrekt inmatning');
-            return;
-       }
-        const addRobot ={
-            serial_number: formData.serial_number,
-            model: formData.robot_model
-        }
-        try {
-            const response = await apiClient.post('/robot/registerRobot', addRobot);
-            console.log(response.data);
-            //router.push({ name: 'technician_add_mower' });
-            alert('robot tillagd');
-            await router.go();
-        } catch (error) {
-            console.error('Error creating robot:', error);
-        }
-    };
-    
-    const fetchMowers = async () => {
+const fetchMowers = async () => {
     const response = await apiClient.get('/user/getPriceLists');
-    console.log(mowers);
+    //console.log(mowers);
     //mowers.value.push(...response.data)
     mowers.value = response.data;
-    console.log(mowers.value);
-    };
-
-
+    //console.log(mowers.value);
+    return;
+};
 
 onMounted(async () => {
-    //const response = await apiClient.get('/user/getPriceLists');
-    fetchMowers();
-    //for (let i = 0; i < mowers.length; i++) {
-      //  mowers.model = response.data[i].model
-        //console.log(mowers.model)
-        //model.push(mowers.model);
-    //} 
-});
+    await fetchMowers();
+
+    const token = localStorage.getItem('accessToken');
+    if(token){
+        const decodedToken = jwtDecode(token);
+        console.log('Accessing the page as ' + decodedToken.user.role);
+        if(['admin', 'technician'].includes(decodedToken.user.role)){
+            role.value = decodedToken.user.role;
+        }
+    }
+});    
+</script>
     
-    </script>
-    
-    <style scoped>
-    
-    form {
-        padding: 20px;
-        border-style: solid;
-        border-color: #CCCCCC;
-        border-width: 3px;
-        border-radius: 5px;
-    }
-    .form-row {
-        display: flex;
-        gap: 20px; 
-        margin-bottom: 20px;
-    }
-    input, label, select{
-        display: block;
-    }
-    input, select {
-        font-size: 1.2rem;
-        padding: 10px;
-    }
-    button {
-        font-size: 1rem;
-        text-decoration: none;
-        padding: 10px;
-        border: solid;
-        border-radius: 5px;
-        border-color: #CCCCCC;
-    }
-    
-    </style>
+<style scoped>
+
+form {
+    padding: 20px;
+    border-style: solid;
+    border-color: #CCCCCC;
+    border-width: 3px;
+    border-radius: 5px;
+}
+.form-row {
+    display: flex;
+    gap: 20px; 
+    margin-bottom: 20px;
+}
+input, label, select{
+    display: block;
+}
+input, select {
+    font-size: 1.2rem;
+    padding: 10px;
+}
+button {
+    font-size: 1rem;
+    text-decoration: none;
+    padding: 10px;
+    border: solid;
+    border-radius: 5px;
+    border-color: #CCCCCC;
+}
+
+</style>

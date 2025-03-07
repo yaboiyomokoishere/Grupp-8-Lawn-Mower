@@ -29,20 +29,23 @@
                     <td>{{ report.title }}</td>
                     <td> {{ report.status }}</td>
                     <td>
-                    <button @click="showDescription(report._id)">Description</button> 
+                        <button @click="showDescription(report._id)">Description</button> 
                     </td>
                 </tr>
                 <tr  v-if = 'report.description !== "" ' :class ="{hideDescription: !isActive.get(report._id)}" colspan="5">
-                    <th  colspan="5" style="position:absolute">Report description: {{ report.description }} </th>
+                    <td>
+                        <th  colspan="5" style="position:absolute">Report description: {{ report.description }} </th>
                     
-                    <ol style="margin-top: 70px; margin-left: 50px;">
-                        <lh style="padding:15px;">Technician replies:</lh>
-                        <li v-for="(message, index) in report.messages" :key="index" colspan="4" class = "replymessage"> 
-                            {{ message }}
-                        </li>
-                    </ol>
-                    <textarea placeholder="Reply" type="text" v-model="formData.messages" style="width:240px; height:150px; margin-left: 50px;"></textarea>
-                    <button @click="handleSubmit(report)">Send</button>
+                        <ol style="margin-top: 70px; margin-left: 50px;">
+                            <li style="padding:15px;">Technician replies:</li>
+                            <li v-for="(message, index) in report.messages" :key="index" colspan="4" class = "replymessage"> 
+                                {{ message }}
+                            </li>
+                        </ol>
+                        <textarea placeholder="Reply" type="text" v-model="formData.messages" style="width:240px; height:150px; margin-left: 50px;"></textarea>
+                        <button @click="handleSubmit(report)">Send</button>
+                    </td>
+                    
                 </tr>
             </tbody>
         </table> 
@@ -60,9 +63,9 @@ import { onMounted,ref,reactive, watch } from 'vue';
 import { jwtDecode } from 'jwt-decode';
 
 
-
 const isActive = ref(new Map());
 const reportStatus = ref("Received");
+const role = ref('');
 
 const reports = ref([]);
 

@@ -139,7 +139,6 @@ const filteredReports = computed(() => {
     return reports.value.filter(report => report.status == status.value);
 });
 
-
 const handleSubmit = async () => {
     try {
         const response = await apiClient.post('/user/sendReport', newReport);
@@ -164,9 +163,8 @@ const hideForm = () => {
 const updateReport = async (reportId) => {
     try {
         const response = await apiClient.put('/user/updateReportStatus', {id: reportId});
-        //console.log(response);
         if(response.status == 200){
-            // toast.success('Report status updated successfully!');
+            console.log('Report status updated successfully!');
             router.go();
         } 
     } catch (error) {
@@ -243,7 +241,4 @@ onMounted( async()=>{
     gap: 15px;
     margin-top: 1.5rem;
 }
-
-
-
 </style>

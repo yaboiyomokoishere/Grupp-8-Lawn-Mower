@@ -1,31 +1,31 @@
 <template>
     <div class="confirmation-page">
-      <div class="customer-info">
-        <h2>Customer Information</h2>
-        <p><strong>Name:</strong> {{ customerInfo.first_name }} {{ customerInfo.last_name }}</p>
-        <p><strong>Email:</strong> {{ customerInfo.email }}</p>
-        <p><strong>Phone:</strong> {{ customerInfo.phone_number }}</p>
-        <p><strong>Address:</strong> {{ customerInfo.address }}</p>
-      </div>
-  
-      <div class="sla-info">
-        <h2>Service Level Agreement Details</h2>
-        <p><strong>Service Address:</strong> {{ orderDetails.address }}</p>
-        <p><strong>Start Date:</strong> {{ orderDetails.start_date }}</p>
-        <p><strong>End Date:</strong> {{ orderDetails.end_date }}</p>
-        <p><strong>Robot Model:</strong> {{ orderDetails.robot_model }}</p>
-        <p><strong>Grass Height:</strong> {{ orderDetails.grass_height }} cm</p>
-        <p><strong>Working Area:</strong> {{ orderDetails.working_area }} m²</p>
-      </div>
-  
-      <div class="price-info">
-        <h3>Total Price: {{ orderDetails.total_price }} kr</h3>
-      </div>
-  
-      <div class="action-buttons">
-        <button class="cancel-button" @click="cancelOrder">Cancel</button>
-        <button class="confirm-button" @click="confirmOrder">Purchase</button>
-      </div>
+        <div class="customer-info">
+            <h2>Customer Information</h2>
+            <p><strong>Name:</strong> {{ customerInfo.first_name }} {{ customerInfo.last_name }}</p>
+            <p><strong>Email:</strong> {{ customerInfo.email }}</p>
+            <p><strong>Phone:</strong> {{ customerInfo.phone_number }}</p>
+            <p><strong>Address:</strong> {{ customerInfo.address }}</p>
+        </div>
+
+        <div class="sla-info">
+            <h2>Service Level Agreement Details</h2>
+            <p><strong>Service Address:</strong> {{ orderDetails.address }}</p>
+            <p><strong>Start Date:</strong> {{ orderDetails.start_date }}</p>
+            <p><strong>End Date:</strong> {{ orderDetails.end_date }}</p>
+            <p><strong>Robot Model:</strong> {{ orderDetails.robot_model }}</p>
+            <p><strong>Grass Height:</strong> {{ orderDetails.grass_height }} cm</p>
+            <p><strong>Working Area:</strong> {{ orderDetails.working_area }} m²</p>
+        </div>
+
+        <div class="price-info">
+            <h3>Total Price: {{ orderDetails.total_price }} kr</h3>
+        </div>
+
+        <div class="action-buttons">
+            <button class="cancel-button" @click="cancelOrder">Cancel</button>
+            <button class="confirm-button" @click="confirmOrder">Purchase</button>
+        </div>
     </div>
 </template>
   
@@ -56,16 +56,15 @@ const customerInfo= reactive({
     address: ''
 })
 
-
 const confirmOrder = async () => {
     try {
+        console.log("Creating new order...");
         const response = await apiClient.post('/sla/createSla', orderDetails);
-        console.log(response.data.message);
-
-        localStorage.removeItem('newOrder');
-
-        toast.success('Order confirmed successfully!');
-        router.push({ name: 'customer_contracts' });
+        if(response.status == 201){
+            localStorage.removeItem('newOrder');
+            toast.success('Order created successfully!');
+            router.push({ name: 'customer_contracts' });
+        }
     } catch (error) {
         console.error('Error confirming order:', error);
     }
@@ -97,10 +96,11 @@ const getNewOrderDetails = async () => {
     try {
         // Append the create_sla variable to follow the price calculator documentation.
         newOrderData.create_sla = true;
-        console.log(newOrderData)
+        console.log("Order data: ", newOrderData)
+        console.log("Calculating price...");
         const response = await apiClient.post('/sla/getPrice', newOrderData);
-        //console.log("Total price:", response.data.result);
         orderDetails.total_price = Math.ceil(response.data.result);
+        console.log("Price calculated: ", orderDetails.total_price);
         //console.log(orderDetails)
     } catch (error) {
         console.error('Error fetching total price:', error);
@@ -109,6 +109,7 @@ const getNewOrderDetails = async () => {
 
 const getCustomerInfo = async () => {
     try {
+        console.log("Loading customer data...");
         const response = await apiClient.get('/user/getCustomer');
         //console.log("User data", response.data);
         customerInfo.first_name = response.data.first_name;
@@ -116,6 +117,7 @@ const getCustomerInfo = async () => {
         customerInfo.email = response.data.email;
         customerInfo.phone_number = response.data.customer_details.phone_number;
         customerInfo.address = response.data.customer_details.address;
+        console.log("Customer data loaded!");
     } catch (error) {
         console.error('Error fetching total price:', error);
     }
@@ -146,8 +148,6 @@ onMounted(async () => {
     border-radius: 8px;
     box-shadow: 3px 3px rgba(128, 128, 128, 0.485);
 }
-
-
 
 .price-info {
     text-align: center;
@@ -203,4 +203,3 @@ button {
     color:green;
 }
 </style>
-  

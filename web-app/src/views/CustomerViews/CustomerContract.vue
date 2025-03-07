@@ -56,11 +56,12 @@
 
 <script setup>
 import { onMounted, reactive } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import  apiClient from '@/config/axios';
 import CustomerNavBar from '@/components/CustomerNavBar.vue';
 
 const $route = useRoute();
+const router = useRouter();
 
 const slaDetails = reactive({
     address: '',
@@ -83,32 +84,30 @@ const customerInfo= reactive({
     address: ''
 });
 
+// List of statuses for which the contract can be updated.
 const validStatuses = ['Active', 'Paid', 'Pending', 'Completed'];
 
 
 const cancelOrder = async () => {
     try {
+        console.log("Attempt to cancel the contract...")
         const id = {id: $route.params.id}
-    
         const response = await apiClient.post('/sla/cancelSla', id);
         if(response.status == 200){
             console.log(response.data.message);
-            //toast.success("Cancelled order successfully!");
-            window.location.reload();
+            toast.success("Order cancelled successfully!");
+            router.go();
         }
     } catch (error) {
         console.error('Error cancelling order:', error);
     }
 };
 
-
 onMounted(async () => {
     try {
+        console.log("Loading contract data...");
         const id = $route.params.id
-        console.log(id);
         const response = await apiClient.get(`/sla/getSla?id=${id}`); 
-        console.log(response.data.result);
-        
         slaDetails.address = response.data.result.address;
         slaDetails.start_date = response.data.result.start_date.split('T')[0];
         slaDetails.end_date = response.data.result.end_date.split('T')[0];
@@ -118,17 +117,21 @@ onMounted(async () => {
         slaDetails.status = response.data.result.status;
         slaDetails.price = Math.round(response.data.result.price);
         slaDetails.current_cut_area = response.data.result.current_cut_area;
+        console.log("Contract data loaded successfully!");
     } catch (error) {
         console.log(error);
     }
+
     try {
+        console.log("Loading customer data...");
         const response = await apiClient.get('/user/getCustomer');
-        //console.log("User data", response.data);
+
         customerInfo.first_name = response.data.first_name;
         customerInfo.last_name = response.data.last_name;
         customerInfo.email = response.data.email;
         customerInfo.phone_number = response.data.customer_details.phone_number;
         customerInfo.address = response.data.customer_details.address;
+        console.log("Customer data loaded successfully!");
     } catch (error) {
         console.error('Error fetching total price:', error);
     }

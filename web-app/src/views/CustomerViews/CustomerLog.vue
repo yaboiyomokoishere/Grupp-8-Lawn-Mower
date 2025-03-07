@@ -50,7 +50,6 @@ const customerLogs = ref([]);
 const isActive = ref(new Map());
 
 const showDescription = function(logId){
-    //console.log(logId);
     if (isActive.value.get(logId)) {
         isActive.value.set(logId, false);
     } else {

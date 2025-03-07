@@ -65,8 +65,14 @@
                             </td>
                         </tr>
                         <tr v-if="reportsIds.has(report._id)">
-                            <td colspan="4">{{ report.description }}</td>
-                            <td></td>
+                            <td colspan="4" style="position:absolute">Your Report:{{ report.description }}</td>
+                            <ol style="margin-top: 70px; margin-left: 10px;">
+                                <lh style="padding:15px; padding-right: 100px;" >Technician replies:</lh>
+                                <li v-for="(message, index) in report.messages" :key="index" colspan="4" class = "replymessage"> 
+                                {{ message }}
+                                </li>
+                            </ol>
+
                         </tr>
                     </template>
                 </tbody>
@@ -133,7 +139,6 @@ const filteredReports = computed(() => {
     return reports.value.filter(report => report.status == status.value);
 });
 
-
 const handleSubmit = async () => {
     try {
         const response = await apiClient.post('/user/sendReport', newReport);
@@ -158,9 +163,8 @@ const hideForm = () => {
 const updateReport = async (reportId) => {
     try {
         const response = await apiClient.put('/user/updateReportStatus', {id: reportId});
-        //console.log(response);
         if(response.status == 200){
-            // toast.success('Report status updated successfully!');
+            console.log('Report status updated successfully!');
             router.go();
         } 
     } catch (error) {
@@ -237,7 +241,4 @@ onMounted( async()=>{
     gap: 15px;
     margin-top: 1.5rem;
 }
-
-
-
 </style>

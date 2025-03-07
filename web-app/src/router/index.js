@@ -7,7 +7,6 @@ import SignUpView from '@/views/SignUpView.vue';
 import Pricing from '@/views/Pricing.vue';
 import CustomerProfile from '@/views/CustomerViews/CustomerProfile.vue';
 import CustomerContracts from '@/views/CustomerViews/CustomerContracts.vue';
-import Dashboard from '@/views/AdminViews/Dashboard.vue';
 import CustomerNewOrder from '@/views/CustomerViews/CustomerNewOrder.vue';
 import CustomerContract from '@/views/CustomerViews/CustomerContract.vue';
 import CustomerConfirmOrder from '@/views/CustomerViews/CustomerConfirmOrder.vue';
@@ -27,6 +26,7 @@ import TechHandleReportView from '@/views/TechnicianViews/TechHandleReportView.v
 import AdminaddMowerView from '@/views/AdminViews/AdminaddMowerView.vue';
 import AdminMowersView from '@/views/AdminViews/AdminMowerView.vue';
 import UpdatePriceList from '@/views/AdminViews/UpdatePriceList.vue';
+import TechAddMower from '@/views/TechnicianViews/TechAddMower.vue';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -105,16 +105,10 @@ const router = createRouter({
         },
         // -------------------------ADMIN  ROUTES------------------------
         {
-            path: '/admin/dashboard',
-            name: 'admin_dashboard',
-            component: Dashboard,
-            // Require authentication based on the meta property, see the beforeach guard below
-            meta: { requiresAuth: true, role: ['admin'] }
-        },
-        {
             path: '/admin/users',
             name: 'admin_users',
             component: UserManagement,
+            // Require authentication based on the meta property, see the beforeach guard below
             meta: { requiresAuth: true, role: ['admin'] }
         },
         {
@@ -184,6 +178,12 @@ const router = createRouter({
             path: '/technician/mower/:id',
             name: 'technician_mower_edit',
             component: EditMower,
+            meta: { requiresAuth: true, role: ['technician', 'admin']}
+        },
+        {
+            path: '/technician/mower/add',
+            name: 'technician_add_mower',
+            component: TechAddMower,
             meta: { requiresAuth: true, role: ['technician', 'admin']}
         },
         {

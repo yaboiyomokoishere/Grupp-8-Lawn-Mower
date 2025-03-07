@@ -45,11 +45,12 @@ const userRole = ref('customer');
 const fetchUsers = async () => {
     const response = await apiClient.get(`/user/getUsers?role=${userRole.value}`);
     users.value = response.data;
-    console.log(users.value);
+    console.log("User data retrieved successfully. List of users with role " + userRole + ": ", users.value);
 }
 
 watch(userRole, async () => {
     await fetchUsers();
+    console.log("User list updated.")
 })
 
 onMounted(async () => {

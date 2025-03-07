@@ -103,10 +103,11 @@ async function calculateNewTotalPrice() {
         robot_model: formData.robot_model
     }
     try {
+        console.log("Calculating price...");
         const response = await apiClient.post('/sla/getPrice', slaData);
         console.log(response.data.result);
         formData.price = response.data.result;
-        // Price NAN WHEN EDITING THE WORKING AREA, WHY???    
+        console.log("Calculated price: ", formData.price);
     } catch (error) {
         console.log(error)
     }
@@ -143,7 +144,6 @@ const fetchSlaData = async () => {
         formData.start_date = response.data.result.start_date;
         formData.end_date = response.data.result.end_date;
         formData.robot_model = response.data.result.assigned_robot_model;
-        console.log(formData)
 
         currentCutArea.value = response.data.result.current_cut_area;
         currentWorkingArea.value = response.data.result.working_area;

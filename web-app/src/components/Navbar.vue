@@ -15,8 +15,8 @@
                 <RouterLink :to="{name: 'customer_contracts'}"  v-if="userRole === 'customer'" class="navbar-item">
                     My Profile
                 </RouterLink>
-                <RouterLink :to="{name: 'admin_dashboard'}" v-else-if="userRole === 'admin'" class="navbar-item">
-                    Dashboard
+                <RouterLink :to="{name: 'admin_users'}" v-else-if="userRole === 'admin'" class="navbar-item">
+                    Admin
                 </RouterLink>
                 <RouterLink :to="{name: 'technician_mowers'}" v-else-if="userRole === 'technician'" class="navbar-item">
                     Dashboard

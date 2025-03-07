@@ -4,6 +4,7 @@ const User = require("../Models/userModel");
 const Sla = require("../Models/slaModel");
 const logSlaEvent = require ("../Middleware/logSlaEvent");
 const bcrypt = require('bcrypt');
+const Report = require("../Models/reportModel");
 
 //----------------------------------------USER ROUTES-----------------------------
 const getUsers = asyncHandler(async (req, res) => {
@@ -109,7 +110,6 @@ const createUser = asyncHandler(async (req, res) => {
 
 const updateUser = asyncHandler(async (req, res) => {
     // Updates only the generic fields of each user account. 
-    // TODO: Implement role specific validation.
     const roles = ['customer', 'technician', 'organization'];
     if (!roles.includes(req.body.role)) {
         return res.status(400).json({ message: 'Error: role must be one of ' + roles.join(', ') });
@@ -184,6 +184,31 @@ const updateSlaStatus = asyncHandler(async (req, res) => {
         return res.status(500).json({ error: 'Error while updating the SLA status.' });
     } 
 });
+
+const respondReport = asyncHandler(async (req, res) => {
+    try {
+        const report = await Report.findById(req.body.id);
+        console.log(report);
+        if(report) {  
+            console.log(req.body.messages);
+            report.status = "Solved";
+            report.messages.push(req.body.messages);
+            
+            console.log(report);
+            report.save();
+            res.status(200).json({message: 'Report updated', data: report});
+            
+        }
+
+        
+        else {
+            res.status(400).json({message: 'Report not found'});
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: 'Server error'});
+    }
+})
 
 const updateServiceDetails = asyncHandler(async (req, res) => {
     try {
@@ -363,5 +388,6 @@ module.exports = {
                 updateUser, 
                 getUserSlas, 
                 updateSlaStatus, 
-                updateServiceDetails
+                updateServiceDetails,
+                respondReport
             };

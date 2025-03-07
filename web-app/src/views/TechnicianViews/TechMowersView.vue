@@ -48,6 +48,7 @@ const mowerStatus = ref('Available');
 
 const fetchMowers = async () => {
     const response = await apiClient.get(`/robot/getAllRobots?status=${mowerStatus.value}`);
+    console.log(mowerStatus.value);
     mowers.value = response.data;
     console.log(mowers.value);
     mowers.value.forEach(mower => {

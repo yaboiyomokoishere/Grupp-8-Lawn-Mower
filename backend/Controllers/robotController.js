@@ -8,8 +8,14 @@ const logSlaEvent = require("../Middleware/logSlaEvent");
 
 const registerRobot  = asyncHandler(async (req, res) => { 
     // for (let i = 0; i < 200; i++) {
-    const serial_number = req.body.serial_number;
-    const robot = await Robot.create({ serial_number });
+    
+    //const robot = await Robot.create({ serial_number });
+    const robot = await Robot.create({ 
+        
+        
+        model: req.body.model,
+        serial_number: req.body.serial_number
+    });
     console.log(robot);
     // }
     res.status(200).json({message: 'Robots created successfully'});
@@ -179,7 +185,7 @@ const getAllRobots = asyncHandler(async (req, res) => {
         res.status(404);
         throw new Error("No robots found");
     }
-    res.json(robots);
+    res.status(200).json(robots);
 });
 
 // låtsas ping till robot

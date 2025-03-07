@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import apiClient from '@/config/axios';
 import AdminNavBar from '@/components/AdminNavBar.vue';
@@ -85,13 +85,14 @@ const formData = reactive({
 const fetchPriceList = async () => {
     try {
         const response = await apiClient.get(`/user/getPriceList?id=${route.params.id}`);
-        //console.log(response.data);
+        console.log("Loading the price list data...")
         formData.model = response.data.model;
         formData.installation = response.data.installation;
         formData.maxArea = response.data.max_area;
         formData.pricePerSquareMeter = response.data.price_per_square_meter;
         formData.dailyRent = response.data.robot_daily_rent;
         formData.heightPrices.push(...response.data.height_prices);
+        console.log("Data loaded successfully!")
     } catch (error) {
         console.error('Error fetching price list:', error);
     }
@@ -99,19 +100,23 @@ const fetchPriceList = async () => {
 
 const addHeightPrice = () => {
     formData.heightPrices.push({ height: 0, price: 0 });
+    console.log("Added a height/price pair to the price list.")
 };
 
 const removeHeightPrice = (index) => {
     if (formData.heightPrices.length > 1) {
         formData.heightPrices.splice(index, 1);
+        console.log("Height/Price row removed successfully!.")
+        return;
     }
+    console.log("Invalid operation: Cannot remove last height/price pair.")
 };
 
 const handleSubmit = async () => {
     try {
         const response = await apiClient.put('/user/updatePriceList', formData);
         if (response.status === 200) {
-           console.log("Success")
+           console.log("Successful update!")
         }
     } catch (error) {
         console.error('Update error:', error);

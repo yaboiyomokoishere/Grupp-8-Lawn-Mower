@@ -11,7 +11,6 @@ const {
     getAllRobots,
     maintenance,
     getAllPriceLists
-    //getBooking
 } = require("../Controllers/robotController");
 const validateToken = require("../Middleware/validateTokenHandler")
 

@@ -8,7 +8,8 @@
                 <option value="Broken">Broken</option>
                 <option value="Unavailable">Unavailable</option>
             </select>
-            <button @click="$router.push({name: 'technician_add_mower'})">Add Mower</button>
+            
+            <button @click="router.push({name: 'technician_add_mower'})">Add Mower</button>
             <table v-if="mowers.length">
                 <thead>
                     <tr>
@@ -26,7 +27,9 @@
                         <td>{{ mower.status }}</td>
                         <td>{{ mower.last_maintenance_date }}</td>
                         <td>
-                        <RouterLink :to="{name: 'technician_mower_edit', params: {id: mower._id}}" class="edit-mower-button">Edit</RouterLink>
+                            <RouterLink to="#" v-if="mower.status=='Broken'">
+                                <button @click="fixRobot(mower.serial_number)" class="update-status-button">Fixed</button>
+                            </RouterLink>
                         </td>                        
                     </tr>
                     
@@ -42,24 +45,38 @@
 import TechNavBar from '@/components/TechNavBar.vue';
 import apiClient from '@/config/axios';
 import { ref, onMounted, watch } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const mowers = ref([]);
 const mowerStatus = ref('Available');
 
 const fetchMowers = async () => {
     const response = await apiClient.get(`/robot/getAllRobots?status=${mowerStatus.value}`);
-    console.log(mowerStatus.value);
+    //console.log(mowerStatus.value);
     mowers.value = response.data;
-    console.log(mowers.value);
+    //console.log(mowers.value);
     mowers.value.forEach(mower => {
         mower.last_maintenance_date = new Date(mower.last_maintenance_date).toLocaleDateString();
     });
-    
-
 };
 watch(mowerStatus, async () => {
     await fetchMowers();
 });
+
+const fixRobot = async (serialNumber) => {
+    try {
+        console.log("Updating robot status to fixed...");
+        const response = await apiClient.post(`/robot/maintenance`, {serial_number: serialNumber});
+        if (response.status == 200){
+            console.log("Status updated successfully!");
+            alert("Status updated to Available.");
+            await router.go();
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
 
 onMounted(async () => {
     fetchMowers();
@@ -100,12 +117,14 @@ onMounted(async () => {
 .tech-content tr:hover {
     background-color: #f8fafc;
 }
+
 .tech-content p {
     color: #718096;
     margin-top:1rem;
     font-style: italic;
 }
-.edit-mower-button {
+
+.edit-mower-button, .update-status-button {
     font-size: 1rem;
     padding: 10px 15px;
     border-radius: 5px;
@@ -113,7 +132,11 @@ onMounted(async () => {
     text-decoration: none;
 }
 
-.edit-mower-button:hover {
+.edit-mower-button:hover, .update-status-button:hover {
     background-color: #989d8f;
+}
+
+.update-status-button {
+    margin-left: 20px;
 }
 </style>

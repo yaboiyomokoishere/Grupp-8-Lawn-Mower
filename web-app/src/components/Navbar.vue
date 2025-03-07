@@ -18,6 +18,9 @@
                 <RouterLink :to="{name: 'admin_users'}" v-else-if="userRole === 'admin'" class="navbar-item">
                     Admin
                 </RouterLink>
+                <RouterLink :to="{name: 'technician_mowers'}" v-else-if="userRole === 'technician'" class="navbar-item">
+                    Tech
+                </RouterLink>
                 <Logout />
             </div>
         </div>

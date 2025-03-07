@@ -71,6 +71,7 @@ const fixRobot = async (serialNumber) => {
         if (response.status == 200){
             console.log("Status updated successfully!");
             alert("Status updated to Available.");
+            await router.go();
         }
     } catch (error) {
         console.log(error);

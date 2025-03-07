@@ -19,7 +19,7 @@
                     Admin
                 </RouterLink>
                 <RouterLink :to="{name: 'technician_mowers'}" v-else-if="userRole === 'technician'" class="navbar-item">
-                    Dashboard
+                    Tech
                 </RouterLink>
                 <Logout />
             </div>

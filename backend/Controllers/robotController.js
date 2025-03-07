@@ -153,7 +153,6 @@ const maintenance = asyncHandler(async (req, res) => {
     try {
         const robot = await Robot.findOne({serial_number: req.body.serial_number});
         robot.status = "Available";
-        //const date = new Date;
         robot.last_maintenance_date = Date.now();
         await robot.save();
         res.status(200).json({message: 'working again!!!'});

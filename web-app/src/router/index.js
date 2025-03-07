@@ -200,9 +200,7 @@ const router = createRouter({
     ]
 });
 
-
 export const isAuthenticated = () => !!localStorage.getItem('accessToken');
-
 
 // Global navigation guard
 router.beforeEach((to, from, next) => {

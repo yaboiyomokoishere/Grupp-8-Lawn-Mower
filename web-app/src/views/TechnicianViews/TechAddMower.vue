@@ -24,7 +24,7 @@
 </template>
     
 <script setup>
-import AdminNavBar from '@/components/TechNavBar.vue';
+import AdminNavBar from '@/components/AdminNavBar.vue';
 import { onMounted } from 'vue';
 import { reactive } from 'vue';
 import apiClient from '@/config/axios';

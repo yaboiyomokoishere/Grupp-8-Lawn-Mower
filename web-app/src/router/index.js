@@ -23,7 +23,6 @@ import TechMowersView from '@/views/TechnicianViews/TechMowersView.vue';
 import TechReportsView from '@/views/TechnicianViews/TechReportsView.vue';
 import EditMower from '@/views/TechnicianViews/EditMower.vue';
 import TechHandleReportView from '@/views/TechnicianViews/TechHandleReportView.vue';
-import AdminMowersView from '@/views/AdminViews/AdminMowerView.vue';
 import UpdatePriceList from '@/views/AdminViews/UpdatePriceList.vue';
 import TechAddMower from '@/views/TechnicianViews/TechAddMower.vue';
 
@@ -169,7 +168,7 @@ const router = createRouter({
             path: '/technician/mower/add',
             name: 'technician_add_mower',
             component: TechAddMower,
-            meta: { requiresAuth: true, role: ['technician', 'admin']}
+            meta: { requiresAuth: true, role: ['admin']}
         },
         {
             path: '/technician/report/:id',

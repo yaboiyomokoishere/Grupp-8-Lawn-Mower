@@ -134,6 +134,7 @@ const handleSubmit = async () => {
         const response = await apiClient.post('/user/createUser', newUser)
         if (response.status == 200) {
             console.log("User created, messag: ", response.data);
+            alert("USER CREATED!!!!!");
             return;
         } else if (response.status==406){
             alert('Email not available');

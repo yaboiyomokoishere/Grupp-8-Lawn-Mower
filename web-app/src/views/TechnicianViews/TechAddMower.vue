@@ -1,11 +1,6 @@
 <template>
     <div class="user-page-container">
-        <div v-if="role == 'technician'">
-            <TechNavBar />
-        </div>
-        <div v-else-if="role == 'admin'">
-            <AdminNavBar />
-        </div>
+        <AdminNavBar />
 
         <div class = "customer-content">
             <h1>Add Mower</h1>
@@ -13,7 +8,7 @@
                 <form @submit.prevent="handleSubmit">
                     <label for="robot_model">Robot Model</label><br>
                     <select name="robot_model" id="robot_model" v-model="formData.robot_model" required>
-                        <option v-for ="mower in mowers":key="mower.id" :value="mower.model">{{ mower.model }}  </option>
+                        <option v-for ="mower in mowers":key="mower.id" :value="mower.model">{{ mower.model }}</option>
                     </select>
                     <div class="form-row">
                         <div class="form-group">
@@ -30,7 +25,6 @@
     
 <script setup>
 import AdminNavBar from '@/components/TechNavBar.vue';
-import TechNavBar from '@/components/TechNavBar.vue';
 import { onMounted } from 'vue';
 import { reactive } from 'vue';
 import apiClient from '@/config/axios';
@@ -44,8 +38,7 @@ const mowers = ref([]);
 const role = ref('');
 
 const formData = reactive({
-    serial_number: '',
-    
+    serial_number: ''
 })
 
 const handleSubmit = async () => {
@@ -64,6 +57,7 @@ const handleSubmit = async () => {
         alert('robot tillagd');
         await router.go();
     } catch (error) {
+        alert("NOT THAT SERIAL NUMBER!!!")
         console.error('Error creating robot:', error);
     }
 };
@@ -84,7 +78,7 @@ onMounted(async () => {
     if(token){
         const decodedToken = jwtDecode(token);
         console.log('Accessing the page as ' + decodedToken.user.role);
-        if(['admin', 'technician'].includes(decodedToken.user.role)){
+        if(['admin'].includes(decodedToken.user.role)){
             role.value = decodedToken.user.role;
         }
     }

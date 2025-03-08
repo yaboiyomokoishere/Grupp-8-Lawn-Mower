@@ -7,35 +7,21 @@ const logSlaEvent = require("../Middleware/logSlaEvent");
 
 
 const registerRobot  = asyncHandler(async (req, res) => { 
-    // for (let i = 0; i < 200; i++) {
-    
-    //const robot = await Robot.create({ serial_number });
-    const robot = await Robot.create({ 
-        
-        
-        model: req.body.model,
-        serial_number: req.body.serial_number
-    });
-    console.log(robot);
-    // }
-    res.status(200).json({message: 'Robots created successfully'});
-    // try {
-    //     const robot = await Robot.create({
-    //         model: req.body.model,
-    //         serial_number: req.body.serial_number,
-    //         last_maintenance_date: req.body.last_maintenance_date
-    //     });
-    //   console.log(robot);
-
-    //     if(!robot){
-    //         res.status(400).json({message: 'robot failed'});
-    //     } else {
-    //         res.status(200).json({message: 'Robot created successfully'});
-    //     }
-    // } catch(error){
-    //     console.log(error);
-    //     res.status(400).json({message: 'Could not register robot'});
-    // }
+    try {
+        // for (let i = 0; i < 200; i++) {
+        //const robot = await Robot.create({ serial_number });
+        const robot = await Robot.create({ 
+            
+            
+            model: req.body.model,
+            serial_number: req.body.serial_number
+        });
+        console.log(robot);
+        // }
+        res.status(200).json({message: 'Robots created successfully'});
+    } catch (err){
+        res.status(400).json({message: err});
+    } 
 });
 
 

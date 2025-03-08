@@ -40,8 +40,6 @@ const toggleUserStatus = asyncHandler(async (req, res) => {
 });
 
 const createUser = asyncHandler(async (req, res) => {
-    // console.log(req.body)
-    // console.log("hej")
     try {
         const { 
             firstName, 

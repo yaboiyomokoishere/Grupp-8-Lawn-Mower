@@ -76,11 +76,11 @@ const updateSla  = asyncHandler(async (req, res) => {
                 if(sla){
                     // check for what is changed
                     if(req.body.grass_height){
-                        description = "The grass height changed to " + req.body.grass_height + " kr from " + sla.grass_height + " kr. ";
+                        description = "The grass height changed to " + req.body.grass_height + " cm from " + sla.grass_height + " cm .";
                         sla.grass_height = req.body.grass_height;
                     }
                     if(req.body.working_area){                      
-                        description = "The working area changed to " + req.body.working_area + " kr  from " + sla.working_area + " kr.";
+                        description = "The working area changed to " + req.body.working_area + " kvm from " + sla.working_area + " kvm.";
                     }
                     sla.working_area = req.body.working_area;
                     

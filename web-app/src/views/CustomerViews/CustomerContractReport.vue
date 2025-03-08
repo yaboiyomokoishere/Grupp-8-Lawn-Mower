@@ -60,8 +60,8 @@
                             <td>
                                 <button @click="toggleDescription(report._id)">Description</button>
                                 <!-- Is appearing before the description button, but can't really tell why. DOM issue?  -->
-                                <button v-if="canEdit" @click="updateReport(report._id)" style="margin-right:10px;">Archive</button>
-                                <button v-if="canEdit" @click="addComment(report._id)" style="margin-right:10px;">Comment</button>
+                                <button v-if="role!='customer'" @click="updateReport(report._id)" style="margin-right:10px;">Archive</button>
+                                <button v-if="role!='customer'" @click="addComment(report._id)" style="margin-right:10px;">Comment</button>
                             </td>
                         </tr>
                         <tr v-if="reportsIds.has(report._id)">
@@ -175,11 +175,12 @@ const updateReport = async (reportId) => {
 
 onMounted( async()=>{
     await fetchReports();
+
     const token = localStorage.getItem('accessToken');
     if(token){
         const decodedToken = jwtDecode(token);
         console.log('Accessing the page as ' + decodedToken.user.role);
-        if(['admin', 'customer'].includes(decodedToken.user.role)){
+        if(['admin', 'customer', 'technician'].includes(decodedToken.user.role)){
             canEdit.value = true;
             role.value = decodedToken.user.role;
         }
@@ -240,5 +241,36 @@ onMounted( async()=>{
     display: flex;
     gap: 15px;
     margin-top: 1.5rem;
+}
+
+.customer-content table {
+    width: 75%;
+    max-width: 75%;
+    margin: 0 auto;
+    border-collapse: collapse; 
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.customer-content th, .customer-content td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.customer-content th {
+    background-color: #f7fafc;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.customer-content tr:hover {
+    background-color: #f8fafc;
+}
+
+.customer-content p {
+    color: #718096;
+    margin-top: 1rem;
+    font-style: italic;
 }
 </style>

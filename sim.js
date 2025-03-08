@@ -15,9 +15,9 @@ const userData = { // user data here
     "password": "testtest"
 };
 
-const sla = ['67c32d94a35241ffadd640a0', '67c332f6bbdd34a9933181ac', '67c33315e99a4a096e249201', '67c33324e99a4a096e249212'] //sla id here
-
-const robot = ['7', '12', '13', '14'] // robot serial number
+const sla = ['67cc4a84efb97dcf7b18097', '67cc4ae6efb97dcf7b1809ab'] //sla id here
+ 
+const robot = ['1', '8'] // robot serial number
 
 const sim = async (userData, sla, robot) => {
     
@@ -32,7 +32,7 @@ const sim = async (userData, sla, robot) => {
     for (let i = 0; i < sla.length; i++) {
         console.log(sla[i]);
         console.log(robot[i]);
-        if(i % 2 == 0) {
+        if(i  == 1) {
             await startCutting(sla[i]);
             await sleep(5000);
             await currentCutArea(sla[i]);
@@ -50,25 +50,6 @@ const sim = async (userData, sla, robot) => {
     }
     // dateCheck();
 };
-
-const register = async (data) => {
-    try {
-        const response = await axios.post('http://localhost:3001/api/user/register', data);
-        console.log(response.data);
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-const login = async (data) => {
-    try {
-        const response = await axios.post('http://localhost:3001/api/user/login', data);
-        console.log(response.data);
-        return response.data;
-    } catch (error) {
-        console.error(error);
-    }
-}
 
 const startCutting = async (sla) => {
     try {

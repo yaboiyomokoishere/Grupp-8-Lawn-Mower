@@ -191,14 +191,11 @@ const respondReport = asyncHandler(async (req, res) => {
             console.log(req.body.messages);
             report.status = "Solved";
             report.messages.push(req.body.messages);
-            
             console.log(report);
             report.save();
             res.status(200).json({message: 'Report updated', data: report});
             
         }
-
-        
         else {
             res.status(400).json({message: 'Report not found'});
         }

@@ -116,11 +116,11 @@ async function handleSubmit() {
             update_cost: formData.price
         }
         const response = await apiClient.put('/sla/updateSla', slaData);
-        if (response.status === 200) {
+        if (response.status === 201) {
             console.log('Sla updated!');
+            toast.success('Sla updated successfully!');
+            router.go(-1);
         }
-        toast.success('Sla updated successfully!');
-        router.push({ name: 'customer_contract_view' });       
     } catch (error) {
         console.error('Error updating SLA:', error);
     }

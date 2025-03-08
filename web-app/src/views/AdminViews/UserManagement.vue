@@ -24,7 +24,7 @@
                         <td>{{ user.email }}</td>
                         <td>{{ user.status.charAt(0).toUpperCase() + user.status.slice(1) }}</td>
                         <td>
-                            <RouterLink :to="{name: 'admin_user_edit', params: {customerId: user._id}}" class="edit-user-button">Edit</RouterLink>
+                            <RouterLink :to="{name: 'admin_user_edit', params: {customerId: user._id}}" class="edit-user-button">View</RouterLink>
                         </td>                        
                     </tr>
                 </tbody>

@@ -84,9 +84,22 @@ const showDescription = function(id) {
 const fetchReports = async () => {
 
     const response = await apiClient.get(`/user/getAllReports?status=${reportStatus.value}`);
-    console.log(response.data);
-    reports.value = response.data;
-    
+    //console.log(response.data);
+    //reports.value = response.data;
+
+    for (let i = 0; i < response.data.length; i++) {
+        let report ={
+            _id: response.data[i]._id,
+            sender_id: response.data[i].sender_id,
+            title: response.data[i].title,
+            description: response.data[i].description,
+            status: response.data[i].status,
+            messages: response.data[i].messages,
+            sla_id: response.data[i].sla_id,
+        }
+        isActive.value.set(i, false);
+        reports.value.push(report);
+    }
 }
 const formData = reactive ({
     messages: "",
@@ -103,7 +116,7 @@ const handleSubmit = async (id) => {
         if (response.status == 200) {
             console.log("Message sent successfully");
             formData.messages = "";
-            isActive.value.set(id, false);
+            isActive.value.set(id._id, false);
             console.log(isActive.value);
             window.location.reload()
         }
@@ -121,19 +134,6 @@ watch(reportStatus, async () => {
 
 onMounted(async () => {
     await fetchReports();
-
-    for (let i = 0; i < reports.value.length; i++) {
-        let report ={
-            sender_id: response.data.data[i].sender_id,
-            title: response.data.data[i].title,
-            description: response.data.data[i].description,
-            status: response.data.data[i].status,
-            messages: response.data.data[i].messages,
-            sla_id: response.data.data[i].sla_id,
-        }
-        isActive.value.set(i, false);
-        reports.value.push(report);
-    }
 
     const token = localStorage.getItem('accessToken');
     if(token){

@@ -43,7 +43,7 @@
                         <button type="button"  @click="goBack">Cancel</button>
                     </div>
                     <br>
-                    <p v-if="formData.price">Your changes will cost {{ formData.price }} kr. </p>
+                    <p v-if="formData.price">Your changes will cost {{ parseFloat(formData.price).toFixed(2) }} kr. </p>
                 </form>
             </div>
         </div>

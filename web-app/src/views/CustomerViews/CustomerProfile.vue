@@ -167,7 +167,7 @@ const handleSubmit = async () => {
 			const response = await apiClient.put('http://localhost:3001/api/user/updateCustomer', newData);
 			if (response.status === 200) {
 				fetchCustomerData();
-				toast.success('Your information has been updated successfully');
+				toast.success('Successful update!');
 			} 
 		} catch (err) {
 			if (err.response && err.response.status === 400) {

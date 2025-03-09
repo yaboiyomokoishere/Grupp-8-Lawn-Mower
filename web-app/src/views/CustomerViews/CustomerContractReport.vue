@@ -65,14 +65,17 @@
                             </td>
                         </tr>
                         <tr v-if="reportsIds.has(report._id)">
-                            <td colspan="4" style="position:absolute">Your Report:{{ report.description }}</td>
-                            <ol style="margin-top: 70px; margin-left: 10px;">
-                                <lh style="padding:15px; padding-right: 100px;" >Technician replies:</lh>
-                                <li v-for="(message, index) in report.messages" :key="index" colspan="4" class = "replymessage"> 
-                                {{ message }}
-                                </li>
-                            </ol>
-
+                            <td colspan="4" style="position:absolute">Description: {{ report.description }}</td>
+                            <td>
+                                <div v-if="report.messages.length > 0">
+                                    <ol style="margin-top: 70px; margin-left: 10px;">
+                                        <lh style="padding:15px; padding-right: 100px;" ><strong>Technician replies:</strong></lh>
+                                        <li v-for="(message, index) in report.messages" :key="index" colspan="4" class = "replymessage"> 
+                                        - {{ message }}
+                                        </li>
+                                    </ol>
+                                </div>
+                            </td>
                         </tr>
                     </template>
                 </tbody>

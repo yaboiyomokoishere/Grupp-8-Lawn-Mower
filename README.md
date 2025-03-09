@@ -1,12 +1,20 @@
 # Robotic-Lawnmower-Administration-Service
-
 ## Project Description
-
+The purpose of this project is to develop a centralized system for managing service-level agreements (SLAs) for robotic lawnmowers, enablingbusinesses to move from product-centric to service-centric models. The system consists of a web-based frontend where customers can create, modify, or teminate SLAs (e.g., adjusting grass height or working area) and multiple administrative interfaces for managing SLAs and related resources. All operations are tracked in an immutable log, ensuring transparency and accountability.
+<br><br>
+The backend consists of a REST API to support future types of frontends (e.g., mobile apps). It implements all the logic of the system, e.g., workflows for dynamic SLAs and role-based access control which provide flexibility and security. Inspired by a decentralized approach, this project focuses on scalability and user-based workflows for service management.
 
 ## Installation 
 
+### Requirements
+Node.js v22.14.0 (or higher)
+MongoDB account
+Permit.io account (Requires email application password)
+
+
 
 ## How to Use
+
 
 ## Directory Structure
 

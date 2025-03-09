@@ -33,11 +33,10 @@
                     </td>
                 </tr>
                 <tr  v-if = 'report.description !== "" ' :class ="{hideDescription: !isActive.get(report._id)}" colspan="5">
+                    <td  colspan="5" style="position:absolute">Report description: {{ report.description }} </td>
                     <td>
-                        <th  colspan="5" style="position:absolute">Report description: {{ report.description }} </th>
-                    
                         <ol style="margin-top: 70px; margin-left: 50px;">
-                            <li style="padding:15px;">Technician replies:</li>
+                            <li style="padding:15px;">Reply:</li>
                             <li v-for="(message, index) in report.messages" :key="index" colspan="4" class = "replymessage"> 
                                 {{ message }}
                             </li>
@@ -61,6 +60,7 @@ import AdminNavBar from '@/components/AdminNavBar.vue';
 import apiClient from '@/config/axios';
 import { onMounted,ref,reactive, watch } from 'vue';
 import { jwtDecode } from 'jwt-decode';
+
 
 
 const isActive = ref(new Map());

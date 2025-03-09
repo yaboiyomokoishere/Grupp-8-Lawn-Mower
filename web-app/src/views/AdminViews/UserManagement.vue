@@ -3,12 +3,15 @@
         <AdminNavBar />
         <div class="admin-content">
             <h1>Users Management</h1>
-            <select v-model="userRole">
-                <option value="customer">Customers</option>
-                <option value="technician">Technicians</option>
-                <option value="organization">Organizations</option>
-            </select>
-            <RouterLink :to="{name:'admin_create_user'}"><button>Create New User</button></RouterLink>
+            <div style="display: flex;">
+                <select v-model="userRole">
+                    <option value="customer">Customers</option>
+                    <option value="technician">Technicians</option>
+                    <option value="organization">Organizations</option>
+                </select>
+                <RouterLink :to="{name:'admin_create_user'}" style="margin-left: auto;"><button>Create New User</button></RouterLink>
+            </div>
+            
             <table v-if="users.length">
                 <thead>
                     <tr>

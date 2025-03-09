@@ -62,6 +62,7 @@ const handleSubmit = async () => {
 			toast.error('Invalid email or password');
 		}
 	} catch (error) {
+		toast.error('Invalid email or password');
 		console.log('Error while logging in:', error);
 	}
 }

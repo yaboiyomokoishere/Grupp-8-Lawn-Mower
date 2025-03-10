@@ -9,11 +9,14 @@
         <div class="customer-content">
             <h1>Update Service Details</h1>
             <div class="update-service-form">
+                <RouterLink :to="{ name: 'pricing'}" target="_blank" class="pricing-link">
+                   Click to view our pricing
+                </RouterLink>
                 <div class="current-details">
                     <p>Current Cut Area: {{ currentCutArea }} m²</p>
                     <p>Max Area: {{ maxArea }} m²</p>
+                    
                 </div>
-
                 <form @submit.prevent="handleSubmit">
                     <div class="form-row">
                         <div class="form-group">
@@ -241,5 +244,14 @@ button {
 button:hover{
     background-color: #989d8f;
     color:black;
+}
+
+.pricing-link{
+    text-decoration: none;
+}
+.pricing-link:hover {
+    color: #2563eb;
+    text-decoration: underline;
+    text-decoration-color: #333333;
 }
 </style>

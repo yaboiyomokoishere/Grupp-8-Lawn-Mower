@@ -8,13 +8,17 @@
         </div>
         <div class = "tech-content">
             <h1>Mower management</h1>
-            <select v-model="mowerStatus">
-                <option value="Available">Available</option>
-                <option value="Broken">Broken</option>
-                <option value="Unavailable">Unavailable</option>
-            </select>
-            
-            <button v-if="role == 'admin'" @click="router.push({name: 'technician_add_mower'})">Add Mower</button>
+            <div style="display: flex;">
+                <select v-model="mowerStatus">
+                    <option value="Available">Available</option>
+                    <option value="Broken">Broken</option>
+                    <option value="Unavailable">Unavailable</option>
+                </select>
+                
+                <button v-if="role == 'admin'" @click="router.push({name: 'technician_add_mower'})" style="margin-left: auto; height:fit-content ;">
+                    Add Mower
+                </button>
+            </div>
             <table v-if="mowers.length">
                 <thead>
                     <tr>

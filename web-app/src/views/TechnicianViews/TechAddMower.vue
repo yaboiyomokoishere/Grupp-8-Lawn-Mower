@@ -1,9 +1,11 @@
 <template>
     <div class="user-page-container">
         <AdminNavBar />
-
         <div class = "customer-content">
             <h1>Add Mower</h1>
+            <div class="back-button-container">
+                <button @click="router.go(-1)" style="">Go back</button>
+            </div>
             <div class="form-container">
                 <form @submit.prevent="handleSubmit">
                     <label for="robot_model">Robot Model</label><br>
@@ -31,8 +33,10 @@ import apiClient from '@/config/axios';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import { jwtDecode } from 'jwt-decode';
+import { useToast } from 'vue-toastification';
 
 
+const toast = useToast();
 const router = useRouter();
 const mowers = ref([]);
 const role = ref('');
@@ -43,7 +47,7 @@ const formData = reactive({
 
 const handleSubmit = async () => {
     if (isNaN(formData.serial_number)){
-        alert('inkorrekt inmatning');
+        toast.error('Invalid input!');
         return;
     }
     const addRobot ={
@@ -54,10 +58,10 @@ const handleSubmit = async () => {
         const response = await apiClient.post('/robot/registerRobot', addRobot);
         console.log(response.data);
         //router.push({ name: 'technician_add_mower' });
-        alert('robot tillagd');
-        await router.go();
+        alert("Robot created successfully!");
+        router.go();
     } catch (error) {
-        alert("NOT THAT SERIAL NUMBER!!!")
+        toast.error("Invalid serial number")
         console.error('Error creating robot:', error);
     }
 };
@@ -106,13 +110,23 @@ input, select {
     font-size: 1.2rem;
     padding: 10px;
 }
+
+.back-button-container {
+    display: flex;
+}
 button {
     font-size: 1rem;
     text-decoration: none;
-    padding: 10px;
-    border: solid;
+    padding: 10px 15px;
     border-radius: 5px;
-    border-color: #CCCCCC;
+    border: 2px solid black;
+    margin-bottom: 30px;
+    margin-left:auto
+}
+
+button:hover{
+    background-color: #989d8f;
+    color:black;
 }
 
 </style>

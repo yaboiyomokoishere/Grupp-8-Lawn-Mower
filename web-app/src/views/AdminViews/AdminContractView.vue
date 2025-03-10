@@ -34,7 +34,7 @@
                                 <option v-for="status in validStatuses" :key="status" :value="status">{{ status }}</option>
                             </select>
                         </p>
-                        <button type="submit" class="sla-button">Update Status</button>
+                        <button type="submit" class="sla-button" style="height: fit-content; margin-top: 20px;">Update Status</button>
                     </form>
                     <p>Created on  {{ slaDetails.creation_date }}</p>
                 </div>
@@ -306,7 +306,7 @@ button:hover{
     color:black;
 }
 
-.status-form button, .update-service-details-button, input, .status-form input {
+.status-form button, .update-service-details-button, input, .status-form input, select {
     font-size: 0.9rem;
     padding: 5px;
 }

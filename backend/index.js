@@ -6,6 +6,9 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const schedule = require('node-schedule');
 const dateCheck = require('./Middleware/dateCheck');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./swagger.yaml');
 
 connectDb();
 const app = express();
@@ -21,6 +24,7 @@ app.use(cors({
     }
 )); // Currently allowing all origins, to be changed later
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/user", require("./Routes/userRoutes"));
 app.use("/api/sla", require("./Routes/slaRoutes"));
 app.use("/api/robot", require("./Routes/robotRoutes"));

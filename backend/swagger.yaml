@@ -1,0 +1,1994 @@
+openapi: 3.0.0
+info:
+  title: Robotic-Lawnmower-Administration-Service
+  description: API for managing robotic lawn mowing services such as managing users, robots, service level agreements, and reports.
+  version: 1.0.0
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum: [customer, technician, admin]
+        status:
+          type: string
+          enum: [active, inactive]
+        customer_details:
+          type: object
+          properties:
+            address:
+              type: string
+            postal_code:
+              type: string
+            phone_number:
+              type: string
+        technician_details:
+          type: object
+        admin_details:
+          type: object
+    
+    PriceList:
+      type: object
+      properties:
+        _id:
+          type: string
+        model:
+          type: string
+        height_prices:
+          type: array
+          items:
+            type: object
+        max_area:
+          type: number
+        price_per_square_meter:
+          type: number
+        installation:
+          type: number
+        robot_daily_rent:
+          type: number
+    
+    Robot:
+      type: object
+      properties:
+        _id:
+          type: string
+        serial_number:
+          type: string
+        model:
+          type: string
+        status:
+          type: string
+          enum: [Available, Unavailable, Broken]
+        booking_schedule:
+          type: array
+          items:
+            type: object
+            properties:
+              sla_id:
+                type: string
+              start_date:
+                type: string
+                format: date-time
+              end_date:
+                type: string
+                format: date-time
+        last_maintenance_date:
+          type: string
+          format: date-time
+
+    SLA:
+      type: object
+      properties:
+        _id:
+          type: string
+        customer_id:
+          type: string
+        address:
+          type: string
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+        grass_height:
+          type: number
+        working_area:
+          type: number
+        current_cut_area:
+          type: number
+        price:
+          type: number
+        status:
+          type: string
+          enum: [Pending, Paid, Active, Completed, Cancelled, Fault]
+        assigned_robot_model:
+          type: string
+    
+    Report:
+      type: object
+      properties:
+        _id:
+          type: string
+        sender_id:
+          type: string
+        sla_id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [Pending, Solved]
+        messages:
+          type: array
+          items:
+            type: object
+    
+    SLALog:
+      type: object
+      properties:
+        _id:
+          type: string
+        sla_id:
+          type: string
+        events:
+          type: array
+          items:
+            type: object
+            properties:
+              action:
+                type: string
+              changed_by:
+                type: string
+              date:
+                type: string
+                format: date-time
+              description:
+                type: string
+
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Unauthorized
+
+    NotFoundError:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+
+    ServerError:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Server error
+
+security:
+  - bearerAuth: []
+
+paths:
+  # Authentication routes
+  /user/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new customer
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - firstName
+                - lastName
+                - email
+                - password
+                - address
+                - phone
+                - postalCode
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                address:
+                  type: string
+                phone:
+                  type: string
+                postalCode:
+                  type: string
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Registration successfull
+        '400':
+          description: Invalid input or email already registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email already registered
+
+  /user/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login a user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+
+  /user/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Logout a user
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Logout successfull
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /user/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Refresh access token
+      security: []
+      responses:
+        '200':
+          description: New access token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+        '406':
+          description: Invalid refresh token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized -> Redirect to login
+
+  # Customer routes
+  /user/getCustomer:
+    get:
+      tags:
+        - Customer
+      summary: Get customer information
+      responses:
+        '200':
+          description: Customer information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /user/updateCustomer:
+    put:
+      tags:
+        - Customer
+      summary: Update customer profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                phone_number:
+                  type: string
+                address:
+                  type: string
+                postal_code:
+                  type: string
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Profile updated successfully
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /user/sendReport:
+    post:
+      tags:
+        - Reports
+      summary: Submit a report for an SLA (Customer)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - title
+                - description
+              properties:
+                id:
+                  type: string
+                  description: SLA ID
+                title:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '200':
+          description: Report submitted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Report submitted
+        '400':
+          description: Invalid input or cannot report closed SLA
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Can not report closed SLA
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /user/getReports:
+    get:
+      tags:
+        - Reports
+      summary: Get reports for a specific SLA
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: SLA ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Reports found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Reports found
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Report'
+        '400':
+          description: No reports found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: No report found
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  
+  /user/getAllReports:
+    get:
+      tags:
+        - Reports
+      summary: Get all reports (Admin/Tech)
+      responses:
+        '200':
+          description: Reports found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Reports found
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Report'
+        '400':
+          description: No reports found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: No report found
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /user/respondReport:
+    put:
+      tags:
+        - Reports
+        - Admin
+      summary: Submit a report for an SLA (Admin/Tech)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - title
+                - description
+              properties:
+                id:
+                  type: string
+                  description: Report ID
+                message:
+                  type: string
+      responses:
+        '200':
+          description: Report updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Report updated
+        '400':
+          description: Invalid input or cannot find report 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Report not found
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+
+
+  # Admin routes
+  /user/createPriceList:
+    post:
+      tags:
+        - Admin
+        - PriceList
+      summary: Create a price list
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - model
+                - heightPrices
+                - maxArea
+                - pricePerSquareMeter
+                - installation
+                - dailyRent
+              properties:
+                model:
+                  type: string
+                heightPrices:
+                  type: array
+                  items:
+                    type: object
+                maxArea:
+                  type: number
+                pricePerSquareMeter:
+                  type: number
+                installation:
+                  type: number
+                dailyRent:
+                  type: number
+      responses:
+        '200':
+          description: Price list created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Price list created successfully.
+        '400':
+          description: Error creating price list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error while creating price list.
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /user/getPriceLists:
+    get:
+      tags:
+        - Admin
+        - PriceList
+      summary: Get all price lists
+      security: []
+      responses:
+        '200':
+          description: List of price lists
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PriceList'
+        '404':
+          description: Price lists not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Price lists unavailable
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /user/getPriceList:
+    get:
+      tags:
+        - Admin
+        - PriceList
+        - Customer
+      summary: Get a specific price list
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: Price list ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Price list details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PriceList'
+        '404':
+          description: Price list not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Price list not found
+        '400':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Server error
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /user/updatePriceList:
+    put:
+      tags:
+        - Admin
+        - PriceList
+      summary: Update a price list
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+                model:
+                  type: string
+                heightPrices:
+                  type: array
+                  items:
+                    type: object
+                maxArea:
+                  type: number
+                pricePerSquareMeter:
+                  type: number
+                installation:
+                  type: number
+                dailyRent:
+                  type: number
+      responses:
+        '200':
+          description: Price list updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Price list updated successfully.
+        '400':
+          description: Error updating price list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error while updating price list.
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Price list not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Price list not found.
+
+  /user/getUsers:
+    get:
+      tags:
+        - Admin
+        - Users
+      summary: Get users by role
+      parameters:
+        - name: role
+          in: query
+          required: true
+          description: User role
+          schema:
+            type: string
+            enum: [customer, technician, admin]
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          description: Price list not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Users not found.
+  
+  /user/getUser:
+    get:
+      tags:
+        - Admin
+        - Users
+      summary: Get users by role
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: User id
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful return
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User not found.
+                    
+  /user/toggleUserStatus:
+    put:
+      tags:
+        - Admin
+      summary: Activate/Deactivate a user account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+                  description: USER ID
+      responses:
+        '200':
+          description: Returns the new status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: active.
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User not found.
+                    
+  /user/createUser:
+    post:
+      tags:
+        - Admin
+        - Users
+      summary: Create a new user (Admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - firstName
+                - lastName
+                - email
+                - password
+                - role
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                role:
+                  type: string
+                  enum: [customer, technician, admin]
+                customerDetails:
+                  type: object
+                  properties:
+                    address:
+                      type: string
+                    postal_code:
+                      type: string
+                    phone_number:
+                      type: string
+                technicianDetails:
+                  type: object
+                adminDetails:
+                  type: object
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User created successfully
+        '400':
+          description: Invalid input or missing required fields
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Required fields missing
+        '406':
+          description: Email already registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email already registered
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /user/updateUser:
+    put:
+      tags:
+        - Admin
+        - Users
+      summary: Update a user's information (Admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - first_name
+                - last_name
+                - email
+                - role
+              properties:
+                id:
+                  type: string
+                  description: The ID of the user to update
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                email:
+                  type: string
+                role:
+                  type: string
+                  enum: [customer, technician, organization]
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid role or missing fields
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: role must be one of customer, technician, organization
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error while searching for the user.
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+          
+  
+  /sla/getUserSlas:
+    get:
+      tags:
+        - SLA
+        - Admin
+      summary: Get all SLAs for a specific user (Admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of SLAs for the user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SLA'
+        '404':
+          description: User or SLAs not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Sla not found
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error while fetching SLAs
+
+  /sla/updateSlaStatus:
+    put:
+      tags:
+        - SLA
+        - Admin
+      summary: Update SLA status (Admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - status
+              properties:
+                id:
+                  type: string
+                status:
+                  type: string
+                  enum: [Active, Paid, Pending, Completed, Fault]
+      responses:
+        '200':
+          description: SLA status updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Status updated successfully
+        '400':
+          description: Invalid status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid status
+        '404':
+          description: SLA not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: SLA not found
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Error while updating the SLA status
+
+  /sla/updateServiceDetails:
+    put:
+      tags:
+        - SLA
+        - Admin
+      summary: Update SLA service details (Admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - slaDetails
+              properties:
+                id:
+                  type: string
+                slaDetails:
+                  type: object
+                  required:
+                    - address
+                    - start_date
+                    - end_date
+                    - grass_height
+                    - working_area
+                    - current_cut_area
+                    - price
+                  properties:
+                    address:
+                      type: string
+                    start_date:
+                      type: string
+                      format: date-time
+                    end_date:
+                      type: string
+                      format: date-time
+                    grass_height:
+                      type: number
+                    working_area:
+                      type: number
+                    current_cut_area:
+                      type: number
+                    price:
+                      type: number
+      responses:
+        '200':
+          description: SLA service details updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Updated successfully
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: All fields must be filled for the SLA to be valid
+        '404':
+          description: SLA not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: SLA not found
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Error while updating SLA details
+  
+  
+  # Robot routes
+  /robot/registerRobot:
+    post:
+      tags:
+        - Robot
+      summary: Register a new robot (Admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - model
+                - serial_number
+              properties:
+                model:
+                  type: string
+                serial_number:
+                  type: string
+      responses:
+        '200':
+          description: Robot registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Robots created successfully
+        '400':
+          description: Invalid input or server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Server error
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /robot/startCutting:
+    post:
+      tags:
+        - Robot
+      summary: Start cutting for an SLA
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - sla_id
+              properties:
+                sla_id:
+                  type: string
+      responses:
+        '201':
+          description: SLA status updated to active
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Sla status updated successfully
+        '404':
+          description: SLA not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Sla not found
+        '400':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Server error
+
+  /robot/currentCutArea:
+    post:
+      tags:
+        - Robot
+      summary: Update the current cut area for an SLA
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - sla_id
+                - currentCutArea
+              properties:
+                sla_id:
+                  type: string
+                currentCutArea:
+                  type: number
+      responses:
+        '200':
+          description: Current cut area updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Updated successfully
+        '404':
+          description: SLA not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Sla not found
+        '400':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Server error
+
+  /robot/doneCutting:
+    post:
+      tags:
+        - Robot
+      summary: Mark SLA as completed
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - sla_id
+              properties:
+                sla_id:
+                  type: string
+      responses:
+        '201':
+          description: SLA status updated to Completed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Sla status updated successfully
+        '404':
+          description: SLA not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Sla not found
+        '400':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Server error
+
+  /robot/broken:
+    post:
+      tags:
+        - Robot
+      summary: Mark robot as broken and cancel SLA
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - serial_number
+              properties:
+                serial_number:
+                  type: string
+      responses:
+        '200':
+          description: Robot marked as broken and SLA cancelled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Broken successfully
+        '400':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Server error
+
+  /robot/maintenance:
+    post:
+      tags:
+        - Robot
+      summary: Mark robot as available after maintenance
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - serial_number
+              properties:
+                serial_number:
+                  type: string
+      responses:
+        '200':
+          description: Robot marked as available
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: working again!!!
+        '400':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Server error
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /robot/getRobot:
+    get:
+      tags:
+        - Robot
+      summary: Get robot by serial number
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: serial_number
+          in: query
+          required: true
+          description: Serial number of the robot
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Robot details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Robot'
+        '404':
+          description: Robot not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Robot not found
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '400':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Server error
+
+  /robot/getAllRobots:
+    get:
+      tags:
+        - Robot
+      summary: Get all robots by status
+      parameters:
+        - name: status
+          in: query
+          required: true
+          description: Status of the robots
+          schema:
+            type: string
+            enum: [Available, Unavailable, Broken]
+      responses:
+        '200':
+          description: List of robots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Robot'
+        '404':
+          description: No robots found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: No robots found
+        '400':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Server error
+
+  /robot/getAllPriceLists:
+    get:
+      tags:
+        - Robot
+        - PriceList
+      summary: Get all price lists
+      responses:
+        '200':
+          description: List of price lists
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PriceList'
+        '404':
+          description: No price lists found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error while fetching price lists
+        '400':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Server error
+
+  # SLA routes
+  /sla/createSla:
+    post:
+      tags:
+        - SLA
+      summary: Create a new SLA (Customer)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - address
+                - start_date
+                - end_date
+                - grass_height
+                - working_area
+                - total_price
+                - robot_model
+              properties:
+                address:
+                  type: string
+                start_date:
+                  type: string
+                  format: date-time
+                end_date:
+                  type: string
+                  format: date-time
+                grass_height:
+                  type: number
+                working_area:
+                  type: number
+                total_price:
+                  type: number
+                robot_model:
+                  type: string
+      responses:
+        '201':
+          description: SLA created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Sla created successfully
+        '400':
+          description: Invalid input or no robots available
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Robots not available
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /sla/updateSla:
+    put:
+      tags:
+        - SLA
+      summary: Update an existing SLA
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+                grass_height:
+                  type: number
+                working_area:
+                  type: number
+                update_cost:
+                  type: number
+      responses:
+        '201':
+          description: SLA updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Sla updated successfully
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: At least a field is required
+        '404':
+          description: SLA not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Sla not found
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /sla/getAllSla:
+    get:
+      tags:
+        - SLA
+      summary: Get all SLAs for current user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of SLAs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SLA'
+        '404':
+          description: No SLAs found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Sla not found
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /sla/getSla:
+    get:
+      tags:
+        - SLA
+      summary: Get specific SLA by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: SLA details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SLA'
+        '404':
+          description: SLA not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Sla not found
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /sla/getPrice:
+    post:
+      tags:
+        - SLA
+      summary: Calculate price for SLA
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - grass_height
+                - working_area
+                - start_date
+                - end_date
+                - robot_model
+              properties:
+                grass_height:
+                  type: number
+                working_area:
+                  type: number
+                start_date:
+                  type: string
+                  format: date-time
+                end_date:
+                  type: string
+                  format: date-time
+                robot_model:
+                  type: string
+                id:
+                  type: string
+                create_sla:
+                  type: boolean
+      responses:
+        '200':
+          description: Price calculation result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: number
+        '400':
+          description: Calculation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /sla/cancelSla:
+    post:
+      tags:
+        - SLA
+      summary: Cancel an SLA
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+      responses:
+        '200':
+          description: SLA cancelled successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Cancellation successful
+        '404':
+          description: SLA not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Sla not found
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /sla/getSlaLog:
+    get:
+      tags:
+        - SLA
+      summary: Get SLA event log
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: SLA log details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SLALog'
+        '404':
+          description: Log not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Sla log not found
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /sla/getSlaPriceList:
+    get:
+      tags:
+        - SLA
+        - PriceList
+      summary: Get price list for SLA's robot model
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Price list details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PriceList'
+        '404':
+          description: Price list not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Price list not found
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'                  

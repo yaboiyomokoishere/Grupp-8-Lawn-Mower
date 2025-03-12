@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const Report = require("../Models/reportModel");
 const Sla = require("../Models/slaModel")
 const logSlaEvent = require ("../Middleware/logSlaEvent");
-const { json } = require("express");
+
 
 const getCustomerInfo = asyncHandler(async (req,res) => {
     const {id} = req.user;

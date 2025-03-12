@@ -42,7 +42,7 @@ const router = express.Router();
 // Authentication routes
 router.post('/register', registerCustomer);
 router.post('/login', loginUser);
-router.post('/logout', logoutUser);
+router.post('/logout', validateToken, logoutUser);
 router.post('/refresh', refreshToken); // Refreshes access token with refresh token
 
 //router.post('/admin/register', registerAdmin); // Use this only to create an admin

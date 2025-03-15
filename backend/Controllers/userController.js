@@ -131,7 +131,7 @@ const loginUser = asyncHandler(async (req, res) => {
         { expiresIn: "60m"}); // Testing interceptors 30m
 
         const refreshToken = jwt.sign({
-            username: user.username,
+            username: user.username, 
             email: user.email,
             id: user.id,
             role: user.role

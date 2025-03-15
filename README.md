@@ -8,12 +8,53 @@ The backend consists of a REST API to support future types of frontends (e.g., m
 
 ### Requirements
 Node.js v22.14.0 (or higher)
-MongoDB account
-Permit.io account (Requires email application password)
+MongoDB database (Can be either on the cloud, e.g., MongoDB Atlas, or local)
+Permit.io account 
 
+### MongoDB
 
+### Permit.io
+Begin by creating a new project, then before opening the Dashboard for the newly project and copy the its API key as shown below. <br>
+![alt text](images/image.png) <br>
 
-## How to Use
+Now in the code directory, replace the mockup API key in the backend/Middleware/authorization.js with yours. Afterwards go back to the <br>
+Permit.io web application and select **Policy** in the sidebar. From there create 3 roles: **admin**, **customer**, and **technician**.<br>
+The next step will be to create all the resources. For each resource provide a name and the methods allowed based on the following table<br>
+
+| Actions | SLA | Robot | Reports | CustomerAccountInfo | CustomerAccountInfoPrivate |
+|---------|-----|-------|---------|---------------------|----------------------------|
+| read    | Yes | Yes   | Yes     | Yes                 | Yes                        |
+| create  | Yes | Yes   | Yes     | Yes                 | Yes                        |
+| update  | Yes | Yes   | No      | Yes                 | Yes                        |
+| delete  | No  | Yes   | No      | Yes                 | Yes                        |
+
+After having defined the resources and their allowed methods, you will have to map the methods to each role. Set the mappings for <br>
+each role in the **Policy Editor** by following the images below. 
+
+<img src="images/admin.png" width="600" height="300"/>
+
+<img src="images/customer.png" width="600" height="300"/>
+
+<img src="images/technician.png" width="600" height="300"/>
+<br>
+
+Lastly, navigate to **Directory** from the sidebar, and then create a user, which will be used to communicate with the service, for <br>
+each role. Make sure that the respective **USER KEYS** and the **TOP LEVEL ACCESS** are the same as shown below. The user details   <br>
+can be anything, common practice is to use an email for some use cases. 
+![alt text](images/image1.png)
+Once done with this part, the authorization set up using Permit.io should be complete.
+
+### (Optional) Enable email notifications
+When a SLA log is updated there is a possibility to have the changes being emailed to the customer. To enable this functionality <br>
+you need an email, which will represent the system/corporation. Once the email is ready, start by removing the comments from line<br>
+19-46 in **backend/Middleware/logSlaEvent**, then replace the email at lines 27 and 33 with yours. For line 28 there different   <br>
+options depending on the service, for example the one being shown is a gmail application password that can be generated in the   <br>
+throught the emails settings. 
+
+## API Documentation
+The documentation for the REST API are available in the swagger.yaml file stored in the backend directory. <br>
+To view the document one can either start up the backend and visit the /api-docs route or simply paste the <br>
+file content in a swagger editor, e.g., at https://editor.swagger.io/.
 
 
 ## Directory Structure

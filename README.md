@@ -12,6 +12,9 @@ MongoDB database (Can be either on the cloud, e.g., MongoDB Atlas, or local) <br
 Permit.io account <br>
 
 ### MongoDB
+If you want to use Atlas as we did you can follow: https://www.mongodb.com/docs/atlas/getting-started/ <br>
+Follow the instructions and paste the connection link in the .env file in the CONNECTION_STRING variabel.
+You should also be able to run Mongodb locally.
 
 ### Permit.io
 Begin by creating a new project, then before opening the Dashboard for the newly project and copy the its API key as shown below. <br>

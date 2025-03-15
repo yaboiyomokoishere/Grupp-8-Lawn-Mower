@@ -7,9 +7,9 @@ The backend consists of a REST API to support future types of frontends (e.g., m
 ## Installation 
 
 ### Requirements
-Node.js v22.14.0 (or higher)
-MongoDB database (Can be either on the cloud, e.g., MongoDB Atlas, or local)
-Permit.io account 
+Node.js v22.14.0 (or higher) <br>
+MongoDB database (Can be either on the cloud, e.g., MongoDB Atlas, or local) <br>
+Permit.io account <br>
 
 ### MongoDB
 

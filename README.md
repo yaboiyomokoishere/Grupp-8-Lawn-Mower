@@ -51,6 +51,11 @@ you need an email, which will represent the system/corporation. Once the email i
 options depending on the service, for example the one being shown is a gmail application password that can be generated in the   <br>
 throught the emails settings. 
 
+### Final step 
+Go into the **/backend** and **/web-app** folders respectively, and run the command **npm run install** to download all the        <br>
+application dependecies. To start the API (backend) you only need to run **npm run start** (or npm run dev for a development server<br> with nodemon). Complications can sometimes arise due to dependencies in which case you have to delete the **node_modules** map and <br> reinstall them again with **npm run install**. To start the web-app you can either build the static files with **npm run build**   <br>
+and then view them with **npm run preview**, or you can just the development server by running **npm run dev**.
+
 ## API Documentation
 The documentation for the REST API are available in the swagger.yaml file stored in the backend directory. <br>
 To view the document one can either start up the backend and visit the /api-docs route or simply paste the <br>
@@ -146,4 +151,4 @@ file content in a swagger editor, e.g., at https://editor.swagger.io/.
 Erik Helgesson,       rekhel-9@student.ltu.se <br>
 Kalle Hedberg,        kalhed-2@student.ltu.se <br>
 Sebastian Pettersson, sebpet-9@student.ltu.se <br>
-Nahor Haile Tsegay,   nahtse-2@student.ltu.se
+Dispatch,             dispat-2@student.ltu.se
